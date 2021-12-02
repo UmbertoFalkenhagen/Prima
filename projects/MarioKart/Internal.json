@@ -1,0 +1,283 @@
+{
+  "MeshTerrain|2021-11-18T14:30:59.382Z|36477": {
+    "ƒ.MeshTerrain": {
+      "idResource": "MeshTerrain|2021-11-18T14:30:59.382Z|36477",
+      "name": "MeshTerrain",
+      "type": "MeshTerrain",
+      "seed": 0,
+      "scale": "[2, 2]",
+      "resolution": "[100, 100]"
+    }
+  },
+  "Material|2021-11-18T14:35:53.531Z|25929": {
+    "ƒ.Material": {
+      "name": "mtrFlat",
+      "idResource": "Material|2021-11-18T14:35:53.531Z|25929",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatColored": {
+          "color": "[1, 1, 1, 1]"
+        }
+      }
+    }
+  },
+  "MeshCube|2021-11-18T14:46:00.613Z|28907": {
+    "ƒ.MeshCube": {
+      "idResource": "MeshCube|2021-11-18T14:46:00.613Z|28907",
+      "name": "MeshAgent",
+      "type": "MeshCube"
+    }
+  },
+  "Material|2021-11-18T14:46:25.942Z|42737": {
+    "ƒ.Material": {
+      "name": "mtrAgent",
+      "idResource": "Material|2021-11-18T14:46:25.942Z|42737",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatColored": {
+          "color": "[0, 0.16470588235294117, 1, 1]"
+        }
+      }
+    }
+  },
+  "MeshRelief|2021-11-18T15:11:27.949Z|40298": {
+    "ƒ.MeshRelief": {
+      "idResource": "MeshRelief|2021-11-18T15:11:27.949Z|40298",
+      "name": "MeshRelief",
+      "type": "MeshRelief"
+    }
+  },
+  "Material|2021-11-23T13:51:58.016Z|48710": {
+    "ƒ.Material": {
+      "name": "mtrMap",
+      "idResource": "Material|2021-11-23T13:51:58.016Z|48710",
+      "shader": "ShaderTextureFlat",
+      "coat": {
+        "ƒ.CoatTextured": {
+          "color": "[0.9803921568627451, 0.9803921568627451, 0.9803921568627451, 1]",
+          "idTexture": "TextureImage|2021-11-23T14:00:36.152Z|53493"
+        }
+      }
+    }
+  },
+  "TextureImage|2021-11-23T14:00:36.152Z|53493": {
+    "ƒ.TextureImage": {
+      "url": "Script\\Textures\\maptex.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2021-11-23T14:00:36.152Z|53493",
+        "name": "Script\\Textures\\maptex.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "Audio|2021-11-24T13:00:05.825Z|96501": {
+    "ƒ.Audio": {
+      "url": "Script\\Sound\\2-03 GBA Mario Circuit.mp3",
+      "idResource": "Audio|2021-11-24T13:00:05.825Z|96501",
+      "name": "Script\\Sound\\2-03 GBA Mario Circuit.mp3",
+      "type": "Audio"
+    }
+  },
+  "Graph|2021-11-18T14:33:59.117Z|18376": {
+    "ƒ.Graph": {
+      "name": "SceneGraph",
+      "components": {
+        "ComponentAudio": [
+          {
+            "ƒ.ComponentAudio": {
+              "active": true,
+              "idResource": "Audio|2021-11-24T13:00:05.825Z|96501",
+              "playing": true,
+              "loop": true,
+              "volume": 1
+            }
+          }
+        ],
+        "ComponentAudioListener": [
+          {
+            "ƒ.ComponentAudioListener": {
+              "active": true
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "Terrain",
+            "components": {
+              "ComponentMaterial": [
+                {
+                  "ƒ.ComponentMaterial": {
+                    "sortForAlpha": false,
+                    "clrPrimary": "[1, 1, 1, 1]",
+                    "clrSecondary": "[1, 1, 1, 1]",
+                    "pivot": {
+                      "translation": "[0, 0]",
+                      "rotation": 0,
+                      "scaling": "[1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    },
+                    "idMaterial": "Material|2021-11-23T13:51:58.016Z|48710"
+                  }
+                }
+              ],
+              "ComponentLight": [
+                {
+                  "ƒ.ComponentLight": {
+                    "pivot": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "light": {
+                      "ƒ.LightAmbient": {
+                        "color": "[0.2784313725490196, 0.2784313725490196, 0.2784313725490196, 1]"
+                      }
+                    }
+                  }
+                },
+                {
+                  "ƒ.ComponentLight": {
+                    "pivot": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[80, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "light": {
+                      "ƒ.LightDirectional": {
+                        "color": "[0.08627450980392157, 0.07058823529411765, 0.07058823529411765, 1]"
+                      }
+                    }
+                  }
+                }
+              ],
+              "ComponentMesh": [
+                {
+                  "ƒ.ComponentMesh": {
+                    "idMesh": "MeshTerrain|2021-11-18T14:30:59.382Z|36477",
+                    "pivot": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentTransform": [
+                {
+                  "ƒ.ComponentTransform": {
+                    "local": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[100, 5, 100]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        }
+      ],
+      "idResource": "Graph|2021-11-18T14:33:59.117Z|18376",
+      "type": "Graph"
+    }
+  },
+  "Graph|2021-11-22T11:02:19.072Z|64411": {
+    "ƒ.Graph": {
+      "name": "Agent",
+      "components": {
+        "ComponentMesh": [
+          {
+            "ƒ.ComponentMesh": {
+              "idMesh": "MeshCube|2021-11-18T14:46:00.613Z|28907",
+              "pivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 2]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentMaterial": [
+          {
+            "ƒ.ComponentMaterial": {
+              "sortForAlpha": false,
+              "clrPrimary": "[1, 1, 1, 1]",
+              "clrSecondary": "[1, 1, 1, 1]",
+              "pivot": {
+                "translation": "[0, 0]",
+                "rotation": 0,
+                "scaling": "[1, 1]"
+              },
+              "Component": {
+                "active": true
+              },
+              "idMaterial": "Material|2021-11-18T14:46:25.942Z|42737"
+            }
+          }
+        ],
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [],
+      "idResource": "Graph|2021-11-22T11:02:19.072Z|64411",
+      "type": "Graph"
+    }
+  },
+  "TextureImage|2021-11-23T10:35:25.413Z|13750": {
+    "ƒ.TextureImage": {
+      "url": "Script\\Textures\\heightmap_3.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2021-11-23T10:35:25.413Z|13750",
+        "name": "Script\\Textures\\heightmap_3.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "TextureImage|2021-11-23T13:47:39.450Z|59654": {
+    "ƒ.TextureImage": {
+      "url": "Script\\Textures\\map.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2021-11-23T13:47:39.450Z|59654",
+        "name": "Script\\Textures\\map.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "MeshRelief|2021-11-23T13:47:43.230Z|04405": {
+    "ƒ.MeshRelief": {
+      "idResource": "MeshRelief|2021-11-23T13:47:43.230Z|04405",
+      "name": "MeshRelief",
+      "type": "MeshRelief",
+      "idTexture": "TextureImage|2021-11-23T13:47:39.450Z|59654"
+    }
+  }
+}
