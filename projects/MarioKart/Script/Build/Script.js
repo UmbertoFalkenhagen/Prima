@@ -35,84 +35,16 @@ var MarioKart;
 var MarioKart;
 (function (MarioKart) {
     var ƒ = FudgeCore;
-    ƒ.Project.registerScriptNamespace(MarioKart); // Register the namespace to FUDGE for serialization
-    class HeightMapGenerator extends ƒ.ComponentScript {
-        // Register the script as component for use in the editor via drag&drop
-        static iSubclass = ƒ.Component.registerSubclass(HeightMapGenerator);
-        // Properties may be mutated by users in the editor via the automatically created user interface
-        message = "HeightMapGenerator added to ";
-        heightMapSource;
-        reliefMesh;
-        map = new ƒ.Node("ownTarrain");
-        graph = ƒ.Project.resources["Graph|2021-11-18T14:33:59.117Z|18376"];
-        constructor() {
-            super();
-            // Don't start when running in editor
-            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
-                return;
-            // Listen to this component being added to or removed from a node
-            this.addEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
-            this.addEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
-        }
-        // Activate the functions of this component as response to events
-        hndEvent = (_event) => {
-            switch (_event.type) {
-                case "componentAdd" /* COMPONENT_ADD */:
-                    ƒ.Debug.log(this.message, this.node);
-                    this.start();
-                    break;
-                case "componentRemove" /* COMPONENT_REMOVE */:
-                    this.removeEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
-                    this.removeEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
-                    break;
-            }
-        };
-        start() {
-            //this.reliefMesh = this.node.getComponent(ƒ.MeshRelief);
-            this.generateTerrain();
-            //ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
-        }
-        //public update = (_event: Event): void => {
-        //}
-        async generateTerrain() {
-            this.heightMapSource = new ƒ.TextureImage();
-            this.heightMapSource = FudgeCore.Project.resources["TextureImage|2021-11-23T10:35:25.413Z|13750"];
-            //await this.heightMapSource.load("../Textures/heightmap_3.png");
-            /*for (let x = 0; x < this.heightMapSource.; index++) {
-              const element = array[index];
-              
-            }*/
-            //let cmpRigidbody: ƒ.ComponentRigidbody = new ƒ.ComponentRigidbody(1, ƒ.BODY_TYPE.STATIC, ƒ.COLLIDER_TYPE.CUBE);
-            let mtrTexFlat = ƒ.Project.resources["Material|2021-11-23T02:36:34.207Z|12139"];
-            let material = new ƒ.ComponentMaterial(mtrTexFlat);
-            let gridMeshFlat = new ƒ.MeshRelief("HeightMap", this.heightMapSource);
-            let grid = new ƒ.ComponentMesh(gridMeshFlat);
-            console.log(grid);
-            grid.mtxPivot.scale(new ƒ.Vector3(100, 10, 100));
-            grid.mtxPivot.translateY(-grid.mesh.boundingBox.max.y);
-            let transfom = new ƒ.ComponentTransform();
-            this.map.addComponent(grid);
-            this.map.addComponent(material);
-            //this.map.addComponent(cmpRigidbody);
-            this.map.addComponent(transfom);
-            this.graph.addChild(this.map);
-            //this.reliefMesh = new ƒ.MeshRelief("HeightMap", this.heightMapSource);
-        }
-    }
-    MarioKart.HeightMapGenerator = HeightMapGenerator;
-})(MarioKart || (MarioKart = {}));
-var MarioKart;
-(function (MarioKart) {
-    var ƒ = FudgeCore;
     ƒ.Debug.info("Main Program Template running!");
     let viewport;
     let sceneGraph;
-    let kart;
+    let cart;
     let cameraNode;
-    let ctrForward = new ƒ.Control("Forward", 10, 0 /* PROPORTIONAL */);
+    let body;
+    let ctrForward = new ƒ.Control("Forward", 50, 0 /* PROPORTIONAL */);
     ctrForward.setDelay(200);
-    let ctrTurn = new ƒ.Control("Forward", 100, 0 /* PROPORTIONAL */);
-    ctrTurn.setDelay(50);
+    let ctrTurn = new ƒ.Control("Turn", 100, 0 /* PROPORTIONAL */);
+    ctrForward.setDelay(50);
     let mtxTerrain;
     let meshTerrain;
     window.addEventListener("load", init);
@@ -145,10 +77,10 @@ var MarioKart;
         ƒ.AudioManager.default.listenWith(sceneGraph.getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.listenTo(sceneGraph);
         ƒ.AudioManager.default.listenWith(sceneGraph.getComponent(ƒ.ComponentAudioListener));
-        kart = ƒ.Project.resources["Graph|2021-11-22T11:02:19.072Z|64411"];
+        cart = sceneGraph.getChildrenByName("Agent")[0];
         //kart.mtxLocal.translateX(5);
-        sceneGraph.appendChild(kart);
-        let kartTransform = kart.getComponent(ƒ.ComponentTransform);
+        //sceneGraph.appendChild(cart);
+        let kartTransform = cart.getComponent(ƒ.ComponentTransform);
         kartTransform.mtxLocal.translateX(35);
         kartTransform.mtxLocal.translateY(5);
         kartTransform.mtxLocal.translateZ(45);
@@ -159,6 +91,7 @@ var MarioKart;
         cameraNode.addComponent(cmpCamera);
         cameraNode.addComponent(new ƒ.ComponentTransform);
         sceneGraph.addChild(cameraNode);
+        body = cart.getComponent(ƒ.ComponentRigidbody);
         //kart.addComponent(cmpCamera);
         // cameraNode.getComponent(ƒ.ComponentTransform).mtxLocal.translateZ(-20);
         // cameraNode.getComponent(ƒ.ComponentTransform).mtxLocal.translateY(10);
@@ -168,26 +101,47 @@ var MarioKart;
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     }
     function update(_event) {
-        // ƒ.Physics.world.simulate();  // if physics is included and used
-        let deltaTime = ƒ.Loop.timeFrameReal / 1000;
+        ƒ.Physics.world.simulate(Math.min(0.1, ƒ.Loop.timeFrameReal / 1000)); // if physics is included and used
+        //let deltaTime: number = ƒ.Loop.timeFrameReal / 1000;
         let turn = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
         ctrTurn.setInput(turn);
-        kart.mtxLocal.rotateY(ctrTurn.getOutput() * deltaTime);
+        cart.getComponent(ƒ.ComponentRigidbody).applyTorque(ƒ.Vector3.SCALE(ƒ.Vector3.Y(), ctrTurn.getOutput()));
         let forward = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
         ctrForward.setInput(forward);
-        kart.mtxLocal.translateZ(ctrForward.getOutput() * deltaTime);
-        let terrainInfo = meshTerrain.getTerrainInfo(kart.mtxLocal.translation, mtxTerrain);
-        kart.mtxLocal.translation = terrainInfo.position;
-        kart.mtxLocal.showTo(ƒ.Vector3.SUM(terrainInfo.position, kart.mtxLocal.getZ()), terrainInfo.normal);
+        cart.getComponent(ƒ.ComponentRigidbody).applyForce(ƒ.Vector3.SCALE(cart.mtxLocal.getZ(), ctrForward.getOutput()));
+        let springRestingDistance = 10;
+        let forceNodes = cart.getChildren();
+        let springForce = -body.mass * ƒ.Physics.world.getGravity().y;
+        for (let forceNode of forceNodes) {
+            let posForce = forceNode.getComponent(ƒ.ComponentMesh).mtxWorld.translation;
+            let terrainInfo = meshTerrain.getTerrainInfo(posForce, mtxTerrain);
+            let currentDeviation;
+            currentDeviation = posForce.y - terrainInfo.position.y;
+            let force = ƒ.Vector3.ZERO();
+            let currentforce = calculateSpringForce(springRestingDistance, springForce, currentDeviation);
+            // force = ƒ.Vector3.SCALE(ƒ.Physics.world.getGravity(), currentforce);
+            // //force = ƒ.Vector3.SCALE(force, deltaTime);
+            force.y = currentforce;
+            body.applyForceAtPoint(force, posForce);
+            //body.applyForceAtPoint(ƒ.Physics.world.getGravity(), posForce);
+        }
         placeCameraOnCart();
         viewport.draw();
         ƒ.AudioManager.default.update();
     }
     function placeCameraOnCart() {
         cameraNode.mtxLocal.mutate({
-            translation: kart.mtxWorld.translation,
-            rotation: new ƒ.Vector3(0, kart.mtxWorld.rotation.y, 0)
+            translation: cart.mtxWorld.translation,
+            rotation: new ƒ.Vector3(0, cart.mtxWorld.rotation.y, 0)
         });
+    }
+    function calculateSpringForce(_restingDistance, _springForceConstant, _currentDeviation) {
+        // resting distance describes the height at which the spring does not excert any force
+        // the spring force constant describes the force that is excerted per 1 metre of pulling/compressing the spring by 1 unit
+        // the current deviation describes the current compression/extension of the spring
+        let currentForce = (_restingDistance - _currentDeviation * _springForceConstant);
+        //   console.log (currentForce);
+        return currentForce;
     }
 })(MarioKart || (MarioKart = {}));
 //# sourceMappingURL=Script.js.map
