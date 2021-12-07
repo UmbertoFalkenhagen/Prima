@@ -264,9 +264,9 @@
                     "initialization": "TO_MESH",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
-                    "dampTranslation": 5,
-                    "dampRotation": 5,
+                    "mass": 200,
+                    "dampTranslation": 3,
+                    "dampRotation": 100,
                     "effectGravity": 1,
                     "typeBody": "DYNAMIC",
                     "typeCollider": "CUBE",
@@ -732,6 +732,15 @@
         }
       ],
       "idResource": "Graph|2021-12-07T11:06:33.661Z|99952",
+      "type": "Graph"
+    }
+  },
+  "Graph|2021-12-07T13:33:03.100Z|97784": {
+    "ƒ.Graph": {
+      "name": "NewGraph",
+      "components": {},
+      "children": [],
+      "idResource": "Graph|2021-12-07T13:33:03.100Z|97784",
       "type": "Graph"
     }
   }

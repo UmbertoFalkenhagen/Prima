@@ -8,9 +8,9 @@ namespace MarioKart {
   let cameraNode: ƒ.Node;
   let body: ƒ.ComponentRigidbody;
 
-  let ctrForward: ƒ.Control = new ƒ.Control("Forward", 50, ƒ.CONTROL_TYPE.PROPORTIONAL);
+  let ctrForward: ƒ.Control = new ƒ.Control("Forward", 7000, ƒ.CONTROL_TYPE.PROPORTIONAL);
   ctrForward.setDelay(200);
-  let ctrTurn: ƒ.Control = new ƒ.Control("Turn", 100, ƒ.CONTROL_TYPE.PROPORTIONAL);
+  let ctrTurn: ƒ.Control = new ƒ.Control("Turn", 1000, ƒ.CONTROL_TYPE.PROPORTIONAL);
   ctrForward.setDelay(50);
 
   let mtxTerrain: ƒ.Matrix4x4;
@@ -88,7 +88,7 @@ namespace MarioKart {
   }
 
   function update(_event: Event): void {
-    ƒ.Physics.world.simulate(Math.min(0.1, ƒ.Loop.timeFrameReal / 1000));  // if physics is included and used
+    
     //let deltaTime: number = ƒ.Loop.timeFrameReal / 1000;
     let turn: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
     ctrTurn.setInput(turn);
@@ -98,27 +98,42 @@ namespace MarioKart {
     ctrForward.setInput(forward);
     cart.getComponent(ƒ.ComponentRigidbody).applyForce(ƒ.Vector3.SCALE(cart.mtxLocal.getZ(), ctrForward.getOutput()));
 
-    let springRestingDistance: number = 10;
-    
+    let maxHeight: number = 0.3;
+    let minHeight: number = 0.2;
     let forceNodes: ƒ.Node[] = cart.getChildren();
-    let springForce: number = -body.mass * ƒ.Physics.world.getGravity().y;
+    let force: ƒ.Vector3 = ƒ.Vector3.SCALE(ƒ.Physics.world.getGravity(), -body.mass / forceNodes.length);
 
     for (let forceNode of forceNodes) {
       let posForce: ƒ.Vector3 = forceNode.getComponent(ƒ.ComponentMesh).mtxWorld.translation;
       let terrainInfo: ƒ.TerrainInfo = meshTerrain.getTerrainInfo(posForce, mtxTerrain);
-      let currentDeviation: number;
-      currentDeviation = posForce.y - terrainInfo.position.y;
-      let force: ƒ.Vector3 = ƒ.Vector3.ZERO();
-      let currentforce: number = calculateSpringForce(springRestingDistance, springForce, currentDeviation);
-      // force = ƒ.Vector3.SCALE(ƒ.Physics.world.getGravity(), currentforce);
-      // //force = ƒ.Vector3.SCALE(force, deltaTime);
-      force.y = currentforce;
-      body.applyForceAtPoint(force, posForce);
-      //body.applyForceAtPoint(ƒ.Physics.world.getGravity(), posForce);
-    } 
+      let height: number = posForce.y - terrainInfo.position.y;
+      if (height < maxHeight)
+        body.applyForceAtPoint(ƒ.Vector3.SCALE(force, (maxHeight - height) / (maxHeight - minHeight)), posForce);
+      
+    }
+
+    // let springRestingDistance: number = 1;
+    
+    // let forceNodes: ƒ.Node[] = cart.getChildren();
+    // let springForce: number = -body.mass * ƒ.Physics.world.getGravity().y;
+
+    // for (let forceNode of forceNodes) {
+    //   let posForce: ƒ.Vector3 = forceNode.getComponent(ƒ.ComponentMesh).mtxWorld.translation;
+    //   let terrainInfo: ƒ.TerrainInfo = meshTerrain.getTerrainInfo(posForce, mtxTerrain);
+    //   let currentDeviation: number;
+    //   currentDeviation = posForce.y - terrainInfo.position.y;
+    //   let force: ƒ.Vector3 = ƒ.Vector3.ZERO();
+    //   let currentforce: number = calculateSpringForce(springRestingDistance, springForce, currentDeviation);
+    //   // force = ƒ.Vector3.SCALE(ƒ.Physics.world.getGravity(), currentforce);
+    //   // //force = ƒ.Vector3.SCALE(force, deltaTime);
+    //   force.y = currentforce;
+    //   body.applyForceAtPoint(force, posForce);
+    //   //body.applyForceAtPoint(ƒ.Physics.world.getGravity(), posForce);
+    // } 
 
     placeCameraOnCart();
     
+    ƒ.Physics.world.simulate();  // if physics is included and used
     viewport.draw();
     ƒ.AudioManager.default.update();
   }
@@ -130,12 +145,13 @@ namespace MarioKart {
     });
   }
 
-  function calculateSpringForce(_restingDistance: number, _springForceConstant: number, _currentDeviation: number): number { 
-  // resting distance describes the height at which the spring does not excert any force
-  // the spring force constant describes the force that is excerted per 1 metre of pulling/compressing the spring by 1 unit
-  // the current deviation describes the current compression/extension of the spring
-     let currentForce: number = (_restingDistance - _currentDeviation * _springForceConstant);
-  //   console.log (currentForce);
-     return currentForce;
-  }
+  // function calculateSpringForce(_restingDistance: number, _springForceConstant: number, _currentDeviation: number): number { 
+  // // resting distance describes the height at which the spring does not excert any force
+  // // the spring force constant describes the force that is excerted per 1 metre of pulling/compressing the spring by 1 unit
+  // // the current deviation describes the current compression/extension of the spring
+  //    let currentForce: number = (_restingDistance - _currentDeviation) * _springForceConstant;
+  // //   console.log (currentForce);
+  //    return currentForce;
+  // }
+
 }
