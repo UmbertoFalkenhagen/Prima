@@ -20,6 +20,8 @@ namespace MarioKart {
   let mtxTerrain: ƒ.Matrix4x4;
   let meshTerrain: ƒ.MeshTerrain;
 
+  let frictionMap: ƒ.TextureImage;
+
   window.addEventListener("load", init);
 
   function init(_event: Event): void {
@@ -37,6 +39,7 @@ namespace MarioKart {
   async function start(): Promise<void> {
     await ƒ.Project.loadResourcesFromHTML();
     sceneGraph = <ƒ.Graph>ƒ.Project.resources["Graph|2021-11-18T14:33:59.117Z|18376"];
+    frictionMap = <ƒ.TextureImage>ƒ.Project.resources["TextureImage|2021-12-13T10:35:51.198Z|25477"];
     // setup Camera
     let cmpCamera: ƒ.ComponentCamera  = new ƒ.ComponentCamera();
 
@@ -99,6 +102,7 @@ namespace MarioKart {
     for (let forceNode of forceNodes) {
       let posForce: ƒ.Vector3 = forceNode.getComponent(ƒ.ComponentMesh).mtxWorld.translation;
       let terrainInfo: ƒ.TerrainInfo = meshTerrain.getTerrainInfo(posForce, mtxTerrain);
+      checkFrictionOnCurrentPosition(terrainInfo.position.x, terrainInfo.position.z);
       let height: number = posForce.y - terrainInfo.position.y;
       if (height < maxHeight) {
         body.applyForceAtPoint(ƒ.Vector3.SCALE(force, (maxHeight - height) / (maxHeight - minHeight)), posForce);
@@ -116,7 +120,8 @@ namespace MarioKart {
       let forward: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
       ctrForward.setInput(forward);
       cart.getComponent(ƒ.ComponentRigidbody).applyForce(ƒ.Vector3.SCALE(cart.mtxLocal.getZ(), ctrForward.getOutput()));
-    }
+    } else
+    body.dampRotation = body.dampTranslation = 0;
     
 
     placeCameraOnCart();
@@ -131,6 +136,24 @@ namespace MarioKart {
       translation: cart.mtxWorld.translation,
       rotation: new ƒ.Vector3(0, cart.mtxWorld.rotation.y, 0)
     });
+  }
+
+  function checkFrictionOnCurrentPosition(_x: number, _z: number): void {
+    //let greyscaleValue: number;
+    // let x: number = frictionMap.image.width / 2;
+    // let z: number = frictionMap.image.height / 2;
+    // var canvas = document.createElement("canvas");
+    // var context = canvas.getContext("2d");
+    // var bufferWidth = frictionMap.image.width;
+    // var bufferHeight = frictionMap.image.height;
+    // canvas.width = bufferWidth;
+    // canvas.height = bufferHeight;
+
+    // context.drawImage(frictionMap.image, 0, 0);
+    
+    // var buffer = context.getImageData(x + _x, z + _z, bufferWidth, bufferHeight).data;
+
+    // console.log(buffer.toString());
   }
 
 }

@@ -44,7 +44,19 @@
     "ƒ.MeshRelief": {
       "idResource": "MeshRelief|2021-11-18T15:11:27.949Z|40298",
       "name": "MeshRelief",
-      "type": "MeshRelief"
+      "type": "MeshRelief",
+      "idTexture": "TextureImage|2021-12-14T13:31:39.356Z|84520"
+    }
+  },
+  "TextureImage|2021-12-13T10:36:00.427Z|09869": {
+    "ƒ.TextureImage": {
+      "url": "Script\\Textures\\displacement-map_heigtmap.jpg",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2021-12-13T10:36:00.427Z|09869",
+        "name": "Script\\Textures\\displacement-map_heigtmap.jpg",
+        "mipmap": "CRISP"
+      }
     }
   },
   "Material|2021-11-23T13:51:58.016Z|48710": {
@@ -55,8 +67,19 @@
       "coat": {
         "ƒ.CoatTextured": {
           "color": "[0.9803921568627451, 0.9803921568627451, 0.9803921568627451, 1]",
-          "idTexture": "TextureImage|2021-11-23T14:00:36.152Z|53493"
+          "idTexture": "TextureImage|2021-12-13T10:35:40.195Z|42063"
         }
+      }
+    }
+  },
+  "TextureImage|2021-12-13T10:35:40.195Z|42063": {
+    "ƒ.TextureImage": {
+      "url": "Script\\Textures\\displacement-map_coloured.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2021-12-13T10:35:40.195Z|42063",
+        "name": "Script\\Textures\\displacement-map_coloured.png",
+        "mipmap": "CRISP"
       }
     }
   },
@@ -458,36 +481,6 @@
       "type": "Graph"
     }
   },
-  "TextureImage|2021-11-23T10:35:25.413Z|13750": {
-    "ƒ.TextureImage": {
-      "url": "Script\\Textures\\heightmap_3.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2021-11-23T10:35:25.413Z|13750",
-        "name": "Script\\Textures\\heightmap_3.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
-  "TextureImage|2021-11-23T13:47:39.450Z|59654": {
-    "ƒ.TextureImage": {
-      "url": "Script\\Textures\\map.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2021-11-23T13:47:39.450Z|59654",
-        "name": "Script\\Textures\\map.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
-  "MeshRelief|2021-11-23T13:47:43.230Z|04405": {
-    "ƒ.MeshRelief": {
-      "idResource": "MeshRelief|2021-11-23T13:47:43.230Z|04405",
-      "name": "MeshRelief",
-      "type": "MeshRelief",
-      "idTexture": "TextureImage|2021-11-23T13:47:39.450Z|59654"
-    }
-  },
   "Graph|2021-12-07T11:06:33.661Z|99952": {
     "ƒ.Graph": {
       "name": "Agent",
@@ -735,13 +728,26 @@
       "type": "Graph"
     }
   },
-  "Graph|2021-12-07T13:33:03.100Z|97784": {
-    "ƒ.Graph": {
-      "name": "NewGraph",
-      "components": {},
-      "children": [],
-      "idResource": "Graph|2021-12-07T13:33:03.100Z|97784",
-      "type": "Graph"
+  "TextureImage|2021-12-13T10:35:51.198Z|25477": {
+    "ƒ.TextureImage": {
+      "url": "Script\\Textures\\displacement-map_greyscale.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2021-12-13T10:35:51.198Z|25477",
+        "name": "Script\\Textures\\displacement-map_greyscale.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "TextureImage|2021-12-14T13:31:39.356Z|84520": {
+    "ƒ.TextureImage": {
+      "url": "Script\\Textures\\displacement-map_small.jpg",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2021-12-14T13:31:39.356Z|84520",
+        "name": "Script\\Textures\\displacement-map_small.jpg",
+        "mipmap": "CRISP"
+      }
     }
   }
 }
