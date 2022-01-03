@@ -1,0 +1,111 @@
+{
+  "MeshCube|2021-12-21T17:38:11.937Z|33087": {
+    "ƒ.MeshCube": {
+      "idResource": "MeshCube|2021-12-21T17:38:11.937Z|33087",
+      "name": "Ground",
+      "type": "MeshCube"
+    }
+  },
+  "Material|2021-12-21T17:38:43.317Z|83500": {
+    "ƒ.Material": {
+      "name": "MtrGroundFlat",
+      "idResource": "Material|2021-12-21T17:38:43.317Z|83500",
+      "shader": "ShaderTextureFlat",
+      "coat": {
+        "ƒ.CoatTextured": {
+          "color": "[0.7294117647058823, 0.7098039215686275, 0.7098039215686275, 1]"
+        }
+      }
+    }
+  },
+  "Graph|2021-12-21T17:37:49.295Z|21356": {
+    "ƒ.Graph": {
+      "name": "SceneGraph",
+      "components": {
+        "ComponentLight": [
+          {
+            "ƒ.ComponentLight": {
+              "pivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "light": {
+                "ƒ.LightAmbient": {
+                  "color": "[1, 1, 1, 1]"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "Terrain",
+            "components": {},
+            "children": [
+              {
+                "ƒ.Node": {
+                  "name": "Ground",
+                  "components": {
+                    "ComponentMesh": [
+                      {
+                        "ƒ.ComponentMesh": {
+                          "idMesh": "MeshCube|2021-12-21T17:38:11.937Z|33087",
+                          "pivot": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentMaterial": [
+                      {
+                        "ƒ.ComponentMaterial": {
+                          "sortForAlpha": false,
+                          "clrPrimary": "[1, 1, 1, 1]",
+                          "clrSecondary": "[1, 1, 1, 1]",
+                          "pivot": {
+                            "translation": "[0, 0]",
+                            "rotation": 0,
+                            "scaling": "[1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          },
+                          "idMaterial": "Material|2021-12-21T17:38:43.317Z|83500"
+                        }
+                      }
+                    ],
+                    "ComponentTransform": [
+                      {
+                        "ƒ.ComponentTransform": {
+                          "local": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[100, 1, 5]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "idResource": "Graph|2021-12-21T17:37:49.295Z|21356",
+      "type": "Graph"
+    }
+  }
+}
