@@ -3,6 +3,10 @@ Repository for the module "Prototyping interactive media-applications and games"
 
 [Pages-Version](https://jirkadelloro.github.io/Prima/)
 
+In this course, students learn fundamentals of game engines and development environments for prototyping. They learn basic development patterns used in highly interactive applications such as animation, transformation, object relationships and event control. We analyse concepts for complex applications or simple games, plan the realisation of core features and create executable prototypes for demonstration. In the end, students design their own piece of art and produce it themselves.
+
+The environment we work with is [FUDGE](https://jirkadelloro.github.io/FUDGE), the Furtwangen University Didactic Game Engine/Editor, which allows for optimized tuition and collaboration, while demonstrating the fundamentals of popular engines like Unreal or Unity. Students acquainted to FUDGE can easily shift over to these mighty tools later on. Coding language is [TypeScript](https://typescriptlang.org)
+
 ## Examples
 See the results created by the docents during the PRIMA-lectures. This is experimental material showing some core functionalities the course was working on, not fully functional prototypes. Usually, we examine one 2d and one 3d application.  
 
@@ -28,7 +32,7 @@ See the results created by the docents during the PRIMA-lectures. This is experi
 |  6 | VUI               | Create a virtual user interface using the interface controller and mutables. Explain the interface.                 |
 |  7 | Event-System      | Use the event system to send messages through graphs and explain if that was useful in your context or not and why. |
 |  8 | External Data     | Create a configuration file your application loads and adjusts to the content. Explain your choice of parameters.   |
-|  9 | Light             | Explain you choice of lights in your graphs.                                                                        |
+|  9 | Light             | Explain your choice of lights in your graphs.                                                                       |
 |  A | Physics           | Add rigidbody components and work with collisions (1) and/or forces and torques (1) and/or joints (1)               |
 |  B | Net               | Add multiplayer functionality via network (3)                                                                       |
 |  C | State Machines    | Create autonomous entities using the StateMachine (1) and/or ComponentStateMachine (1) defined in FudgeAid          |
