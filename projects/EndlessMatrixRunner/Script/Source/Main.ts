@@ -2,9 +2,15 @@ namespace EndlessMatrixRunner {
   import ƒ = FudgeCore;
 
   let viewport: ƒ.Viewport;
-  let sceneGraph: ƒ.Node;
+  export let sceneGraph: ƒ.Node;
 
   let cameraNode: ƒ.Node;
+
+  export let playerNode: ƒ.Node;
+  export let groundNode: ƒ.Node;
+
+  let ctrForward: ƒ.Control = new ƒ.Control("Forward", 100, ƒ.CONTROL_TYPE.PROPORTIONAL);
+  ctrForward.setDelay(200);
 
   ƒ.Debug.info("Main Program Template running!");
 
@@ -24,7 +30,7 @@ namespace EndlessMatrixRunner {
 
   async function start(): Promise<void> {
     await ƒ.Project.loadResourcesFromHTML();
-    sceneGraph = <ƒ.Graph>ƒ.Project.resources["Graph|2021-11-18T14:33:59.117Z|18376"];
+    sceneGraph = <ƒ.Graph>ƒ.Project.resources["Graph|2021-12-21T17:37:49.295Z|21356"];
 
     let cmpCamera: ƒ.ComponentCamera  = new ƒ.ComponentCamera();
 
@@ -38,15 +44,25 @@ namespace EndlessMatrixRunner {
     ƒ.AudioManager.default.listenTo(sceneGraph);
     ƒ.AudioManager.default.listenWith(sceneGraph.getComponent(ƒ.ComponentAudioListener));
 
-    ƒ.AudioManager.default.listenTo(sceneGraph);
-    ƒ.AudioManager.default.listenWith(sceneGraph.getComponent(ƒ.ComponentAudioListener));
+    playerNode = sceneGraph.getChildrenByName("Player")[0];
+    playerNode.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_1;
+    
 
-    cmpCamera.mtxPivot.translation = new ƒ.Vector3(0, 8, -12);
-    cmpCamera.mtxPivot.rotation = new ƒ.Vector3(25, 0, 0);
+    groundNode = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Ground")[0];
+    groundNode.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
+
+    let platformNode: ƒ.Node[] = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].getChildrenByName("Platform");
+    platformNode.forEach(platform => {
+      platform.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
+    });
+
+    //cmpCamera.mtxPivot.translation = new ƒ.Vector3(0, 8, -12);
+    //cmpCamera.mtxPivot.rotation = new ƒ.Vector3(25, 0, 0);
     
     cameraNode = new ƒ.Node("cameraNode");
     cameraNode.addComponent(cmpCamera);
     cameraNode.addComponent(new ƒ.ComponentTransform);
+    cameraNode.addComponent(new CameraScript);
     sceneGraph.addChild(cameraNode);
 
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
@@ -54,8 +70,29 @@ namespace EndlessMatrixRunner {
   }
 
   function update(_event: Event): void {
-    // ƒ.Physics.world.simulate();  // if physics is included and used
+
+    let forward: number = 1;
+    ctrForward.setInput(forward);
+
+    let movementVector: ƒ.Vector3 = ƒ.Vector3.ZERO();
+    movementVector.x = ctrForward.getOutput();
+    playerNode.getComponent(ƒ.ComponentRigidbody).applyForce(movementVector);
+
+    controllGround();
+    //setUpCamera();
+
+    ƒ.Physics.world.simulate();  // if physics is included and used
     viewport.draw();
     ƒ.AudioManager.default.update();
+  }
+
+  function controllGround(): void {
+    
+  }
+
+  function setUpCamera(): void {
+    cameraNode.mtxLocal.mutate({
+      translation: playerNode.mtxWorld.translation
+    });
   }
 }

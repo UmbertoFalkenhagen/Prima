@@ -2,11 +2,11 @@ namespace EndlessMatrixRunner {
   import ƒ = FudgeCore;
   ƒ.Project.registerScriptNamespace(EndlessMatrixRunner);  // Register the namespace to FUDGE for serialization
 
-  export class CustomComponentScript extends ƒ.ComponentScript {
+  export class CameraScript extends ƒ.ComponentScript {
     // Register the script as component for use in the editor via drag&drop
-    public static readonly iSubclass: number = ƒ.Component.registerSubclass(CustomComponentScript);
+    public static readonly iSubclass: number = ƒ.Component.registerSubclass(CameraScript);
     // Properties may be mutated by users in the editor via the automatically created user interface
-    public message: string = "CustomComponentScript added to ";
+    public message: string = "CameraScript added to ";
 
 
     constructor() {
@@ -37,14 +37,16 @@ namespace EndlessMatrixRunner {
 
     public start (): void  {
      
-      
+      this.node.mtxLocal.translation.y = playerNode.mtxLocal.translation.y + 7.5;
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
       
       
     }
 
     public update = (_event: Event): void => {
-
+      this.node.mtxLocal.translation.x = playerNode.mtxLocal.translation.x;
+      this.node.mtxLocal.translation.z = playerNode.mtxLocal.translation.z + 20;
+      this.node.mtxLocal.lookAt(playerNode.mtxLocal.translation);
     }
 
 
