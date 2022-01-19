@@ -8,6 +8,7 @@ namespace EndlessMatrixRunner {
 
   export let playerNode: ƒ.Node;
   export let groundNode: ƒ.Node;
+  export let deltaTime: number;
 
   let ctrForward: ƒ.Control = new ƒ.Control("Forward", 100, ƒ.CONTROL_TYPE.PROPORTIONAL);
   ctrForward.setDelay(200);
@@ -48,13 +49,10 @@ namespace EndlessMatrixRunner {
     playerNode.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_1;
     
 
-    groundNode = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Ground")[0];
-    groundNode.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
+    // groundNode = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Ground")[0];
+    // groundNode.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
 
-    let platformNode: ƒ.Node[] = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].getChildrenByName("Platform");
-    platformNode.forEach(platform => {
-      platform.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
-    });
+    
 
     //cmpCamera.mtxPivot.translation = new ƒ.Vector3(0, 8, -12);
     //cmpCamera.mtxPivot.rotation = new ƒ.Vector3(25, 0, 0);
@@ -65,25 +63,60 @@ namespace EndlessMatrixRunner {
     cameraNode.addComponent(new CameraScript);
     sceneGraph.addChild(cameraNode);
 
+    viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
+
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
   }
 
   function update(_event: Event): void {
 
-    let forward: number = 1;
-    ctrForward.setInput(forward);
+    //make sure all terrain objects have a proper collisiongroup assigned
+    let platformNode: ƒ.Node[] = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].getChildrenByName("Platform");
+    platformNode.forEach(platform => {
+      platform.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2; //all ground objects are collision group 2
+      platform.getChildrenByName("EdgeObstacle").forEach(edgeobstacle => {
+        edgeobstacle.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_3; //all obstacles are collision group 3
+        //console.log("EdgeObstacle received collision group");
+      });
+    }); //all items should have collision group 4 and all npcs have collision group 5
 
-    let movementVector: ƒ.Vector3 = ƒ.Vector3.ZERO();
-    movementVector.x = ctrForward.getOutput();
-    playerNode.getComponent(ƒ.ComponentRigidbody).applyForce(movementVector);
+    deltaTime = ƒ.Loop.timeFrameReal / 1000;
 
-    controllGround();
-    //setUpCamera();
+    if (GameState.get().gameRunning) {
+      controllGround();
+      GameState.get().highscore += 1 * deltaTime;
+      //console.log(Math.floor(GameState.get().highscore));
+      //setUpCamera();
 
-    ƒ.Physics.world.simulate();  // if physics is included and used
+      
+    } else if (!GameState.get().gameRunning) {
+      startGame();
+    }
+    ƒ.Physics.world.simulate(); // if physics is included and used
     viewport.draw();
     ƒ.AudioManager.default.update();
+  }
+
+  async function startGame(): Promise<void> {
+    console.log(sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].getChildrenByName("Ground").length);
+    if (sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].getChildrenByName("Ground").length == 0) {
+      console.log("#1");
+      let ground: ƒ.Graph = <ƒ.Graph>ƒ.Project.resources["Graph|2022-01-11T12:17:14.316Z|01096"];
+      let newGroundNode: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(ground);
+      newGroundNode.mtxLocal.translation = new ƒ.Vector3(0, 0, 0);
+      newGroundNode.name = "Ground";
+      sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].addChild(newGroundNode);
+      console.log("Created first ground segment");
+    }
+    if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE, ƒ.KEYBOARD_CODE.ENTER])) {
+      GameState.get().gameRunning = true;
+      GameState.get().highscore = 0;
+    }
+
+    
+      
+      
   }
 
   function controllGround(): void {
