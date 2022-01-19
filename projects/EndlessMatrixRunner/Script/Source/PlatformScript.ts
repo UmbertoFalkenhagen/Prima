@@ -38,6 +38,10 @@ namespace EndlessMatrixRunner {
     public update = (_event: Event): void => {
       if (playerNode.mtxLocal.translation.x - 15 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2 
         && this.node == sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].getChildrenByName("Platform")[0]) {
+          this.node.getChildren().forEach(child => {
+            child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
+          });
+          this.node.removeComponent(this.node.getComponent(ƒ.ComponentRigidbody));
           sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].removeChild(this.node);
           console.log("Removed platform");
       }

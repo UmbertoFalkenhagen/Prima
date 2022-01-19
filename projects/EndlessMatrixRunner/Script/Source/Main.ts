@@ -3,6 +3,7 @@ namespace EndlessMatrixRunner {
 
   let viewport: ƒ.Viewport;
   export let sceneGraph: ƒ.Node;
+  export let configurations: any;
 
   let cameraNode: ƒ.Node;
 
@@ -39,6 +40,8 @@ namespace EndlessMatrixRunner {
     viewport = new ƒ.Viewport();
     viewport.initialize("Viewport", sceneGraph, cmpCamera, canvas);
     sceneGraph = viewport.getBranch();
+
+    configurations = await fetchData();
 
     viewport.calculateTransforms();
 
@@ -84,7 +87,7 @@ namespace EndlessMatrixRunner {
     deltaTime = ƒ.Loop.timeFrameReal / 1000;
 
     if (GameState.get().gameRunning) {
-      controllGround();
+      //controllGround();
       GameState.get().highscore += 1 * deltaTime;
       //console.log(Math.floor(GameState.get().highscore));
       //setUpCamera();
@@ -119,8 +122,14 @@ namespace EndlessMatrixRunner {
       
   }
 
-  function controllGround(): void {
-    
+  async function fetchData() {
+    try {
+      const response = await fetch("../configuration.JSON");
+      const responseObj = await response.json();
+      return responseObj;
+    } catch(error) {
+      return error;
+    }
   }
 
   function setUpCamera(): void {

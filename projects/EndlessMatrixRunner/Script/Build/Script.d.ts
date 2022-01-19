@@ -50,6 +50,7 @@ declare namespace EndlessMatrixRunner {
 declare namespace EndlessMatrixRunner {
     import ƒ = FudgeCore;
     let sceneGraph: ƒ.Node;
+    let configurations: any;
     let playerNode: ƒ.Node;
     let groundNode: ƒ.Node;
     let deltaTime: number;

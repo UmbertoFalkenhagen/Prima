@@ -66,6 +66,7 @@ namespace EndlessMatrixRunner {
         
       } else if (playerNode.mtxLocal.translation.x - 15 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2 
         && this.node == this.groundNodes[0]) {
+          this.node.removeComponent(this.node.getComponent(ƒ.ComponentRigidbody));
           sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].removeChild(this.node);
           console.log("Removed ground segment");
       }

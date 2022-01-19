@@ -73,7 +73,7 @@ namespace EndlessMatrixRunner {
 
       if (GameState.get().gameRunning) {
 
-        this.ctrlForward.setInput(3);
+        this.ctrlForward.setInput(configurations.initialspeed);
         playerNode.getComponent(ƒ.ComponentRigidbody).applyForce(ƒ.Vector3.SCALE(playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
   
         let isGrounded: boolean = false;
@@ -88,6 +88,7 @@ namespace EndlessMatrixRunner {
   
             case ƒ.COLLISION_GROUP.GROUP_3: //Obstacles
               this.respawn();
+              
               console.log("Obstacle hit");
               break;
           
@@ -127,8 +128,23 @@ namespace EndlessMatrixRunner {
         this.cmpPlayerRb.setVelocity(new ƒ.Vector3(0, 0, 0));
         this.cmpPlayerRb.setPosition(new ƒ.Vector3(0, 2.2, 0));
         GameState.get().gameRunning = false;
+        let platforms: ƒ.Node[] = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].getChildrenByName("Platform");
+        platforms.forEach(platform => {
+          platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));
+          platform.getChildrenByName("EdgeObstacle").forEach(child => {
+            child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
+            });
+        });
+
         sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].removeAllChildren();
+
+        let groundsegments: ƒ.Node[] = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].getChildren();
+        groundsegments.forEach(groundsegment => {
+          groundsegment.removeComponent(groundsegment.getComponent(ƒ.ComponentRigidbody));
+        });
         sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].removeAllChildren();
+
+        
       }
 
   }

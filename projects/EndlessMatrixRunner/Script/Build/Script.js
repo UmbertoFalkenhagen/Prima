@@ -157,6 +157,7 @@ var EndlessMatrixRunner;
             }
             else if (EndlessMatrixRunner.playerNode.mtxLocal.translation.x - 15 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2
                 && this.node == this.groundNodes[0]) {
+                this.node.removeComponent(this.node.getComponent(ƒ.ComponentRigidbody));
                 EndlessMatrixRunner.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].removeChild(this.node);
                 console.log("Removed ground segment");
             }
@@ -201,6 +202,7 @@ var EndlessMatrixRunner;
         viewport = new ƒ.Viewport();
         viewport.initialize("Viewport", EndlessMatrixRunner.sceneGraph, cmpCamera, canvas);
         EndlessMatrixRunner.sceneGraph = viewport.getBranch();
+        EndlessMatrixRunner.configurations = await fetchData();
         viewport.calculateTransforms();
         ƒ.AudioManager.default.listenTo(EndlessMatrixRunner.sceneGraph);
         ƒ.AudioManager.default.listenWith(EndlessMatrixRunner.sceneGraph.getComponent(ƒ.ComponentAudioListener));
@@ -231,7 +233,7 @@ var EndlessMatrixRunner;
         }); //all items should have collision group 4 and all npcs have collision group 5
         EndlessMatrixRunner.deltaTime = ƒ.Loop.timeFrameReal / 1000;
         if (EndlessMatrixRunner.GameState.get().gameRunning) {
-            controllGround();
+            //controllGround();
             EndlessMatrixRunner.GameState.get().highscore += 1 * EndlessMatrixRunner.deltaTime;
             //console.log(Math.floor(GameState.get().highscore));
             //setUpCamera();
@@ -259,7 +261,15 @@ var EndlessMatrixRunner;
             EndlessMatrixRunner.GameState.get().highscore = 0;
         }
     }
-    function controllGround() {
+    async function fetchData() {
+        try {
+            const response = await fetch("../configuration.JSON");
+            const responseObj = await response.json();
+            return responseObj;
+        }
+        catch (error) {
+            return error;
+        }
     }
     function setUpCamera() {
         cameraNode.mtxLocal.mutate({
@@ -341,6 +351,10 @@ var EndlessMatrixRunner;
         update = (_event) => {
             if (EndlessMatrixRunner.playerNode.mtxLocal.translation.x - 15 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2
                 && this.node == EndlessMatrixRunner.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].getChildrenByName("Platform")[0]) {
+                this.node.getChildren().forEach(child => {
+                    child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
+                });
+                this.node.removeComponent(this.node.getComponent(ƒ.ComponentRigidbody));
                 EndlessMatrixRunner.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].removeChild(this.node);
                 console.log("Removed platform");
             }
@@ -518,7 +532,7 @@ var EndlessMatrixRunner;
             this.cmpPlayerRb.effectRotation = new ƒ.Vector3(0, 0, 0);
             this.ctrlJump.setDelay(EndlessMatrixRunner.deltaTime * 1000 - 1);
             if (EndlessMatrixRunner.GameState.get().gameRunning) {
-                this.ctrlForward.setInput(3);
+                this.ctrlForward.setInput(EndlessMatrixRunner.configurations.initialspeed);
                 EndlessMatrixRunner.playerNode.getComponent(ƒ.ComponentRigidbody).applyForce(ƒ.Vector3.SCALE(EndlessMatrixRunner.playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
                 let isGrounded = false;
                 let playerCollisions = this.cmpPlayerRb.collisions;
@@ -563,7 +577,18 @@ var EndlessMatrixRunner;
             this.cmpPlayerRb.setVelocity(new ƒ.Vector3(0, 0, 0));
             this.cmpPlayerRb.setPosition(new ƒ.Vector3(0, 2.2, 0));
             EndlessMatrixRunner.GameState.get().gameRunning = false;
+            let platforms = EndlessMatrixRunner.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].getChildrenByName("Platform");
+            platforms.forEach(platform => {
+                platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));
+                platform.getChildrenByName("EdgeObstacle").forEach(child => {
+                    child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
+                });
+            });
             EndlessMatrixRunner.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].removeAllChildren();
+            let groundsegments = EndlessMatrixRunner.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].getChildren();
+            groundsegments.forEach(groundsegment => {
+                groundsegment.removeComponent(groundsegment.getComponent(ƒ.ComponentRigidbody));
+            });
             EndlessMatrixRunner.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].removeAllChildren();
         };
     }
