@@ -236,7 +236,6 @@ var EndlessMatrixRunner;
             //controllGround();
             EndlessMatrixRunner.GameState.get().highscore += 1 * EndlessMatrixRunner.deltaTime;
             //console.log(Math.floor(GameState.get().highscore));
-            //setUpCamera();
         }
         else if (!EndlessMatrixRunner.GameState.get().gameRunning) {
             startGame();
@@ -270,11 +269,6 @@ var EndlessMatrixRunner;
         catch (error) {
             return error;
         }
-    }
-    function setUpCamera() {
-        cameraNode.mtxLocal.mutate({
-            translation: EndlessMatrixRunner.playerNode.mtxWorld.translation
-        });
     }
 })(EndlessMatrixRunner || (EndlessMatrixRunner = {}));
 var EndlessMatrixRunner;

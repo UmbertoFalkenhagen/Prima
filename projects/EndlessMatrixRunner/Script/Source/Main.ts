@@ -90,7 +90,6 @@ namespace EndlessMatrixRunner {
       //controllGround();
       GameState.get().highscore += 1 * deltaTime;
       //console.log(Math.floor(GameState.get().highscore));
-      //setUpCamera();
 
       
     } else if (!GameState.get().gameRunning) {
@@ -132,9 +131,4 @@ namespace EndlessMatrixRunner {
     }
   }
 
-  function setUpCamera(): void {
-    cameraNode.mtxLocal.mutate({
-      translation: playerNode.mtxWorld.translation
-    });
-  }
 }
