@@ -10,11 +10,13 @@
     "ƒ.Material": {
       "name": "MtrGroundFlat",
       "idResource": "Material|2021-12-21T17:38:43.317Z|83500",
-      "shader": "ShaderTextureFlat",
+      "shader": "ShaderFlatTextured",
       "coat": {
-        "ƒ.CoatTextured": {
-          "color": "[0.7294117647058823, 0.7098039215686275, 0.7098039215686275, 1]",
-          "idTexture": "TextureImage|2022-01-03T10:56:51.487Z|78828"
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2022-01-03T10:56:51.487Z|78828",
+          "diffuse": 1,
+          "specular": 0
         }
       }
     }
@@ -43,10 +45,12 @@
     "ƒ.Material": {
       "name": "MtrPlayerBody",
       "idResource": "Material|2022-01-03T11:07:30.872Z|00491",
-      "shader": "ShaderUniColor",
+      "shader": "ShaderFlat",
       "coat": {
-        "ƒ.CoatColored": {
-          "color": "[1, 0.5843137254901961, 0, 1]"
+        "ƒ.CoatRemissive": {
+          "color": "[1, 0.5843137254901961, 0, 1]",
+          "diffuse": 1,
+          "specular": 0
         }
       }
     }
@@ -62,10 +66,12 @@
     "ƒ.Material": {
       "name": "MtrPlayerEyes",
       "idResource": "Material|2022-01-03T11:14:39.524Z|26576",
-      "shader": "ShaderUniColor",
+      "shader": "ShaderFlat",
       "coat": {
-        "ƒ.CoatColored": {
-          "color": "[0.19215686274509805, 0.21568627450980393, 0.8666666666666667, 1]"
+        "ƒ.CoatRemissive": {
+          "color": "[0.19215686274509805, 0.21568627450980393, 0.8666666666666667, 1]",
+          "diffuse": 1,
+          "specular": 0
         }
       }
     }
@@ -88,11 +94,13 @@
     "ƒ.Material": {
       "name": "MtrObstacleMetal",
       "idResource": "Material|2022-01-10T10:36:33.555Z|28190",
-      "shader": "ShaderTextureFlat",
+      "shader": "ShaderFlatTextured",
       "coat": {
-        "ƒ.CoatTextured": {
+        "ƒ.CoatRemissiveTextured": {
           "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2022-01-10T10:36:11.519Z|89025"
+          "idTexture": "TextureImage|2022-01-10T10:36:11.519Z|89025",
+          "diffuse": 1,
+          "specular": 0
         }
       }
     }
@@ -111,6 +119,7 @@
   "Graph|2021-12-21T17:37:49.295Z|21356": {
     "ƒ.Graph": {
       "name": "SceneGraph",
+      "active": true,
       "components": {
         "ComponentLight": [
           {
@@ -124,6 +133,9 @@
                 "ƒ.LightAmbient": {
                   "color": "[1, 1, 1, 1]"
                 }
+              },
+              "Component": {
+                "active": true
               }
             }
           }
@@ -140,11 +152,13 @@
         {
           "ƒ.Node": {
             "name": "Terrain",
+            "active": true,
             "components": {},
             "children": [
               {
                 "ƒ.Node": {
                   "name": "Platforms",
+                  "active": true,
                   "components": {},
                   "children": []
                 }
@@ -152,11 +166,13 @@
               {
                 "ƒ.Node": {
                   "name": "GroundSegments",
+                  "active": true,
                   "components": {},
                   "children": [
                     {
                       "ƒ.GraphInstance": {
                         "name": "Ground1.0",
+                        "active": true,
                         "components": {
                           "ComponentMesh": [
                             {
@@ -252,6 +268,7 @@
         {
           "ƒ.GraphInstance": {
             "name": "Player",
+            "active": true,
             "components": {
               "ComponentMesh": [
                 {
@@ -339,6 +356,7 @@
               {
                 "ƒ.Node": {
                   "name": "PlayerEyes",
+                  "active": true,
                   "components": {
                     "ComponentMesh": [
                       {
@@ -384,16 +402,19 @@
         {
           "ƒ.Node": {
             "name": "Spawners",
+            "active": true,
             "components": {},
             "children": [
               {
                 "ƒ.Node": {
                   "name": "PlatformSpawners",
+                  "active": true,
                   "components": {},
                   "children": [
                     {
                       "ƒ.Node": {
                         "name": "BottomLine",
+                        "active": true,
                         "components": {
                           "ComponentTransform": [
                             {

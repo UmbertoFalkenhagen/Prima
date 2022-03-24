@@ -240,7 +240,7 @@ var EndlessMatrixRunner;
         else if (!EndlessMatrixRunner.GameState.get().gameRunning) {
             startGame();
         }
-        ƒ.Physics.world.simulate(); // if physics is included and used
+        ƒ.Physics.simulate(); // if physics is included and used
         viewport.draw();
         ƒ.AudioManager.default.update();
     }
