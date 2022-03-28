@@ -82,5 +82,24 @@ namespace PacmanNew {
     ctrlRotation.setInput(inputrotationvalue);
     playerAgent.mtxLocal.rotateZ(ctrlRotation.getOutput() * deltaTime * 360);
 
+    bordercollisionscanner();
+    
+  }
+
+  function bordercollisionscanner(): void { //checks if the pacman collides with battlefieldborders
+    let playerposition: ƒ.Vector3 = playerAgent.mtxLocal.translation;
+    let playerradius: number = playerAgent.getComponent(ƒ.ComponentMesh).radius;
+    let gridwidth: number = sceneGraph.getChildrenByName("Grid")[0].getChildrenByName("GridRow(1)")[0].getChildren().length * 1.1;
+    let gridheight: number = sceneGraph.getChildrenByName("Grid")[0].getChildren().length * 1.1;
+
+    //console.log ("width/height: " + gridwidth + ", " + gridheight);
+    //console.log("Player position: " + playerposition);
+    //console.log("Player radius: " + playerradius);
+
+    if ((playerposition.x - playerradius) < 0 || (playerposition.y - playerradius < 0) || (playerposition.x + playerradius) >  gridwidth || (playerposition.y + playerradius) > gridheight) {
+      playerAgent.mtxLocal.translation.set(0.5, 0.5, 0);
+      console.log("collision");
+    }
+
   }
 }

@@ -99,6 +99,20 @@ var PacmanNew;
             + (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT]));
         ctrlRotation.setInput(inputrotationvalue);
         PacmanNew.playerAgent.mtxLocal.rotateZ(ctrlRotation.getOutput() * deltaTime * 360);
+        bordercollisionscanner();
+    }
+    function bordercollisionscanner() {
+        let playerposition = PacmanNew.playerAgent.mtxLocal.translation;
+        let playerradius = PacmanNew.playerAgent.getComponent(ƒ.ComponentMesh).radius;
+        let gridwidth = sceneGraph.getChildrenByName("Grid")[0].getChildrenByName("GridRow(1)")[0].getChildren().length * 1.1;
+        let gridheight = sceneGraph.getChildrenByName("Grid")[0].getChildren().length * 1.1;
+        //console.log ("width/height: " + gridwidth + ", " + gridheight);
+        //console.log("Player position: " + playerposition);
+        //console.log("Player radius: " + playerradius);
+        if ((playerposition.x - playerradius) < 0 || (playerposition.y - playerradius < 0) || (playerposition.x + playerradius) > gridwidth || (playerposition.y + playerradius) > gridheight) {
+            PacmanNew.playerAgent.mtxLocal.translation.set(0.5, 0.5, 0);
+            console.log("collision");
+        }
     }
 })(PacmanNew || (PacmanNew = {}));
 //# sourceMappingURL=Script.js.map
