@@ -7,10 +7,10 @@ namespace PacmanNew {
   export let playerAgent: ƒ.Node;
   let cameraNode: ƒ.Node = new ƒ.Node("cameraNode");
 
-  let ctrlForward: ƒ.Control = new ƒ.Control("Forward", 1, ƒ.CONTROL_TYPE.PROPORTIONAL);
-  ctrlForward.setDelay(50);
-  let ctrlRotation: ƒ.Control = new ƒ.Control("Rotation", 1, ƒ.CONTROL_TYPE.PROPORTIONAL);
-  ctrlRotation.setDelay(50);
+  let ctrlY: ƒ.Control = new ƒ.Control("Forward", 1, ƒ.CONTROL_TYPE.PROPORTIONAL);
+  ctrlY.setDelay(50);
+  let ctrlX: ƒ.Control = new ƒ.Control("Rotation", 1, ƒ.CONTROL_TYPE.PROPORTIONAL);
+  ctrlX.setDelay(50);
   let agentMoveSpeedFactor: number = 5;
   let deltaTime: number;
 
@@ -69,37 +69,51 @@ namespace PacmanNew {
     ƒ.AudioManager.default.update();
 
     //movementcontrol
-    let inputmovementvalue: number = (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN])) 
-    + (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP]));
-
-    ctrlForward.setInput(inputmovementvalue);
-    playerAgent.mtxLocal.translateY(ctrlForward.getOutput() * deltaTime * agentMoveSpeedFactor);
-    cameraNode.mtxLocal.translation.x = playerAgent.mtxLocal.translation.x;
-
-    let inputrotationvalue: number = (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]))
-    + (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT]));
-
-    ctrlRotation.setInput(inputrotationvalue);
-    playerAgent.mtxLocal.rotateZ(ctrlRotation.getOutput() * deltaTime * 360);
-
-    bordercollisionscanner();
-    
-  }
-
-  function bordercollisionscanner(): void { //checks if the pacman collides with battlefieldborders
     let playerposition: ƒ.Vector3 = playerAgent.mtxLocal.translation;
     let playerradius: number = playerAgent.getComponent(ƒ.ComponentMesh).radius;
     let gridwidth: number = sceneGraph.getChildrenByName("Grid")[0].getChildrenByName("GridRow(1)")[0].getChildren().length * 1.1;
     let gridheight: number = sceneGraph.getChildrenByName("Grid")[0].getChildren().length * 1.1;
 
-    //console.log ("width/height: " + gridwidth + ", " + gridheight);
-    //console.log("Player position: " + playerposition);
-    //console.log("Player radius: " + playerradius);
+    let inputYvalue: number = (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN])) 
+    + (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP]));
 
-    if ((playerposition.x - playerradius) < 0 || (playerposition.y - playerradius < 0) || (playerposition.x + playerradius) >  gridwidth || (playerposition.y + playerradius) > gridheight) {
-      playerAgent.mtxLocal.translation.set(0.5, 0.5, 0);
-      console.log("collision");
+    if (inputYvalue < 0) {
+      if (!((playerposition.y - playerradius) < 0)) {
+        ctrlY.setInput(inputYvalue);
+        playerAgent.mtxLocal.translateY(ctrlY.getOutput() * deltaTime * agentMoveSpeedFactor);
+        } else {
+          console.log("collision bottom");
+        }
+    } else if (inputYvalue > 0) {
+      if (!((playerposition.y + playerradius) >  gridheight)) {
+        ctrlY.setInput(inputYvalue);
+        playerAgent.mtxLocal.translateY(ctrlY.getOutput() * deltaTime * agentMoveSpeedFactor);
+      } else {
+        console.log("collision top");
+      }
     }
 
+    let inputXvalue: number = (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]))
+    + (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT]));
+
+    if (inputXvalue < 0) {
+      if (!((playerposition.x - playerradius) < 0)) {
+        ctrlX.setInput(inputXvalue);
+        playerAgent.mtxLocal.translateX(ctrlX.getOutput() * deltaTime * agentMoveSpeedFactor);
+        } else {
+          console.log("collision left");
+        }
+    } else if (inputXvalue > 0) {
+      if (!((playerposition.x + playerradius) >  gridwidth)) {
+        ctrlX.setInput(inputXvalue);
+        playerAgent.mtxLocal.translateX(ctrlX.getOutput() * deltaTime * agentMoveSpeedFactor);
+      } else {
+        console.log("collision right");
+      }
+    }
+
+    
+    //bordercollisionscanner();
+    
   }
 }

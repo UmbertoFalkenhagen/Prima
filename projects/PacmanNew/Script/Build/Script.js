@@ -43,10 +43,10 @@ var PacmanNew;
     let viewport;
     let sceneGraph;
     let cameraNode = new ƒ.Node("cameraNode");
-    let ctrlForward = new ƒ.Control("Forward", 1, 0 /* PROPORTIONAL */);
-    ctrlForward.setDelay(50);
-    let ctrlRotation = new ƒ.Control("Rotation", 1, 0 /* PROPORTIONAL */);
-    ctrlRotation.setDelay(50);
+    let ctrlY = new ƒ.Control("Forward", 1, 0 /* PROPORTIONAL */);
+    ctrlY.setDelay(50);
+    let ctrlX = new ƒ.Control("Rotation", 1, 0 /* PROPORTIONAL */);
+    ctrlX.setDelay(50);
     let agentMoveSpeedFactor = 5;
     let deltaTime;
     window.addEventListener("load", init);
@@ -90,29 +90,51 @@ var PacmanNew;
         deltaTime = ƒ.Loop.timeFrameReal / 1000;
         ƒ.AudioManager.default.update();
         //movementcontrol
-        let inputmovementvalue = (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]))
-            + (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP]));
-        ctrlForward.setInput(inputmovementvalue);
-        PacmanNew.playerAgent.mtxLocal.translateY(ctrlForward.getOutput() * deltaTime * agentMoveSpeedFactor);
-        cameraNode.mtxLocal.translation.x = PacmanNew.playerAgent.mtxLocal.translation.x;
-        let inputrotationvalue = (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]))
-            + (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT]));
-        ctrlRotation.setInput(inputrotationvalue);
-        PacmanNew.playerAgent.mtxLocal.rotateZ(ctrlRotation.getOutput() * deltaTime * 360);
-        bordercollisionscanner();
-    }
-    function bordercollisionscanner() {
         let playerposition = PacmanNew.playerAgent.mtxLocal.translation;
         let playerradius = PacmanNew.playerAgent.getComponent(ƒ.ComponentMesh).radius;
         let gridwidth = sceneGraph.getChildrenByName("Grid")[0].getChildrenByName("GridRow(1)")[0].getChildren().length * 1.1;
         let gridheight = sceneGraph.getChildrenByName("Grid")[0].getChildren().length * 1.1;
-        //console.log ("width/height: " + gridwidth + ", " + gridheight);
-        //console.log("Player position: " + playerposition);
-        //console.log("Player radius: " + playerradius);
-        if ((playerposition.x - playerradius) < 0 || (playerposition.y - playerradius < 0) || (playerposition.x + playerradius) > gridwidth || (playerposition.y + playerradius) > gridheight) {
-            PacmanNew.playerAgent.mtxLocal.translation.set(0.5, 0.5, 0);
-            console.log("collision");
+        let inputYvalue = (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]))
+            + (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP]));
+        if (inputYvalue < 0) {
+            if (!((playerposition.y - playerradius) < 0)) {
+                ctrlY.setInput(inputYvalue);
+                PacmanNew.playerAgent.mtxLocal.translateY(ctrlY.getOutput() * deltaTime * agentMoveSpeedFactor);
+            }
+            else {
+                console.log("collision bottom");
+            }
         }
+        else if (inputYvalue > 0) {
+            if (!((playerposition.y + playerradius) > gridheight)) {
+                ctrlY.setInput(inputYvalue);
+                PacmanNew.playerAgent.mtxLocal.translateY(ctrlY.getOutput() * deltaTime * agentMoveSpeedFactor);
+            }
+            else {
+                console.log("collision top");
+            }
+        }
+        let inputXvalue = (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]))
+            + (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT]));
+        if (inputXvalue < 0) {
+            if (!((playerposition.x - playerradius) < 0)) {
+                ctrlX.setInput(inputXvalue);
+                PacmanNew.playerAgent.mtxLocal.translateX(ctrlX.getOutput() * deltaTime * agentMoveSpeedFactor);
+            }
+            else {
+                console.log("collision left");
+            }
+        }
+        else if (inputXvalue > 0) {
+            if (!((playerposition.x + playerradius) > gridwidth)) {
+                ctrlX.setInput(inputXvalue);
+                PacmanNew.playerAgent.mtxLocal.translateX(ctrlX.getOutput() * deltaTime * agentMoveSpeedFactor);
+            }
+            else {
+                console.log("collision right");
+            }
+        }
+        //bordercollisionscanner();
     }
 })(PacmanNew || (PacmanNew = {}));
 //# sourceMappingURL=Script.js.map

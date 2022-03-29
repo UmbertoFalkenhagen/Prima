@@ -1194,10 +1194,7 @@
           "ƒ.Node": {
             "name": "Walls",
             "active": true,
-            "components": {
-              "ComponentMesh": [],
-              "ComponentMaterial": []
-            },
+            "components": {},
             "children": [
               {
                 "ƒ.Node": {
