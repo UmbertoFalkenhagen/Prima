@@ -74,7 +74,10 @@
     "ƒ.Graph": {
       "name": "SceneGraph",
       "active": true,
-      "components": {},
+      "components": {
+        "ComponentAudioListener": [],
+        "ComponentAudio": []
+      },
       "children": [
         {
           "ƒ.Node": {
@@ -1366,10 +1369,62 @@
               }
             ]
           }
+        },
+        {
+          "ƒ.Node": {
+            "name": "AudioListener",
+            "active": true,
+            "components": {
+              "ComponentAudioListener": [
+                {
+                  "ƒ.ComponentAudioListener": {
+                    "active": true
+                  }
+                }
+              ],
+              "ComponentAudio": [
+                {
+                  "ƒ.ComponentAudio": {
+                    "active": true,
+                    "idResource": "Audio|2022-03-31T12:54:08.473Z|82103",
+                    "playing": true,
+                    "loop": true,
+                    "volume": 0.30000001192092896
+                  }
+                },
+                {
+                  "ƒ.ComponentAudio": {
+                    "active": true,
+                    "idResource": "Audio|2022-03-31T13:03:24.815Z|75403",
+                    "playing": false,
+                    "loop": false,
+                    "volume": 1
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
         }
       ],
       "idResource": "Graph|2022-03-25T15:44:46.847Z|42436",
       "type": "Graph"
+    }
+  },
+  "Audio|2022-03-31T12:54:08.473Z|82103": {
+    "ƒ.Audio": {
+      "url": "Script\\Sounds\\pacman_beginning.wav",
+      "idResource": "Audio|2022-03-31T12:54:08.473Z|82103",
+      "name": "Script\\Sounds\\pacman_beginning.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2022-03-31T13:03:24.815Z|75403": {
+    "ƒ.Audio": {
+      "url": "Script\\Sounds\\pacman_eatfruit.wav",
+      "idResource": "Audio|2022-03-31T13:03:24.815Z|75403",
+      "name": "Script\\Sounds\\pacman_eatfruit.wav",
+      "type": "Audio"
     }
   }
 }
