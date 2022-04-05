@@ -51,6 +51,7 @@ namespace Script {
       if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_DOWN, ƒ.KEYBOARD_CODE.S]))
         direction.set(0, -1);
 
+      console.log(direction);
 
       if (blocked(ƒ.Vector2.SUM(nearestGridPoint, direction)))
         if (direction.equals(directionOld)) // did not turn
