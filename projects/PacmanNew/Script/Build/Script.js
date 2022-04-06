@@ -47,12 +47,12 @@ var PacmanNew;
     let cmpCamera = new ƒ.ComponentCamera();
     let cameraPosParameter = 1;
     let direction = ƒ.Vector2.ZERO();
-    let speed = 0.5;
+    let speed = 0.05;
     let ctrlY = new ƒ.Control("Forward", 1, 0 /* PROPORTIONAL */);
     ctrlY.setDelay(50);
     let ctrlX = new ƒ.Control("Rotation", 1, 0 /* PROPORTIONAL */);
     ctrlX.setDelay(50);
-    let agentMoveSpeedFactor = 5;
+    //let agentMoveSpeedFactor: number = 5;
     let deltaTime;
     window.addEventListener("load", init);
     function init(_event) {
@@ -183,7 +183,7 @@ var PacmanNew;
             // else if (!waka.isPlaying)
             //   waka.play(true);
         }
-        PacmanNew.playerAgent.mtxLocal.translate(ƒ.Vector2.SCALE(direction, speed * deltaTime * 5).toVector3());
+        PacmanNew.playerAgent.mtxLocal.translate(ƒ.Vector2.SCALE(direction, speed).toVector3());
         viewport.draw();
         switchCamMode(cameraPosParameter);
     }
@@ -205,9 +205,9 @@ var PacmanNew;
                 break;
         }
     }
-    function hndKeyDown(e) {
-        if (e.key == " " ||
-            e.code == "Space") {
+    function hndKeyDown(_e) {
+        if (_e.key == " " ||
+            _e.code == "Space") {
             if (cameraPosParameter == 0) {
                 cameraPosParameter = 1;
             }

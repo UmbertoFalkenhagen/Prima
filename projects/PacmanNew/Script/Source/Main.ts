@@ -11,13 +11,13 @@ namespace PacmanNew {
   let cameraPosParameter: number = 1;
 
   let direction: ƒ.Vector2 = ƒ.Vector2.ZERO();
-  let speed: number = 0.5;
+  let speed: number = 0.05;
 
   let ctrlY: ƒ.Control = new ƒ.Control("Forward", 1, ƒ.CONTROL_TYPE.PROPORTIONAL);
   ctrlY.setDelay(50);
   let ctrlX: ƒ.Control = new ƒ.Control("Rotation", 1, ƒ.CONTROL_TYPE.PROPORTIONAL);
   ctrlX.setDelay(50);
-  let agentMoveSpeedFactor: number = 5;
+  //let agentMoveSpeedFactor: number = 5;
   let deltaTime: number;
 
   window.addEventListener("load", init);
@@ -175,7 +175,7 @@ namespace PacmanNew {
 
     }
 
-    playerAgent.mtxLocal.translate(ƒ.Vector2.SCALE(direction, speed * deltaTime * 5).toVector3());
+    playerAgent.mtxLocal.translate(ƒ.Vector2.SCALE(direction, speed).toVector3());
     viewport.draw();
     
 
@@ -203,9 +203,9 @@ namespace PacmanNew {
   }
 
 
-  function hndKeyDown(e: any): void {
-    if (e.key == " " ||
-        e.code == "Space"   
+  function hndKeyDown(_e: KeyboardEvent): void {
+    if (_e.key == " " ||
+        _e.code == "Space"   
     ) {
       if (cameraPosParameter == 0) {
         cameraPosParameter = 1;
