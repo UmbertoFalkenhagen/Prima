@@ -39,6 +39,7 @@ var Script;
 var PacmanNew;
 (function (PacmanNew) {
     var ƒ = FudgeCore;
+    var ƒAid = FudgeAid;
     ƒ.Debug.info("Main Program Template running!");
     let viewport;
     let sceneGraph;
@@ -48,12 +49,12 @@ var PacmanNew;
     let cameraPosParameter = 1;
     let direction = ƒ.Vector2.ZERO();
     let speed = 0.05;
-    let ctrlY = new ƒ.Control("Forward", 1, 0 /* PROPORTIONAL */);
-    ctrlY.setDelay(50);
-    let ctrlX = new ƒ.Control("Rotation", 1, 0 /* PROPORTIONAL */);
-    ctrlX.setDelay(50);
+    //let root: ƒ.Node;
+    let animations;
+    let spriteNode;
+    let spriteOriginalScale;
     //let agentMoveSpeedFactor: number = 5;
-    let deltaTime;
+    //let deltaTime: number;
     window.addEventListener("load", init);
     function init(_event) {
         let dialog = document.querySelector("dialog");
@@ -86,75 +87,41 @@ var PacmanNew;
         ƒ.AudioManager.default.listenWith(sceneGraph.getComponent(ƒ.ComponentAudioListener));
         PacmanNew.playerAgent = sceneGraph.getChildrenByName("PlayerAgent")[0];
         grid = sceneGraph.getChildrenByName("Grid")[0];
+        //set up pacman sprite
+        await loadSprites();
+        spriteNode = new ƒAid.NodeSprite("Sprite");
+        spriteNode.addComponent(new ƒ.ComponentTransform(new ƒ.Matrix4x4()));
+        spriteNode.mtxLocal.translateZ(0.1);
+        //spriteNode.addComponent(new ƒ.ComponentMesh(new ƒ.MeshSprite));
+        spriteNode.setAnimation(animations["pacman"]);
+        spriteNode.setFrameDirection(1);
+        spriteOriginalScale = spriteNode.mtxLocal.scaling.toVector2();
+        PacmanNew.playerAgent.addChild(spriteNode);
+        console.log(PacmanNew.playerAgent);
         document.addEventListener("keydown", hndKeyDown); //document keyboard event listener
+        viewport.draw();
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
-        deltaTime = ƒ.Loop.timeFrameReal / 1000;
+        //deltaTime = ƒ.Loop.timeFrameReal / 1000;
         ƒ.AudioManager.default.update();
         //movementcontrol
-        // let playerposition: ƒ.Vector3 = playerAgent.mtxLocal.translation;
-        // let playerradius: number = playerAgent.getComponent(ƒ.ComponentMesh).radius;
-        // let gridwidth: number = sceneGraph.getChildrenByName("Grid")[0].getChildrenByName("GridRow(1)")[0].getChildren().length * 1.1;
-        // let gridheight: number = sceneGraph.getChildrenByName("Grid")[0].getChildren().length * 1.1;
         let sounds = sceneGraph.getChildrenByName("AudioListener")[0].getComponents(ƒ.ComponentAudio); //array with audios
-        // let inputYvalue: number = (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN])) 
-        // + (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP]));
-        // if (inputYvalue < 0) {
-        //   if (!((playerposition.y - playerradius) < 0)) {
-        //     ctrlY.setInput(inputYvalue);
-        //     playerAgent.mtxLocal.translateY(ctrlY.getOutput() * deltaTime * agentMoveSpeedFactor);
-        //     } else {
-        //       console.log("collision bottom");
-        //       if (!sounds[1].isPlaying) {
-        //         sounds[1].play(true);
-        //       }
-        //     }
-        // } else if (inputYvalue > 0) {
-        //   if (!((playerposition.y + playerradius) >  gridheight)) {
-        //     ctrlY.setInput(inputYvalue);
-        //     playerAgent.mtxLocal.translateY(ctrlY.getOutput() * deltaTime * agentMoveSpeedFactor);
-        //   } else {
-        //     console.log("collision top");
-        //     if (!sounds[1].isPlaying) {
-        //       sounds[1].play(true);
-        //     }
-        //   }
-        // }
-        // let inputXvalue: number = (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]))
-        // + (ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT]));
-        // if (inputXvalue < 0) {
-        //   if (!((playerposition.x - playerradius) < 0)) {
-        //     ctrlX.setInput(inputXvalue);
-        //     playerAgent.mtxLocal.translateX(ctrlX.getOutput() * deltaTime * agentMoveSpeedFactor);
-        //     } else {
-        //       console.log("collision left");
-        //       if (!sounds[1].isPlaying) {
-        //         sounds[1].play(true);
-        //       }
-        //     }
-        // } else if (inputXvalue > 0) {
-        //   if (!((playerposition.x + playerradius) >  gridwidth)) {
-        //     ctrlX.setInput(inputXvalue);
-        //     playerAgent.mtxLocal.translateX(ctrlX.getOutput() * deltaTime * agentMoveSpeedFactor);
-        //   } else {
-        //     console.log("collision right");
-        //     if (!sounds[1].isPlaying) {
-        //       sounds[1].play(true);
-        //     }
-        //   }
-        // }
         let posPacman = PacmanNew.playerAgent.mtxLocal.translation;
         let nearestGridPoint = new ƒ.Vector2(Math.round(posPacman.x), Math.round(posPacman.y));
         let nearGridPoint = posPacman.toVector2().equals(nearestGridPoint, 2 * speed);
         if (nearGridPoint) {
             let directionOld = direction.clone;
-            if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_RIGHT, ƒ.KEYBOARD_CODE.D]))
+            if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_RIGHT, ƒ.KEYBOARD_CODE.D])) {
                 direction.set(1, 0);
-            if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A]))
+                changeSpriteLookDirection("east");
+            }
+            if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A])) {
                 direction.set(-1, 0);
+                changeSpriteLookDirection("west");
+            }
             if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_UP, ƒ.KEYBOARD_CODE.W]))
                 direction.set(0, 1);
             if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_DOWN, ƒ.KEYBOARD_CODE.S]))
@@ -178,17 +145,12 @@ var PacmanNew;
                 }
             if (!direction.equals(directionOld) || direction.equals(ƒ.Vector2.ZERO()))
                 PacmanNew.playerAgent.mtxLocal.translation = nearestGridPoint.toVector3();
-            // if (direction.equals(ƒ.Vector2.ZERO()))
-            //   waka.play(false);
-            // else if (!waka.isPlaying)
-            //   waka.play(true);
         }
         PacmanNew.playerAgent.mtxLocal.translate(ƒ.Vector2.SCALE(direction, speed).toVector3());
         viewport.draw();
         switchCamMode(cameraPosParameter);
     }
     function switchCamMode(camSetting) {
-        //let cmpCamera: ƒ.ComponentCamera  = cameraNode.getComponent(ƒ.ComponentCamera);
         switch (camSetting) {
             case 0:
                 cameraNode.mtxLocal.mutate({
@@ -219,6 +181,36 @@ var PacmanNew;
     function blocked(_posCheck) {
         let check = grid.getChild(_posCheck.y)?.getChild(_posCheck.x)?.getChild(0);
         return (!check || check.name == "Wall");
+    }
+    async function loadSprites() {
+        let imgSpriteSheet = new ƒ.TextureImage();
+        await imgSpriteSheet.load("Script/Sprites/texture.png");
+        let spriteSheet = new ƒ.CoatTextured(ƒ.Color.CSS("White"), imgSpriteSheet);
+        generateSprites(spriteSheet);
+    }
+    function generateSprites(_spritesheet) {
+        animations = {};
+        //this.animations = {};
+        let name = "pacman";
+        let sprite = new ƒAid.SpriteSheetAnimation(name, _spritesheet);
+        sprite.generateByGrid(ƒ.Rectangle.GET(0, 0, 64, 64), 8, 60, ƒ.ORIGIN2D.CENTER, ƒ.Vector2.X(64));
+        animations[name] = sprite;
+    }
+    function changeSpriteLookDirection(lookdirection) {
+        //spriteNode.mtxLocal.scaleX = spriteOriginalScale.;
+        switch (lookdirection) {
+            case "east":
+                break;
+            case "north":
+                break;
+            case "west":
+                spriteNode.mtxLocal.scaleX(-1);
+                break;
+            case "south":
+                break;
+            default:
+                break;
+        }
     }
 })(PacmanNew || (PacmanNew = {}));
 //# sourceMappingURL=Script.js.map

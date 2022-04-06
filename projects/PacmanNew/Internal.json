@@ -1894,106 +1894,16 @@
                     "local": {
                       "translation": "[1, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[0.75, 0.7500001192092896, 0.75]"
+                      "scaling": "[0.9999999403953552, 1.0000001192092896, 1]"
                     },
                     "Component": {
                       "active": true
                     }
-                  }
-                }
-              ],
-              "ComponentMesh": [
-                {
-                  "ƒ.ComponentMesh": {
-                    "idMesh": "MeshSphere|2022-03-25T15:21:45.708Z|02734",
-                    "pivot": {
-                      "translation": "[0, 0, 0]",
-                      "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    }
-                  }
-                }
-              ],
-              "ComponentMaterial": [
-                {
-                  "ƒ.ComponentMaterial": {
-                    "sortForAlpha": false,
-                    "clrPrimary": "[1, 1, 1, 1]",
-                    "clrSecondary": "[1, 1, 1, 1]",
-                    "pivot": {
-                      "translation": "[0, 0]",
-                      "rotation": 0,
-                      "scaling": "[1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    },
-                    "idMaterial": "Material|2022-03-25T15:21:59.183Z|08686"
                   }
                 }
               ]
             },
-            "children": [
-              {
-                "ƒ.Node": {
-                  "name": "PlayerFace",
-                  "active": true,
-                  "components": {
-                    "ComponentTransform": [
-                      {
-                        "ƒ.ComponentTransform": {
-                          "local": {
-                            "translation": "[0, 0.4000000059604645, 0]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[0.5, 0.4000000059604645, 0.7000000476837158]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ],
-                    "ComponentMesh": [
-                      {
-                        "ƒ.ComponentMesh": {
-                          "idMesh": "MeshCube|2022-03-25T16:01:15.147Z|53168",
-                          "pivot": {
-                            "translation": "[0, 0, 0]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[1, 1, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ],
-                    "ComponentMaterial": [
-                      {
-                        "ƒ.ComponentMaterial": {
-                          "sortForAlpha": false,
-                          "clrPrimary": "[1, 1, 1, 1]",
-                          "clrSecondary": "[1, 1, 1, 1]",
-                          "pivot": {
-                            "translation": "[0, 0]",
-                            "rotation": 0,
-                            "scaling": "[1, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          },
-                          "idMaterial": "Material|2022-03-25T15:18:45.887Z|92723"
-                        }
-                      }
-                    ]
-                  },
-                  "children": []
-                }
-              }
-            ]
+            "children": []
           }
         },
         {
@@ -2035,6 +1945,13 @@
       ],
       "idResource": "Graph|2022-03-25T15:44:46.847Z|42436",
       "type": "Graph"
+    }
+  },
+  "MeshSprite|2022-04-06T12:11:51.485Z|27151": {
+    "ƒ.MeshSprite": {
+      "idResource": "MeshSprite|2022-04-06T12:11:51.485Z|27151",
+      "name": "MeshSprite",
+      "type": "MeshSprite"
     }
   }
 }
