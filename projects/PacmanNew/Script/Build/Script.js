@@ -50,9 +50,7 @@ var PacmanNew;
     let direction = ƒ.Vector2.ZERO();
     let speed = 0.05;
     //let root: ƒ.Node;
-    let animations;
     let spriteNode;
-    let spriteOriginalScale;
     //let agentMoveSpeedFactor: number = 5;
     //let deltaTime: number;
     window.addEventListener("load", init);
@@ -88,20 +86,14 @@ var PacmanNew;
         PacmanNew.playerAgent = sceneGraph.getChildrenByName("PlayerAgent")[0];
         grid = sceneGraph.getChildrenByName("Grid")[0];
         //set up pacman sprite
-        await loadSprites();
-        spriteNode = new ƒAid.NodeSprite("Sprite");
-        spriteNode.addComponent(new ƒ.ComponentTransform(new ƒ.Matrix4x4()));
-        spriteNode.mtxLocal.translateZ(0.1);
-        //spriteNode.addComponent(new ƒ.ComponentMesh(new ƒ.MeshSprite));
-        spriteNode.setAnimation(animations["pacman"]);
-        spriteNode.setFrameDirection(1);
-        spriteOriginalScale = spriteNode.mtxLocal.scaling.toVector2();
+        spriteNode = await createSprite();
         PacmanNew.playerAgent.addChild(spriteNode);
         console.log(PacmanNew.playerAgent);
         document.addEventListener("keydown", hndKeyDown); //document keyboard event listener
         viewport.draw();
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        //return null;
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
@@ -116,11 +108,9 @@ var PacmanNew;
             let directionOld = direction.clone;
             if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_RIGHT, ƒ.KEYBOARD_CODE.D])) {
                 direction.set(1, 0);
-                changeSpriteLookDirection("east");
             }
             if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A])) {
                 direction.set(-1, 0);
-                changeSpriteLookDirection("west");
             }
             if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_UP, ƒ.KEYBOARD_CODE.W]))
                 direction.set(0, 1);
@@ -147,6 +137,11 @@ var PacmanNew;
                 PacmanNew.playerAgent.mtxLocal.translation = nearestGridPoint.toVector3();
         }
         PacmanNew.playerAgent.mtxLocal.translate(ƒ.Vector2.SCALE(direction, speed).toVector3());
+        if (direction.magnitudeSquared != 0) {
+            spriteNode.mtxLocal.reset();
+            spriteNode.mtxLocal.translateZ(0.1);
+            spriteNode.mtxLocal.rotation = new ƒ.Vector3(0, direction.x < 0 ? 180 : 0, direction.y * 90);
+        }
         viewport.draw();
         switchCamMode(cameraPosParameter);
     }
@@ -182,35 +177,20 @@ var PacmanNew;
         let check = grid.getChild(_posCheck.y)?.getChild(_posCheck.x)?.getChild(0);
         return (!check || check.name == "Wall");
     }
-    async function loadSprites() {
+    async function createSprite() {
         let imgSpriteSheet = new ƒ.TextureImage();
         await imgSpriteSheet.load("Script/Sprites/texture.png");
-        let spriteSheet = new ƒ.CoatTextured(ƒ.Color.CSS("White"), imgSpriteSheet);
-        generateSprites(spriteSheet);
-    }
-    function generateSprites(_spritesheet) {
-        animations = {};
-        //this.animations = {};
-        let name = "pacman";
-        let sprite = new ƒAid.SpriteSheetAnimation(name, _spritesheet);
-        sprite.generateByGrid(ƒ.Rectangle.GET(0, 0, 64, 64), 8, 60, ƒ.ORIGIN2D.CENTER, ƒ.Vector2.X(64));
-        animations[name] = sprite;
-    }
-    function changeSpriteLookDirection(lookdirection) {
-        //spriteNode.mtxLocal.scaleX = spriteOriginalScale.;
-        switch (lookdirection) {
-            case "east":
-                break;
-            case "north":
-                break;
-            case "west":
-                spriteNode.mtxLocal.scaleX(-1);
-                break;
-            case "south":
-                break;
-            default:
-                break;
-        }
+        let coat = new ƒ.CoatTextured(undefined, imgSpriteSheet);
+        let animation = new ƒAid.SpriteSheetAnimation("Pacman", coat);
+        animation.generateByGrid(ƒ.Rectangle.GET(0, 0, 64, 64), 8, 70, ƒ.ORIGIN2D.CENTER, ƒ.Vector2.X(64));
+        let sprite = new ƒAid.NodeSprite("Sprite");
+        sprite.setAnimation(animation);
+        sprite.setFrameDirection(1);
+        sprite.framerate = 15;
+        let cmpTransfrom = new ƒ.ComponentTransform();
+        sprite.addComponent(cmpTransfrom);
+        sprite.mtxLocal.translateZ(0.1);
+        return sprite;
     }
 })(PacmanNew || (PacmanNew = {}));
 //# sourceMappingURL=Script.js.map

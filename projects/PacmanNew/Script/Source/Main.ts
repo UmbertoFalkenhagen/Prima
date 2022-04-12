@@ -15,9 +15,7 @@ namespace PacmanNew {
   let speed: number = 0.05;
 
   //let root: ƒ.Node;
-  let animations: ƒAid.SpriteSheetAnimations;
   let spriteNode: ƒAid.NodeSprite;
-  let spriteOriginalScale: ƒ.Vector2;
 
   //let agentMoveSpeedFactor: number = 5;
   //let deltaTime: number;
@@ -66,16 +64,8 @@ namespace PacmanNew {
     grid = sceneGraph.getChildrenByName("Grid")[0];
 
     //set up pacman sprite
-    await loadSprites();
+    spriteNode = await createSprite();
 
-    spriteNode = new ƒAid.NodeSprite("Sprite");
-    spriteNode.addComponent(new ƒ.ComponentTransform(new ƒ.Matrix4x4()));
-    spriteNode.mtxLocal.translateZ(0.1);
-    //spriteNode.addComponent(new ƒ.ComponentMesh(new ƒ.MeshSprite));
-    spriteNode.setAnimation(<ƒAid.SpriteSheetAnimation>animations["pacman"]);
-    spriteNode.setFrameDirection(1);
-
-    spriteOriginalScale = spriteNode.mtxLocal.scaling.toVector2();
     playerAgent.addChild(spriteNode);
     console.log(playerAgent);
 
@@ -84,6 +74,7 @@ namespace PacmanNew {
     viewport.draw();
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+    //return null;
   }
 
   function update(_event: Event): void {
@@ -103,11 +94,9 @@ namespace PacmanNew {
       let directionOld: ƒ.Vector2 = direction.clone;
       if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_RIGHT, ƒ.KEYBOARD_CODE.D])) {
         direction.set(1, 0);
-        changeSpriteLookDirection("east");
       }
       if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_LEFT, ƒ.KEYBOARD_CODE.A])) {
         direction.set(-1, 0);
-        changeSpriteLookDirection("west");
       }
       if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_UP, ƒ.KEYBOARD_CODE.W]))
         direction.set(0, 1);
@@ -137,6 +126,14 @@ namespace PacmanNew {
     }
 
     playerAgent.mtxLocal.translate(ƒ.Vector2.SCALE(direction, speed).toVector3());
+
+    if (direction.magnitudeSquared != 0) {
+      spriteNode.mtxLocal.reset();
+      spriteNode.mtxLocal.translateZ(0.1);
+      spriteNode.mtxLocal.rotation = new ƒ.Vector3(0, direction.x < 0 ? 180 : 0, direction.y * 90);
+      
+    }
+
     viewport.draw();
     
     switchCamMode(cameraPosParameter);
@@ -179,42 +176,24 @@ namespace PacmanNew {
     return (!check || check.name == "Wall");
   }
 
-  async function loadSprites(): Promise<void> {
+  async function createSprite(): Promise<ƒAid.NodeSprite> {
     let imgSpriteSheet: ƒ.TextureImage = new ƒ.TextureImage();
     await imgSpriteSheet.load("Script/Sprites/texture.png");
+    let coat: ƒ.CoatTextured = new ƒ.CoatTextured(undefined, imgSpriteSheet);
 
-    let spriteSheet: ƒ.CoatTextured = new ƒ.CoatTextured(ƒ.Color.CSS("White"), imgSpriteSheet);
-    generateSprites(spriteSheet);
-  }
+    let animation: ƒAid.SpriteSheetAnimation = new ƒAid.SpriteSheetAnimation("Pacman", coat);
+    animation.generateByGrid(ƒ.Rectangle.GET(0, 0, 64, 64), 8, 70, ƒ.ORIGIN2D.CENTER, ƒ.Vector2.X(64));
 
-  function generateSprites(_spritesheet: ƒ.CoatTextured): void {
-    animations = {};
-    //this.animations = {};
-    let name: string = "pacman";
-    let sprite: ƒAid.SpriteSheetAnimation = new ƒAid.SpriteSheetAnimation(name, _spritesheet);
-    sprite.generateByGrid(ƒ.Rectangle.GET(0, 0, 64, 64), 8, 60, ƒ.ORIGIN2D.CENTER, ƒ.Vector2.X(64));
-    animations[name] = sprite;
-  }
+    let sprite: ƒAid.NodeSprite = new ƒAid.NodeSprite("Sprite");
+    sprite.setAnimation(animation);
+    sprite.setFrameDirection(1);
+    sprite.framerate = 15;
 
-  function changeSpriteLookDirection(lookdirection: string): void {
-    //spriteNode.mtxLocal.scaleX = spriteOriginalScale.;
-    switch (lookdirection) {
-      case "east":
-        
-        break;
-      case "north":
-        
-        break;
-      case "west":
-          spriteNode.mtxLocal.scaleX(-1);
-        break;
-      case "south":
-        
-        break;
-            
-      default:
-        break;
-    }
+    let cmpTransfrom: ƒ.ComponentTransform = new ƒ.ComponentTransform();
+    sprite.addComponent(cmpTransfrom);
+    sprite.mtxLocal.translateZ(0.1);
+
+    return sprite;
   }
 
 }
