@@ -11,6 +11,8 @@ namespace PacmanNew {
   let cmpCamera: ƒ.ComponentCamera  = new ƒ.ComponentCamera();
   let cameraPosParameter: number = 1;
 
+  let ghost: Ghost;
+
   let direction: ƒ.Vector2 = ƒ.Vector2.ZERO();
   let speed: number = 0.05;
 
@@ -68,6 +70,9 @@ namespace PacmanNew {
 
     playerAgent.addChild(spriteNode);
     console.log(playerAgent);
+
+    ghost = new Ghost(grid);
+    sceneGraph.addChild(ghost);
 
     document.addEventListener("keydown", hndKeyDown);     //document keyboard event listener
 
