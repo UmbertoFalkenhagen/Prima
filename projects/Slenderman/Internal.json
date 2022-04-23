@@ -1,4 +1,58 @@
 {
+  "Material|2022-04-14T13:04:05.102Z|19457": {
+    "ƒ.Material": {
+      "name": "ShaderFlatTextured",
+      "idResource": "Material|2022-04-14T13:04:05.102Z|19457",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2022-04-14T13:04:17.175Z|30000",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "TextureImage|2022-04-14T13:04:17.175Z|30000": {
+    "ƒ.TextureImage": {
+      "url": "Textures\\maptex.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2022-04-14T13:04:17.175Z|30000",
+        "name": "Textures\\maptex.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "MeshQuad|2022-04-14T12:58:17.872Z|58029": {
+    "ƒ.MeshQuad": {
+      "idResource": "MeshQuad|2022-04-14T12:58:17.872Z|58029",
+      "name": "Floor"
+    }
+  },
+  "MeshObj|2022-04-14T13:08:56.697Z|09817": {
+    "ƒ.MeshObj": {
+      "idResource": "MeshObj|2022-04-14T13:08:56.697Z|09817",
+      "name": "Models\\cfxidcuko5-Slenderman\\Slenderman Model.obj",
+      "type": "MeshObj",
+      "url": "Models\\cfxidcuko5-Slenderman\\Slenderman Model.obj"
+    }
+  },
+  "Material|2022-04-14T13:11:27.953Z|27353": {
+    "ƒ.Material": {
+      "name": "ShaderFlat",
+      "idResource": "Material|2022-04-14T13:11:27.953Z|27353",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[1, 1, 1, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
   "Graph|2022-04-14T12:57:56.715Z|82700": {
     "ƒ.Graph": {
       "name": "SceneGraph",
@@ -44,7 +98,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2022-04-14T13:04:05.102Z|19457"
+                    "idMaterial": "Material|2022-04-21T12:13:34.155Z|38500"
                   }
                 }
               ],
@@ -55,7 +109,7 @@
                     "pivot": {
                       "translation": "[0, -4, 0]",
                       "rotation": "[-90, 0, 0]",
-                      "scaling": "[60, 60, 60]"
+                      "scaling": "[100, 100, 60]"
                     },
                     "Component": {
                       "active": true
@@ -71,8 +125,73 @@
           "ƒ.Node": {
             "name": "PlayerAgent",
             "active": true,
-            "components": {},
-            "children": []
+            "components": {
+              "ComponentTransform": [
+                {
+                  "ƒ.ComponentTransform": {
+                    "local": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentCamera": []
+            },
+            "children": [
+              {
+                "ƒ.Node": {
+                  "name": "Camera",
+                  "active": true,
+                  "components": {
+                    "ComponentCamera": [
+                      {
+                        "ƒ.ComponentCamera": {
+                          "backgroundColor": {
+                            "r": 0,
+                            "g": 0,
+                            "b": 0,
+                            "a": 1
+                          },
+                          "backgroundEnabled": true,
+                          "projection": "central",
+                          "fieldOfView": 45,
+                          "direction": 2,
+                          "aspect": 1,
+                          "pivot": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentTransform": [
+                      {
+                        "ƒ.ComponentTransform": {
+                          "local": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              }
+            ]
           }
         },
         {
@@ -122,46 +241,6 @@
       "type": "Graph"
     }
   },
-  "MeshQuad|2022-04-14T12:58:17.872Z|58029": {
-    "ƒ.MeshQuad": {
-      "idResource": "MeshQuad|2022-04-14T12:58:17.872Z|58029",
-      "name": "Floor"
-    }
-  },
-  "Material|2022-04-14T13:04:05.102Z|19457": {
-    "ƒ.Material": {
-      "name": "ShaderFlatTextured",
-      "idResource": "Material|2022-04-14T13:04:05.102Z|19457",
-      "shader": "ShaderFlatTextured",
-      "coat": {
-        "ƒ.CoatRemissiveTextured": {
-          "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2022-04-14T13:04:17.175Z|30000",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
-  "TextureImage|2022-04-14T13:04:17.175Z|30000": {
-    "ƒ.TextureImage": {
-      "url": "Textures\\maptex.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2022-04-14T13:04:17.175Z|30000",
-        "name": "Textures\\maptex.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
-  "MeshObj|2022-04-14T13:08:56.697Z|09817": {
-    "ƒ.MeshObj": {
-      "idResource": "MeshObj|2022-04-14T13:08:56.697Z|09817",
-      "name": "Models\\cfxidcuko5-Slenderman\\Slenderman Model.obj",
-      "type": "MeshObj",
-      "url": "Models\\cfxidcuko5-Slenderman\\Slenderman Model.obj"
-    }
-  },
   "TextureImage|2022-04-14T13:10:15.978Z|95484": {
     "ƒ.TextureImage": {
       "url": "Models\\cfxidcuko5-Slenderman\\Textures\\Tex_0666_0.png",
@@ -188,14 +267,26 @@
       }
     }
   },
-  "Material|2022-04-14T13:11:27.953Z|27353": {
+  "TextureImage|2022-04-21T12:11:10.068Z|55823": {
+    "ƒ.TextureImage": {
+      "url": "Textures\\SlendermanMap_01.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2022-04-21T12:11:10.068Z|55823",
+        "name": "Textures\\SlendermanMap_01.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "Material|2022-04-21T12:13:34.155Z|38500": {
     "ƒ.Material": {
-      "name": "ShaderFlat",
-      "idResource": "Material|2022-04-14T13:11:27.953Z|27353",
-      "shader": "ShaderFlat",
+      "name": "ShaderFlatTextured",
+      "idResource": "Material|2022-04-21T12:13:34.155Z|38500",
+      "shader": "ShaderFlatTextured",
       "coat": {
-        "ƒ.CoatRemissive": {
+        "ƒ.CoatRemissiveTextured": {
           "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2022-04-21T12:11:10.068Z|55823",
           "diffuse": 1,
           "specular": 0
         }
