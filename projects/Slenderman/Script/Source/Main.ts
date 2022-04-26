@@ -8,8 +8,8 @@ namespace Script {
   let speedRotY: number = -0.2;
   let speedRotX: number = 0.2;
   let rotationX: number = 0;
-  let cntWalk: ƒ.Control = new ƒ.Control("cntWalk", 2, ƒ.CONTROL_TYPE.PROPORTIONAL);
-  let cntStrafe: ƒ.Control = new ƒ.Control("cntStrafe", 2, ƒ.CONTROL_TYPE.PROPORTIONAL);
+  let ctrlWalk: ƒ.Control = new ƒ.Control("ctrlWalk", 2, ƒ.CONTROL_TYPE.PROPORTIONAL);
+  let ctrlStrafe: ƒ.Control = new ƒ.Control("ctrlStrafe", 2, ƒ.CONTROL_TYPE.PROPORTIONAL);
   let exhaustion: number = 0;
   let canSprint: boolean = true;
 
@@ -38,31 +38,31 @@ namespace Script {
 
   function controlWalk(): void {
     let input: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
-    cntWalk.setInput(input);
+    ctrlWalk.setInput(input);
 
     let strafe: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
-    cntStrafe.setInput(strafe);
+    ctrlStrafe.setInput(strafe);
 
     console.log(canSprint);
     if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SHIFT_LEFT]) && canSprint == true) {
-      cntWalk.setFactor(20);
-      cntStrafe.setFactor(20);
-      cntWalk.setDelay(500);
-      cntStrafe.setDelay(500);
+      ctrlWalk.setFactor(20);
+      ctrlStrafe.setFactor(20);
+      ctrlWalk.setDelay(500);
+      ctrlStrafe.setDelay(500);
     } else {
-      cntWalk.setFactor(8);
-      cntStrafe.setFactor(8);
-      cntWalk.setDelay(200);
-      cntStrafe.setDelay(200);
+      ctrlWalk.setFactor(8);
+      ctrlStrafe.setFactor(8);
+      ctrlWalk.setDelay(200);
+      ctrlStrafe.setDelay(200);
     }
 
     if (input == 0 && strafe == 0) {
-      cntWalk.setDelay(200);
-      cntStrafe.setDelay(200);
+      ctrlWalk.setDelay(200);
+      ctrlStrafe.setDelay(200);
     }
 
-    avatar.mtxLocal.translateZ(cntWalk.getOutput() * ƒ.Loop.timeFrameGame / 1000);
-    avatar.mtxLocal.translateX(cntStrafe.getOutput() * ƒ.Loop.timeFrameGame / 1000);
+    avatar.mtxLocal.translateZ(ctrlWalk.getOutput() * ƒ.Loop.timeFrameGame / 1000);
+    avatar.mtxLocal.translateX(ctrlStrafe.getOutput() * ƒ.Loop.timeFrameGame / 1000);
     /* cntWalk.setInput(strafe); 
     avatar.mtxLocal.translateX(cntWalk.getOutput() * ƒ.Loop.timeFrameGame / 1000); */
   }
