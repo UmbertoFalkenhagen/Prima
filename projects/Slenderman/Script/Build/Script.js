@@ -43,29 +43,75 @@ var Script;
     let viewport;
     let avatar;
     let cmpCamera;
-    let speedRotY = 0.2;
+    let speedRotY = -0.2;
     let speedRotX = 0.2;
     let rotationX = 0;
+    let cntWalk = new ƒ.Control("cntWalk", 2, 0 /* PROPORTIONAL */);
+    let cntStrafe = new ƒ.Control("cntStrafe", 2, 0 /* PROPORTIONAL */);
+    let exhaustion = 0;
+    let canSprint = true;
     document.addEventListener("interactiveViewportStarted", start);
     function start(_event) {
         viewport = _event.detail;
         avatar = viewport.getBranch().getChildrenByName("PlayerAgent")[0];
-        viewport.camera = avatar.getChildrenByName("Camera")[0].getComponent(ƒ.ComponentCamera);
-        cmpCamera = avatar.getChildrenByName("Camera")[0].getComponent(ƒ.ComponentCamera);
+        console.log(avatar);
+        viewport.camera = cmpCamera = avatar.getChild(0).getComponent(ƒ.ComponentCamera);
+        console.log(viewport.camera);
         viewport.getCanvas().addEventListener("pointermove", hndPointerMove);
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
-        // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
+        controlWalk();
+        controlSpeed();
         viewport.draw();
         ƒ.AudioManager.default.update();
+    }
+    function controlWalk() {
+        let input = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
+        cntWalk.setInput(input);
+        let strafe = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
+        cntStrafe.setInput(strafe);
+        console.log(canSprint);
+        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SHIFT_LEFT]) && canSprint == true) {
+            cntWalk.setFactor(20);
+            cntStrafe.setFactor(20);
+            cntWalk.setDelay(500);
+            cntStrafe.setDelay(500);
+        }
+        else {
+            cntWalk.setFactor(8);
+            cntStrafe.setFactor(8);
+            cntWalk.setDelay(200);
+            cntStrafe.setDelay(200);
+        }
+        if (input == 0 && strafe == 0) {
+            cntWalk.setDelay(200);
+            cntStrafe.setDelay(200);
+        }
+        avatar.mtxLocal.translateZ(cntWalk.getOutput() * ƒ.Loop.timeFrameGame / 1000);
+        avatar.mtxLocal.translateX(cntStrafe.getOutput() * ƒ.Loop.timeFrameGame / 1000);
+        /* cntWalk.setInput(strafe);
+        avatar.mtxLocal.translateX(cntWalk.getOutput() * ƒ.Loop.timeFrameGame / 1000); */
     }
     function hndPointerMove(_event) {
         avatar.mtxLocal.rotateY(_event.movementX * speedRotY);
         rotationX += _event.movementY * speedRotX;
         rotationX = Math.min(60, Math.max(-60, rotationX));
         cmpCamera.mtxPivot.rotation = ƒ.Vector3.X(rotationX);
+    }
+    function controlSpeed() {
+        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SHIFT_LEFT]) && canSprint == true) {
+            exhaustion += ƒ.Loop.timeFrameGame / 1000;
+            if (exhaustion > 10) {
+                canSprint = false;
+                setTimeout(function () {
+                    canSprint = true;
+                    exhaustion = 0;
+                }, 7000);
+            }
+        }
     }
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map
