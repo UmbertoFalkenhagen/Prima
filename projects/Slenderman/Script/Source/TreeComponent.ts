@@ -2,11 +2,13 @@ namespace Slenderman {
   import ƒ = FudgeCore;
   ƒ.Project.registerScriptNamespace(Slenderman);  // Register the namespace to FUDGE for serialization
 
-  export class CustomComponentScript extends ƒ.ComponentScript {
+  export class TreeComponent extends ƒ.ComponentScript {
     // Register the script as component for use in the editor via drag&drop
-    public static readonly iSubclass: number = ƒ.Component.registerSubclass(CustomComponentScript);
+    public static readonly iSubclass: number = ƒ.Component.registerSubclass(TreeComponent);
     // Properties may be mutated by users in the editor via the automatically created user interface
-    public message: string = "CustomComponentScript added to ";
+    public message: string = "TreeComponent added to ";
+    private treepos: ƒ.Vector3 = new ƒ.Vector3;
+    private scalefactor: ƒ.Vector3 = new ƒ.Vector3;
 
 
     constructor() {
@@ -36,6 +38,13 @@ namespace Slenderman {
           // if deserialized the node is now fully reconstructed and access to all its components and children is possible
           break;
       }
+    }
+
+    public placeTree(_treepos: ƒ.Vector3, _scalefactor: ƒ.Vector3): void {
+      this.treepos = _treepos;
+      this.scalefactor = _scalefactor;
+      this.node.mtxLocal.translation = _treepos;
+      this.node.mtxLocal.scaling = this.scalefactor;
     }
 
     // protected reduceMutator(_mutator: ƒ.Mutator): void {
