@@ -2,7 +2,7 @@ namespace Slenderman {
   import ƒ = FudgeCore;
   ƒ.Debug.info("Main Program Template running!");
 
-  let viewport: ƒ.Viewport;
+  export let viewport: ƒ.Viewport;
   let sceneGraph: ƒ.Node;
   let avatar: ƒ.Node;
   let cmpCamera: ƒ.ComponentCamera;
@@ -20,27 +20,18 @@ namespace Slenderman {
     viewport = _event.detail;
     sceneGraph = viewport.getBranch();
     avatar = viewport.getBranch().getChildrenByName("PlayerAgent")[0];
-    console.log(avatar);
+    //console.log(avatar);
 
     viewport.camera = cmpCamera = avatar.getChild(0).getComponent(ƒ.ComponentCamera);
     console.log(viewport.camera);
 
-    //instantiate new tree from prefab
-    let treegraph: ƒ.Graph = <ƒ.Graph> ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"];
-    let treenode = new ƒ.Node("TreeNode");
-    treenode.addComponent(new ƒ.ComponentTransform);
-    treenode.addChild(treegraph.getChildrenByName("Crown")[0]);
-    treenode.addChild(treegraph.getChildrenByName("Stem")[0]);
-    sceneGraph.addChild(treenode);
-
-    //add treecomponent and place/scale tree
-    let treecomponent: TreeComponent = new TreeComponent;
-    treenode.addComponent(treecomponent);
-    let treepos: ƒ.Vector3 = new ƒ.Vector3(40, 0, 10);
+    let treepos: ƒ.Vector2 = new ƒ.Vector2(40, 10);
     let treescale: ƒ.Vector3 = new ƒ.Vector3(5, 10, 10);
-    treecomponent.placeTree(treepos, treescale);
+    createTree(treepos,treescale);
 
-    console.log(treenode);
+    
+
+    //console.log(treenode);
 
     viewport.getCanvas().addEventListener("pointermove", hndPointerMove);
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
@@ -62,7 +53,7 @@ namespace Slenderman {
     let strafe: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
     ctrlStrafe.setInput(strafe);
 
-    console.log(canSprint);
+    //console.log(canSprint);
     if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SHIFT_LEFT]) && canSprint == true) {
       ctrlWalk.setFactor(20);
       ctrlStrafe.setFactor(20);
@@ -107,6 +98,21 @@ namespace Slenderman {
           7000);
       }
     }
+  }
+
+  function createTree(_treepos: ƒ.Vector2, _scalefactor: ƒ.Vector3): void {
+    //instantiate new tree from prefab
+    let treegraph: ƒ.Graph = <ƒ.Graph> ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"];
+    let treenode: ƒ.Node = new ƒ.Node("TreeNode");
+    treenode.addComponent(new ƒ.ComponentTransform);
+    treenode.addChild(treegraph.getChildrenByName("Crown")[0]);
+    treenode.addChild(treegraph.getChildrenByName("Stem")[0]);
+    sceneGraph.addChild(treenode);
+
+    //add treecomponent and place/scale tree
+    let treecomponent: TreeComponent = new TreeComponent;
+    treenode.addComponent(treecomponent);
+    treecomponent.placeTree(_treepos, _scalefactor);
   }
   
 }

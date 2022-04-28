@@ -40,11 +40,29 @@ namespace Slenderman {
       }
     }
 
-    public placeTree(_treepos: ƒ.Vector3, _scalefactor: ƒ.Vector3): void {
-      this.treepos = _treepos;
+    public placeTree(_treepos: ƒ.Vector2, _scalefactor: ƒ.Vector3): void {
+      
+      //place tree at given x and z coordinates
+      this.treepos.x = _treepos.x;
+      this.treepos.z = _treepos.y;
+      this.node.mtxLocal.translation.x = this.treepos.x;
+      this.node.mtxLocal.translation.z = this.treepos.y;
+
+      //scale tree according to given values
       this.scalefactor = _scalefactor;
-      this.node.mtxLocal.translation = _treepos;
       this.node.mtxLocal.scaling = this.scalefactor;
+
+      //place tree on terrain height at coordinates
+      let mtxTerrain: ƒ.Matrix4x4;
+      let meshTerrain: ƒ.MeshTerrain;
+      let cmpMeshTerrain: ƒ.ComponentMesh = viewport.getBranch().getChildrenByName("Floor")[0].getComponent(ƒ.ComponentMesh);
+      meshTerrain = <ƒ.MeshTerrain>cmpMeshTerrain.mesh;
+      mtxTerrain = cmpMeshTerrain.mtxWorld;
+      let posStem: ƒ.Vector3 = this.node.getChildrenByName("Stem")[0].getComponent(ƒ.ComponentMesh).mtxWorld.translation;
+      let terrainInfo: ƒ.TerrainInfo = meshTerrain.getTerrainInfo(posStem, mtxTerrain);
+      console.log(terrainInfo);
+      let height: number = posStem.y - terrainInfo.position.y;
+      this.node.mtxLocal.translateY((-height / this.node.mtxLocal.scaling.y) - 0.2);
     }
 
     // protected reduceMutator(_mutator: ƒ.Mutator): void {

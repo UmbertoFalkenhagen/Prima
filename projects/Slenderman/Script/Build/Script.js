@@ -40,7 +40,6 @@ var Slenderman;
 (function (Slenderman) {
     var ƒ = FudgeCore;
     ƒ.Debug.info("Main Program Template running!");
-    let viewport;
     let sceneGraph;
     let avatar;
     let cmpCamera;
@@ -53,27 +52,17 @@ var Slenderman;
     let canSprint = true;
     document.addEventListener("interactiveViewportStarted", start);
     function start(_event) {
-        viewport = _event.detail;
-        sceneGraph = viewport.getBranch();
-        avatar = viewport.getBranch().getChildrenByName("PlayerAgent")[0];
-        console.log(avatar);
-        viewport.camera = cmpCamera = avatar.getChild(0).getComponent(ƒ.ComponentCamera);
-        console.log(viewport.camera);
-        //instantiate new tree from prefab
-        let treegraph = ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"];
-        let treenode = new ƒ.Node("TreeNode");
-        treenode.addComponent(new ƒ.ComponentTransform);
-        treenode.addChild(treegraph.getChildrenByName("Crown")[0]);
-        treenode.addChild(treegraph.getChildrenByName("Stem")[0]);
-        sceneGraph.addChild(treenode);
-        //add treecomponent and place/scale tree
-        let treecomponent = new Slenderman.TreeComponent;
-        treenode.addComponent(treecomponent);
-        let treepos = new ƒ.Vector3(40, 0, 10);
+        Slenderman.viewport = _event.detail;
+        sceneGraph = Slenderman.viewport.getBranch();
+        avatar = Slenderman.viewport.getBranch().getChildrenByName("PlayerAgent")[0];
+        //console.log(avatar);
+        Slenderman.viewport.camera = cmpCamera = avatar.getChild(0).getComponent(ƒ.ComponentCamera);
+        console.log(Slenderman.viewport.camera);
+        let treepos = new ƒ.Vector2(40, 10);
         let treescale = new ƒ.Vector3(5, 10, 10);
-        treecomponent.placeTree(treepos, treescale);
-        console.log(treenode);
-        viewport.getCanvas().addEventListener("pointermove", hndPointerMove);
+        createTree(treepos, treescale);
+        //console.log(treenode);
+        Slenderman.viewport.getCanvas().addEventListener("pointermove", hndPointerMove);
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     }
@@ -81,7 +70,7 @@ var Slenderman;
         // ƒ.Physics.simulate();  // if physics is included and used
         controlWalk();
         controlSpeed();
-        viewport.draw();
+        Slenderman.viewport.draw();
         ƒ.AudioManager.default.update();
     }
     function controlWalk() {
@@ -89,7 +78,7 @@ var Slenderman;
         ctrlWalk.setInput(input);
         let strafe = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
         ctrlStrafe.setInput(strafe);
-        console.log(canSprint);
+        //console.log(canSprint);
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SHIFT_LEFT]) && canSprint == true) {
             ctrlWalk.setFactor(20);
             ctrlStrafe.setFactor(20);
@@ -129,6 +118,19 @@ var Slenderman;
             }
         }
     }
+    function createTree(_treepos, _scalefactor) {
+        //instantiate new tree from prefab
+        let treegraph = ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"];
+        let treenode = new ƒ.Node("TreeNode");
+        treenode.addComponent(new ƒ.ComponentTransform);
+        treenode.addChild(treegraph.getChildrenByName("Crown")[0]);
+        treenode.addChild(treegraph.getChildrenByName("Stem")[0]);
+        sceneGraph.addChild(treenode);
+        //add treecomponent and place/scale tree
+        let treecomponent = new Slenderman.TreeComponent;
+        treenode.addComponent(treecomponent);
+        treecomponent.placeTree(_treepos, _scalefactor);
+    }
 })(Slenderman || (Slenderman = {}));
 var Slenderman;
 (function (Slenderman) {
@@ -140,7 +142,7 @@ var Slenderman;
             super();
             this.treepos = _treepos;
             this.scalefactor = _scalefactor;
-            let treegraph = ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"];
+            //let treegraph: ƒ.Graph = <ƒ.Graph> ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"]; 
         }
     }
     Slenderman.Tree = Tree;
@@ -182,10 +184,25 @@ var Slenderman;
             }
         };
         placeTree(_treepos, _scalefactor) {
-            this.treepos = _treepos;
+            //place tree at given x and z coordinates
+            this.treepos.x = _treepos.x;
+            this.treepos.z = _treepos.y;
+            this.node.mtxLocal.translation.x = this.treepos.x;
+            this.node.mtxLocal.translation.z = this.treepos.y;
+            //scale tree according to given values
             this.scalefactor = _scalefactor;
-            this.node.mtxLocal.translation = _treepos;
             this.node.mtxLocal.scaling = this.scalefactor;
+            //place tree on terrain height at coordinates
+            let mtxTerrain;
+            let meshTerrain;
+            let cmpMeshTerrain = Slenderman.viewport.getBranch().getChildrenByName("Floor")[0].getComponent(ƒ.ComponentMesh);
+            meshTerrain = cmpMeshTerrain.mesh;
+            mtxTerrain = cmpMeshTerrain.mtxWorld;
+            let posStem = this.node.getChildrenByName("Stem")[0].getComponent(ƒ.ComponentMesh).mtxWorld.translation;
+            let terrainInfo = meshTerrain.getTerrainInfo(posStem, mtxTerrain);
+            console.log(terrainInfo);
+            let height = posStem.y - terrainInfo.position.y;
+            this.node.mtxLocal.translateY((-height / this.node.mtxLocal.scaling.y) - 0.2);
         }
     }
     Slenderman.TreeComponent = TreeComponent;

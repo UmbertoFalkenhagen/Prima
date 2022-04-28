@@ -8,6 +8,8 @@ declare namespace Slenderman {
     }
 }
 declare namespace Slenderman {
+    import ƒ = FudgeCore;
+    let viewport: ƒ.Viewport;
 }
 declare namespace Slenderman {
     import ƒ = FudgeCore;
@@ -26,6 +28,6 @@ declare namespace Slenderman {
         private scalefactor;
         constructor();
         hndEvent: (_event: Event) => void;
-        placeTree(_treepos: ƒ.Vector3, _scalefactor: ƒ.Vector3): void;
+        placeTree(_treepos: ƒ.Vector2, _scalefactor: ƒ.Vector3): void;
     }
 }

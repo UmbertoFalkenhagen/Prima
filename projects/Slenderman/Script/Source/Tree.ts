@@ -10,7 +10,7 @@ namespace Slenderman {
             this.treepos = _treepos;
             this.scalefactor = _scalefactor;
 
-            let treegraph: ƒ.Graph = <ƒ.Graph> ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"]; 
+            //let treegraph: ƒ.Graph = <ƒ.Graph> ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"]; 
           }
     }
 }

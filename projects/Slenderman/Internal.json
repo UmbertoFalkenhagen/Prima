@@ -100,6 +100,16 @@
       }
     }
   },
+  "MeshTerrain|2022-04-28T09:12:04.118Z|62801": {
+    "ƒ.MeshTerrain": {
+      "idResource": "MeshTerrain|2022-04-28T09:12:04.118Z|62801",
+      "name": "MeshTerrain",
+      "type": "MeshTerrain",
+      "seed": 0,
+      "scale": "[2, 1.0000001192092896]",
+      "resolution": "[20, 20]"
+    }
+  },
   "Graph|2022-04-14T12:57:56.715Z|82700": {
     "ƒ.Graph": {
       "name": "SceneGraph",
@@ -152,11 +162,25 @@
               "ComponentMesh": [
                 {
                   "ƒ.ComponentMesh": {
-                    "idMesh": "MeshQuad|2022-04-14T12:58:17.872Z|58029",
+                    "idMesh": "MeshTerrain|2022-04-28T09:12:04.118Z|62801",
                     "pivot": {
-                      "translation": "[0, -4, 0]",
-                      "rotation": "[-90, 0, 0]",
-                      "scaling": "[100, 100, 60]"
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[101, 7, 101]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentTransform": [
+                {
+                  "ƒ.ComponentTransform": {
+                    "local": {
+                      "translation": "[0, -8, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
                     },
                     "Component": {
                       "active": true
@@ -316,13 +340,6 @@
           }
         },
         {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "name": "Tree",
-            "idSource": "Graph|2022-04-26T14:32:47.257Z|97095"
-          }
-        },
-        {
           "ƒ.Node": {
             "name": "Sun",
             "active": true,
@@ -362,6 +379,13 @@
               ]
             },
             "children": []
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "name": "GraphInstance",
+            "idSource": "Graph|2022-04-28T09:44:06.170Z|41430"
           }
         }
       ],
