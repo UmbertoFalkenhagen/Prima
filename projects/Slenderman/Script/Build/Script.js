@@ -118,17 +118,14 @@ var Slenderman;
             }
         }
     }
-    function createTree(_treepos, _scalefactor) {
+    async function createTree(_treepos, _scalefactor) {
         //instantiate new tree from prefab
         let treegraph = ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"];
-        let treenode = new ƒ.Node("TreeNode");
-        treenode.addComponent(new ƒ.ComponentTransform);
-        treenode.addChild(treegraph.getChildrenByName("Crown")[0]);
-        treenode.addChild(treegraph.getChildrenByName("Stem")[0]);
-        sceneGraph.addChild(treenode);
+        let instance = await ƒ.Project.createGraphInstance(treegraph);
+        sceneGraph.addChild(instance);
         //add treecomponent and place/scale tree
         let treecomponent = new Slenderman.TreeComponent;
-        treenode.addComponent(treecomponent);
+        instance.addComponent(treecomponent);
         treecomponent.placeTree(_treepos, _scalefactor);
     }
 })(Slenderman || (Slenderman = {}));

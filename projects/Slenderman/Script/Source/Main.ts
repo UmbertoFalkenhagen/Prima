@@ -27,7 +27,7 @@ namespace Slenderman {
 
     let treepos: ƒ.Vector2 = new ƒ.Vector2(40, 10);
     let treescale: ƒ.Vector3 = new ƒ.Vector3(5, 10, 10);
-    createTree(treepos,treescale);
+    createTree(treepos, treescale);
 
     
 
@@ -100,18 +100,16 @@ namespace Slenderman {
     }
   }
 
-  function createTree(_treepos: ƒ.Vector2, _scalefactor: ƒ.Vector3): void {
+  async function createTree(_treepos: ƒ.Vector2, _scalefactor: ƒ.Vector3): Promise<void> {
     //instantiate new tree from prefab
     let treegraph: ƒ.Graph = <ƒ.Graph> ƒ.Project.resources["Graph|2022-04-26T14:32:47.257Z|97095"];
-    let treenode: ƒ.Node = new ƒ.Node("TreeNode");
-    treenode.addComponent(new ƒ.ComponentTransform);
-    treenode.addChild(treegraph.getChildrenByName("Crown")[0]);
-    treenode.addChild(treegraph.getChildrenByName("Stem")[0]);
-    sceneGraph.addChild(treenode);
+    let instance: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(treegraph);
+
+    sceneGraph.addChild(instance);
 
     //add treecomponent and place/scale tree
     let treecomponent: TreeComponent = new TreeComponent;
-    treenode.addComponent(treecomponent);
+    instance.addComponent(treecomponent);
     treecomponent.placeTree(_treepos, _scalefactor);
   }
   
