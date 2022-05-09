@@ -4,8 +4,9 @@ namespace EndlessMatrixRunnerSoSe22 {
 
   let viewport: ƒ.Viewport;
   export let sceneGraph: ƒ.Node;
-  export let playerNode: ƒ.Node;
+  export let playerNode: Agent;
 
+  // tslint:disable-next-line: no-any
   export let configurations: any;
   export let deltaTime: number;
 
@@ -37,18 +38,24 @@ namespace EndlessMatrixRunnerSoSe22 {
       viewport.initialize("Viewport", sceneGraph, cmpCamera, canvas);
       sceneGraph = viewport.getBranch();
 
-      let playerprefab: ƒ.Graph = <ƒ.Graph>ƒ.Project.resources["Graph|2022-05-05T12:50:15.258Z|71678"];
-      let prefabinstance: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(playerprefab);
-      sceneGraph.addChild(prefabinstance);
+      // let playerprefab: ƒ.Graph = <ƒ.Graph>ƒ.Project.resources["Graph|2022-05-05T12:50:15.258Z|71678"];
+      // let prefabinstance: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(playerprefab);
+      // sceneGraph.addChild(prefabinstance);
 
-      playerNode = sceneGraph.getChildrenByName("PlayerBody")[0];
-      
+      playerNode = new Agent(new ƒ.Vector3(0, 0, 0));
+      sceneGraph.addChild(playerNode);
 
       cameraNode = new ƒ.Node("cameraNode");
       cameraNode.addComponent(cmpCamera);
       cameraNode.addComponent(new ƒ.ComponentTransform);
       cameraNode.addComponent(new CameraScript);
       sceneGraph.addChild(cameraNode);
+
+      let floorelement: FloorElement = new FloorElement(new ƒ.Vector3(20, 1, 2));
+      sceneGraph.addChild(floorelement);
+
+      //let obstacleplatform: ObstaclePlatform = new ObstaclePlatform();
+      //sceneGraph.addChild(obstacleplatform);
     
       viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
@@ -59,6 +66,16 @@ namespace EndlessMatrixRunnerSoSe22 {
     function update(_event: Event): void {
     ƒ.Physics.simulate();  // if physics is included and used
     deltaTime = ƒ.Loop.timeFrameReal / 1000;
+
+    // //make sure all terrain objects have a proper collisiongroup assigned
+    // let platformNodes: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
+    // platformNodes.forEach(platform => {
+    //   platform.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2; //all ground objects are collision group 2
+    //   platform.getChildrenByName("Obstacle").forEach(edgeobstacle => {
+    //     edgeobstacle.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_3; //all obstacles are collision group 3
+    //     //console.log("EdgeObstacle received collision group");
+    //   });
+    // }); //all items should have collision group 4 and all npcs have collision group 5
 
     if (GameState.get().gameRunning) {
       //controllGround();
@@ -95,12 +112,15 @@ namespace EndlessMatrixRunnerSoSe22 {
       
   }
 
+    // tslint:disable-next-line: typedef
     async function fetchData() {
     try {
+      // tslint:disable-next-line: typedef
       const response = await fetch("../configuration.JSON");
+      // tslint:disable-next-line: typedef
       const responseObj = await response.json();
       return responseObj;
-    } catch(error) {
+    } catch (error) {
       return error;
     }
   }

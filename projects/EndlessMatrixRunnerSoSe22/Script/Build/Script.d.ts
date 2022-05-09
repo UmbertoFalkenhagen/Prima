@@ -1,5 +1,11 @@
 declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
+    class Agent extends ƒ.Node {
+        constructor(position: ƒ.Vector3);
+    }
+}
+declare namespace EndlessMatrixRunnerSoSe22 {
+    import ƒ = FudgeCore;
     class CameraScript extends ƒ.ComponentScript {
         static readonly iSubclass: number;
         message: string;
@@ -20,6 +26,12 @@ declare namespace EndlessMatrixRunnerSoSe22 {
 }
 declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
+    class FloorElement extends ƒ.Node {
+        constructor(scale: ƒ.Vector3);
+    }
+}
+declare namespace EndlessMatrixRunnerSoSe22 {
+    import ƒ = FudgeCore;
     class GameState extends ƒ.Mutable {
         private static instance;
         name: string;
@@ -33,9 +45,16 @@ declare namespace EndlessMatrixRunnerSoSe22 {
 declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
     let sceneGraph: ƒ.Node;
-    let playerNode: ƒ.Node;
+    let playerNode: Agent;
     let configurations: any;
     let deltaTime: number;
+}
+declare namespace EndlessMatrixRunnerSoSe22 {
+    import ƒ = FudgeCore;
+    class ObstaclePlatform extends ƒ.Node {
+        constructor();
+        private createObstacleElement;
+    }
 }
 declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;

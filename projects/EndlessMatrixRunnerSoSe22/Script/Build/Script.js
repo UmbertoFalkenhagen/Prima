@@ -2,6 +2,35 @@
 var EndlessMatrixRunnerSoSe22;
 (function (EndlessMatrixRunnerSoSe22) {
     var ƒ = FudgeCore;
+    class Agent extends ƒ.Node {
+        constructor(position) {
+            super("Agent");
+            this.addComponent(new ƒ.ComponentTransform);
+            let elementmesh = ƒ.Project.resources["MeshSphere|2022-05-05T11:36:25.420Z|81284"];
+            let elementmeshcmp = new ƒ.ComponentMesh(elementmesh);
+            elementmeshcmp.mtxPivot.scaling = new ƒ.Vector3(1, 2, 1);
+            this.addComponent(elementmeshcmp);
+            let elementmat = ƒ.Project.resources["Material|2022-05-05T11:37:45.198Z|89647"];
+            let elementmatcmp = new ƒ.ComponentMaterial(elementmat);
+            this.addComponent(elementmatcmp);
+            let elementrb = new ƒ.ComponentRigidbody();
+            elementrb.initialization = ƒ.BODY_INIT.TO_PIVOT;
+            elementrb.mass = 30;
+            elementrb.typeBody = ƒ.BODY_TYPE.DYNAMIC;
+            elementrb.typeCollider = ƒ.COLLIDER_TYPE.CAPSULE;
+            elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_1;
+            elementrb.restitution = 0.1;
+            this.addComponent(elementrb);
+            this.addComponent(new EndlessMatrixRunnerSoSe22.PlayerMovement());
+            this.mtxWorld.translation = position;
+            this.mtxLocal.translateY(3);
+        }
+    }
+    EndlessMatrixRunnerSoSe22.Agent = Agent;
+})(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
+var EndlessMatrixRunnerSoSe22;
+(function (EndlessMatrixRunnerSoSe22) {
+    var ƒ = FudgeCore;
     ƒ.Project.registerScriptNamespace(EndlessMatrixRunnerSoSe22); // Register the namespace to FUDGE for serialization
     class CameraScript extends ƒ.ComponentScript {
         // Register the script as component for use in the editor via drag&drop
@@ -82,6 +111,32 @@ var EndlessMatrixRunnerSoSe22;
 var EndlessMatrixRunnerSoSe22;
 (function (EndlessMatrixRunnerSoSe22) {
     var ƒ = FudgeCore;
+    class FloorElement extends ƒ.Node {
+        constructor(scale) {
+            super("FloorElement");
+            this.addComponent(new ƒ.ComponentTransform);
+            let elementmesh = ƒ.Project.resources["MeshCube|2022-05-05T11:29:50.067Z|61589"];
+            this.addComponent(new ƒ.ComponentMesh(elementmesh));
+            let elementmat = ƒ.Project.resources["Material|2022-05-05T11:30:27.621Z|27233"];
+            let elementmatcmp = new ƒ.ComponentMaterial(elementmat);
+            elementmatcmp.mtxPivot.scale(new ƒ.Vector2(3, 0.25));
+            this.addComponent(elementmatcmp);
+            let elementrb = new ƒ.ComponentRigidbody();
+            elementrb.initialization = ƒ.BODY_INIT.TO_MESH;
+            elementrb.mass = 1;
+            elementrb.typeBody = ƒ.BODY_TYPE.STATIC;
+            elementrb.typeCollider = ƒ.COLLIDER_TYPE.CUBE;
+            elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
+            this.addComponent(elementrb);
+            this.mtxLocal.scale(scale);
+            //this.mtxLocal.translateY(0.5);
+        }
+    }
+    EndlessMatrixRunnerSoSe22.FloorElement = FloorElement;
+})(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
+var EndlessMatrixRunnerSoSe22;
+(function (EndlessMatrixRunnerSoSe22) {
+    var ƒ = FudgeCore;
     //import ƒui = FudgeUserInterface;
     class GameState extends ƒ.Mutable {
         //private static controller: ƒui.Controller;
@@ -129,15 +184,20 @@ var EndlessMatrixRunnerSoSe22;
             viewport = new ƒ.Viewport();
             viewport.initialize("Viewport", EndlessMatrixRunnerSoSe22.sceneGraph, cmpCamera, canvas);
             EndlessMatrixRunnerSoSe22.sceneGraph = viewport.getBranch();
-            let playerprefab = ƒ.Project.resources["Graph|2022-05-05T12:50:15.258Z|71678"];
-            let prefabinstance = await ƒ.Project.createGraphInstance(playerprefab);
-            EndlessMatrixRunnerSoSe22.sceneGraph.addChild(prefabinstance);
-            EndlessMatrixRunnerSoSe22.playerNode = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("PlayerBody")[0];
+            // let playerprefab: ƒ.Graph = <ƒ.Graph>ƒ.Project.resources["Graph|2022-05-05T12:50:15.258Z|71678"];
+            // let prefabinstance: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(playerprefab);
+            // sceneGraph.addChild(prefabinstance);
+            EndlessMatrixRunnerSoSe22.playerNode = new EndlessMatrixRunnerSoSe22.Agent(new ƒ.Vector3(0, 0, 0));
+            EndlessMatrixRunnerSoSe22.sceneGraph.addChild(EndlessMatrixRunnerSoSe22.playerNode);
             cameraNode = new ƒ.Node("cameraNode");
             cameraNode.addComponent(cmpCamera);
             cameraNode.addComponent(new ƒ.ComponentTransform);
             cameraNode.addComponent(new EndlessMatrixRunnerSoSe22.CameraScript);
             EndlessMatrixRunnerSoSe22.sceneGraph.addChild(cameraNode);
+            let floorelement = new EndlessMatrixRunnerSoSe22.FloorElement(new ƒ.Vector3(20, 1, 2));
+            EndlessMatrixRunnerSoSe22.sceneGraph.addChild(floorelement);
+            //let obstacleplatform: ObstaclePlatform = new ObstaclePlatform();
+            //sceneGraph.addChild(obstacleplatform);
             viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
             ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -145,6 +205,15 @@ var EndlessMatrixRunnerSoSe22;
         function update(_event) {
             ƒ.Physics.simulate(); // if physics is included and used
             EndlessMatrixRunnerSoSe22.deltaTime = ƒ.Loop.timeFrameReal / 1000;
+            // //make sure all terrain objects have a proper collisiongroup assigned
+            // let platformNodes: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
+            // platformNodes.forEach(platform => {
+            //   platform.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2; //all ground objects are collision group 2
+            //   platform.getChildrenByName("Obstacle").forEach(edgeobstacle => {
+            //     edgeobstacle.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_3; //all obstacles are collision group 3
+            //     //console.log("EdgeObstacle received collision group");
+            //   });
+            // }); //all items should have collision group 4 and all npcs have collision group 5
             if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
                 //controllGround();
                 EndlessMatrixRunnerSoSe22.GameState.get().highscore += 1 * EndlessMatrixRunnerSoSe22.deltaTime;
@@ -172,9 +241,12 @@ var EndlessMatrixRunnerSoSe22;
                 EndlessMatrixRunnerSoSe22.GameState.get().highscore = 0;
             }
         }
+        // tslint:disable-next-line: typedef
         async function fetchData() {
             try {
+                // tslint:disable-next-line: typedef
                 const response = await fetch("../configuration.JSON");
+                // tslint:disable-next-line: typedef
                 const responseObj = await response.json();
                 return responseObj;
             }
@@ -183,6 +255,58 @@ var EndlessMatrixRunnerSoSe22;
             }
         }
     }
+})(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
+var EndlessMatrixRunnerSoSe22;
+(function (EndlessMatrixRunnerSoSe22) {
+    var ƒ = FudgeCore;
+    class ObstaclePlatform extends ƒ.Node {
+        constructor() {
+            super("ObstaclePlatform");
+            this.addComponent(new ƒ.ComponentTransform);
+            let elementmesh = ƒ.Project.resources["MeshCube|2022-05-05T11:29:50.067Z|61589"];
+            let elementmeshcmp = new ƒ.ComponentMesh(elementmesh);
+            elementmeshcmp.mtxPivot.scaling = new ƒ.Vector3(4, 1, 2);
+            this.addComponent(elementmeshcmp);
+            let elementmat = ƒ.Project.resources["Material|2022-05-05T11:30:27.621Z|27233"];
+            let elementmatcmp = new ƒ.ComponentMaterial(elementmat);
+            elementmatcmp.mtxPivot.scale(new ƒ.Vector2(2, 0.5));
+            this.addComponent(elementmatcmp);
+            let elementrb = new ƒ.ComponentRigidbody();
+            elementrb.initialization = ƒ.BODY_INIT.TO_MESH;
+            elementrb.mass = 1;
+            elementrb.typeBody = ƒ.BODY_TYPE.STATIC;
+            elementrb.typeCollider = ƒ.COLLIDER_TYPE.CUBE;
+            elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
+            this.addComponent(elementrb);
+            this.mtxLocal.translateY(3);
+            this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
+            this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
+            this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 1, 1));
+        }
+        createObstacleElement(position, rotation, scale) {
+            let obstacleNode = new ƒ.Node("Obstacle");
+            let elementtransform = new ƒ.ComponentTransform;
+            elementtransform.mtxLocal.translation = position;
+            elementtransform.mtxLocal.scaling = scale;
+            elementtransform.mtxLocal.rotation = rotation;
+            obstacleNode.addComponent(elementtransform);
+            let elementmesh = ƒ.Project.resources["MeshPyramid|2022-05-05T12:03:50.249Z|59428"];
+            obstacleNode.addComponent(new ƒ.ComponentMesh(elementmesh));
+            let elementmat = ƒ.Project.resources["Material|2022-05-05T12:03:08.224Z|13509"];
+            let elementmatcmp = new ƒ.ComponentMaterial(elementmat);
+            elementmatcmp.mtxPivot.scale(new ƒ.Vector2(1, 2));
+            obstacleNode.addComponent(elementmatcmp);
+            let elementrb = new ƒ.ComponentRigidbody();
+            elementrb.initialization = ƒ.BODY_INIT.TO_MESH;
+            elementrb.mass = 1;
+            elementrb.typeBody = ƒ.BODY_TYPE.STATIC;
+            elementrb.typeCollider = ƒ.COLLIDER_TYPE.PYRAMID;
+            elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_3;
+            obstacleNode.addComponent(elementrb);
+            this.addChild(obstacleNode);
+        }
+    }
+    EndlessMatrixRunnerSoSe22.ObstaclePlatform = ObstaclePlatform;
 })(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
 var EndlessMatrixRunnerSoSe22;
 (function (EndlessMatrixRunnerSoSe22) {
@@ -276,19 +400,19 @@ var EndlessMatrixRunnerSoSe22;
             this.cmpPlayerRb.setVelocity(new ƒ.Vector3(0, 0, 0));
             this.cmpPlayerRb.setPosition(new ƒ.Vector3(0, 2.2, 0));
             EndlessMatrixRunnerSoSe22.GameState.get().gameRunning = false;
-            let platforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].getChildrenByName("Platform");
+            let platforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
             platforms.forEach(platform => {
                 platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));
-                platform.getChildrenByName("EdgeObstacle").forEach(child => {
+                platform.getChildrenByName("Obstacle").forEach(child => {
                     child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
                 });
             });
-            EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Platforms")[0].removeAllChildren();
-            let groundsegments = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].getChildren();
+            EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].removeAllChildren();
+            let groundsegments = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("FloorElements")[0].getChildren();
             groundsegments.forEach(groundsegment => {
                 groundsegment.removeComponent(groundsegment.getComponent(ƒ.ComponentRigidbody));
             });
-            EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].removeAllChildren();
+            EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Floorelements")[0].removeAllChildren();
         };
     }
     EndlessMatrixRunnerSoSe22.PlayerMovement = PlayerMovement;
