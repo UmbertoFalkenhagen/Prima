@@ -111,7 +111,7 @@ namespace EndlessMatrixRunnerSoSe22 {
         if (this.isJumpPressed && isGrounded) {
           //playerNode.getComponent(ƒ.ComponentRigidbody).applyLinearImpulse(ƒ.Vector3.SCALE(playerNode.mtxLocal.getY(), 300));
           let velocityvector: ƒ.Vector3 = this.cmpPlayerRb.getVelocity();
-          velocityvector.y = 20;
+          velocityvector.y = 10;
           this.cmpPlayerRb.setVelocity(velocityvector);
           console.log("Jump from ground");
           return;
@@ -142,8 +142,8 @@ namespace EndlessMatrixRunnerSoSe22 {
         groundsegments.forEach(groundsegment => {
           groundsegment.removeComponent(groundsegment.getComponent(ƒ.ComponentRigidbody));
         });
-        sceneGraph.getChildrenByName("Floorelements")[0].removeAllChildren();
-
+        sceneGraph.getChildrenByName("FloorElements")[0].removeAllChildren();
+        let firstfloorelement: FloorElement = new FloorElement(new ƒ.Vector3(0, 0, 0))
         
       }
 

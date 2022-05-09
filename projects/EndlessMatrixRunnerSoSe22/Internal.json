@@ -97,89 +97,7 @@
             "name": "FloorElements",
             "active": true,
             "components": {},
-            "children": [
-              {
-                "ƒ.Node": {
-                  "name": "FloorElement",
-                  "active": false,
-                  "components": {
-                    "ComponentMesh": [
-                      {
-                        "ƒ.ComponentMesh": {
-                          "idMesh": "MeshCube|2022-05-05T11:29:50.067Z|61589",
-                          "pivot": {
-                            "translation": "[0, 0, 0]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[1, 1, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ],
-                    "ComponentMaterial": [
-                      {
-                        "ƒ.ComponentMaterial": {
-                          "sortForAlpha": false,
-                          "clrPrimary": "[1, 1, 1, 1]",
-                          "clrSecondary": "[1, 1, 1, 1]",
-                          "pivot": {
-                            "translation": "[0, 0]",
-                            "rotation": 0,
-                            "scaling": "[3, 0.25]"
-                          },
-                          "Component": {
-                            "active": true
-                          },
-                          "idMaterial": "Material|2022-05-05T11:30:27.621Z|27233"
-                        }
-                      }
-                    ],
-                    "ComponentTransform": [
-                      {
-                        "ƒ.ComponentTransform": {
-                          "local": {
-                            "translation": "[8, -1.5000001192092896, 0]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[20, 1, 2]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ],
-                    "ComponentRigidbody": [
-                      {
-                        "ƒ.ComponentRigidbody": {
-                          "initialization": "TO_PIVOT",
-                          "friction": 0.2,
-                          "restitution": 0.2,
-                          "mass": 1,
-                          "dampTranslation": 0.1,
-                          "dampRotation": 0.1,
-                          "effectGravity": 1,
-                          "typeBody": "STATIC",
-                          "typeCollider": "CUBE",
-                          "isTrigger": false,
-                          "id": 5,
-                          "pivot": {
-                            "translation": "[0, 0, 0]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[1, 1, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  "children": []
-                }
-              }
-            ]
+            "children": []
           }
         },
         {
@@ -193,15 +111,7 @@
                   "name": "Platforms",
                   "active": true,
                   "components": {},
-                  "children": [
-                    {
-                      "ƒ.GraphInstance": {
-                        "deserializeFromSource": true,
-                        "name": "ObstaclePlatform",
-                        "idSource": "Graph|2022-05-05T12:02:19.873Z|49803"
-                      }
-                    }
-                  ]
+                  "children": []
                 }
               }
             ]

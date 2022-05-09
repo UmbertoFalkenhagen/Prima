@@ -51,10 +51,10 @@ namespace EndlessMatrixRunnerSoSe22 {
       cameraNode.addComponent(new CameraScript);
       sceneGraph.addChild(cameraNode);
 
-      let floorelement: FloorElement = new FloorElement(new ƒ.Vector3(20, 1, 2));
-      sceneGraph.addChild(floorelement);
+      let floorelement: FloorElement = new FloorElement(new ƒ.Vector3(0, 0, 0));
+      //sceneGraph.addChild(floorelement);
 
-      //let obstacleplatform: ObstaclePlatform = new ObstaclePlatform();
+      let obstacleplatform: ObstaclePlatform = new ObstaclePlatform(new ƒ.Vector3(20, 2, 0));
       //sceneGraph.addChild(obstacleplatform);
     
       viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;

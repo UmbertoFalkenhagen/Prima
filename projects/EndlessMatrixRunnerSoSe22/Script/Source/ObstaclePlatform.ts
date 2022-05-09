@@ -1,9 +1,10 @@
 namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
     export class ObstaclePlatform extends ƒ.Node {
-        public constructor() {
+        public constructor(position: ƒ.Vector3) {
             super("ObstaclePlatform");
-            this.addComponent(new ƒ.ComponentTransform);
+            let elementtransform: ƒ.ComponentTransform = new ƒ.ComponentTransform;
+            this.addComponent(elementtransform);
 
             let elementmesh: ƒ.MeshCube = <ƒ.MeshCube>ƒ.Project.resources["MeshCube|2022-05-05T11:29:50.067Z|61589"];
             let elementmeshcmp: ƒ.ComponentMesh = new ƒ.ComponentMesh(elementmesh);
@@ -23,11 +24,13 @@ namespace EndlessMatrixRunnerSoSe22 {
             elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
             this.addComponent(elementrb);
 
-            this.mtxLocal.translateY(3);
+            this.mtxLocal.translate(position);
 
             this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
             this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
             this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 1, 1));
+        
+            sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(this);
         }
 
         private createObstacleElement(position: ƒ.Vector3, rotation: ƒ.Vector3, scale: ƒ.Vector3): void {

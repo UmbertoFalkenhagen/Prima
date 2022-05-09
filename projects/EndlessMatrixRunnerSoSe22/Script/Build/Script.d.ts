@@ -27,7 +27,7 @@ declare namespace EndlessMatrixRunnerSoSe22 {
 declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
     class FloorElement extends ƒ.Node {
-        constructor(scale: ƒ.Vector3);
+        constructor(position: ƒ.Vector3);
     }
 }
 declare namespace EndlessMatrixRunnerSoSe22 {
@@ -44,6 +44,20 @@ declare namespace EndlessMatrixRunnerSoSe22 {
 }
 declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
+    class GroundControllerScript extends ƒ.ComponentScript {
+        static readonly iSubclass: number;
+        message: string;
+        private groundNodes;
+        constructor();
+        hndEvent: (_event: Event) => void;
+        start(): void;
+        update: (_event: Event) => void;
+        private checkPlayerPosition;
+        private instantiateNewGroundSegmentAtPosition;
+    }
+}
+declare namespace EndlessMatrixRunnerSoSe22 {
+    import ƒ = FudgeCore;
     let sceneGraph: ƒ.Node;
     let playerNode: Agent;
     let configurations: any;
@@ -52,7 +66,7 @@ declare namespace EndlessMatrixRunnerSoSe22 {
 declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
     class ObstaclePlatform extends ƒ.Node {
-        constructor();
+        constructor(position: ƒ.Vector3);
         private createObstacleElement;
     }
 }

@@ -2,9 +2,10 @@ namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
 
     export class FloorElement extends ƒ.Node {
-        public constructor(scale: ƒ.Vector3) {
+        public constructor(position: ƒ.Vector3) {
             super("FloorElement");
-            this.addComponent(new ƒ.ComponentTransform);
+            let elementtransform: ƒ.ComponentTransform = new ƒ.ComponentTransform;
+            this.addComponent(elementtransform);
 
             let elementmesh: ƒ.MeshCube = <ƒ.MeshCube>ƒ.Project.resources["MeshCube|2022-05-05T11:29:50.067Z|61589"];
             this.addComponent(new ƒ.ComponentMesh(elementmesh));
@@ -22,7 +23,13 @@ namespace EndlessMatrixRunnerSoSe22 {
             elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
             this.addComponent(elementrb);
 
-            this.mtxLocal.scale(scale);
+            this.addComponent(new GroundControllerScript());
+
+            this.mtxLocal.scale(new ƒ.Vector3(20, 1, 2));
+            this.mtxLocal.translate(position);
+
+            sceneGraph.getChildrenByName("FloorElements")[0].addChild(this);
+            
             //this.mtxLocal.translateY(0.5);
         }
         
