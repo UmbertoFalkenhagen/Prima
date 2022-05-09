@@ -46,10 +46,9 @@ namespace EndlessMatrixRunnerSoSe22 {
   
       public update = (_event: Event): void => {
   
-        if (GameState.get().gameRunning) {
-          this.groundNodes = sceneGraph.getChildrenByName("FloorElements")[0].getChildrenByName("FloorElement");
-          this.checkPlayerPosition();
-        }
+        this.groundNodes = sceneGraph.getChildrenByName("FloorElements")[0].getChildrenByName("FloorElement");
+        this.checkPlayerPosition();
+        
   
       }
   

@@ -198,10 +198,8 @@ var EndlessMatrixRunnerSoSe22;
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
         update = (_event) => {
-            if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
-                this.groundNodes = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("FloorElements")[0].getChildrenByName("FloorElement");
-                this.checkPlayerPosition();
-            }
+            this.groundNodes = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("FloorElements")[0].getChildrenByName("FloorElement");
+            this.checkPlayerPosition();
         };
         checkPlayerPosition = () => {
             //console.log("Playerposition: " + playerNode.mtxLocal.translation.x);
