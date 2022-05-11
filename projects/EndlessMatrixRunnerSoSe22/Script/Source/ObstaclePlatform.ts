@@ -16,13 +16,16 @@ namespace EndlessMatrixRunnerSoSe22 {
             elementmatcmp.mtxPivot.scale(new ƒ.Vector2(2, 0.5));
             this.addComponent(elementmatcmp);
 
-            let elementrb: ƒ.ComponentRigidbody = new ƒ.ComponentRigidbody();
-            elementrb.initialization = ƒ.BODY_INIT.TO_MESH;
-            elementrb.mass = 1;
-            elementrb.typeBody = ƒ.BODY_TYPE.STATIC;
-            elementrb.typeCollider = ƒ.COLLIDER_TYPE.CUBE;
-            elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
+            let elementrb: ƒ.ComponentRigidbody = new ƒ.ComponentRigidbody(1, ƒ.BODY_TYPE.STATIC, ƒ.COLLIDER_TYPE.CUBE, ƒ.COLLISION_GROUP.GROUP_2);
             this.addComponent(elementrb);
+            elementrb.initialization = ƒ.BODY_INIT.TO_MESH;
+            // elementrb.mass = 1;
+            // elementrb.typeBody = ƒ.BODY_TYPE.STATIC;
+            // elementrb.typeCollider = ƒ.COLLIDER_TYPE.CUBE;
+            // elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
+
+            //this.addComponent(new PlatformRemover);
+            
 
             this.mtxLocal.translate(position);
 

@@ -72,6 +72,40 @@ declare namespace EndlessMatrixRunnerSoSe22 {
 }
 declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
+    class PlatformRemover extends ƒ.ComponentScript {
+        static readonly iSubclass: number;
+        message: string;
+        private groundNodes;
+        private noderb;
+        private nodetransform;
+        constructor();
+        hndEvent: (_event: Event) => void;
+        start(): void;
+        update: (_event: Event) => void;
+        private checkPlayerPosition;
+    }
+}
+declare namespace EndlessMatrixRunnerSoSe22 {
+    import ƒ = FudgeCore;
+    class PlatformSpawner extends ƒ.Node {
+        constructor(distancefromplayer: number);
+    }
+}
+declare namespace EndlessMatrixRunnerSoSe22 {
+    import ƒ = FudgeCore;
+    class PlatformSpawnerScript extends ƒ.ComponentScript {
+        message: string;
+        private distancefromplayer;
+        private spawnactivationcounter;
+        constructor(_distancefromplayer: number);
+        hndEvent: (_event: Event) => void;
+        start(): void;
+        update: (_event: Event) => void;
+        spawnNewPlatform: (xposfrombottomline: number, yposfrombottomline: number) => Promise<void>;
+    }
+}
+declare namespace EndlessMatrixRunnerSoSe22 {
+    import ƒ = FudgeCore;
     class PlayerMovement extends ƒ.ComponentScript {
         static readonly iSubclass: number;
         message: string;

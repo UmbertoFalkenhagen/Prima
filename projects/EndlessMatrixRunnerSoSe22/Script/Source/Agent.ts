@@ -21,7 +21,7 @@ namespace EndlessMatrixRunnerSoSe22 {
             elementrb.typeBody = ƒ.BODY_TYPE.DYNAMIC;
             elementrb.typeCollider = ƒ.COLLIDER_TYPE.CAPSULE;
             elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_1;
-            elementrb.restitution = 0.1;
+            elementrb.restitution = 0;
             this.addComponent(elementrb);
 
             this.addComponent(new PlayerMovement());

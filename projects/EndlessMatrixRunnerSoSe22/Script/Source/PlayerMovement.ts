@@ -143,7 +143,8 @@ namespace EndlessMatrixRunnerSoSe22 {
           groundsegment.removeComponent(groundsegment.getComponent(ƒ.ComponentRigidbody));
         });
         sceneGraph.getChildrenByName("FloorElements")[0].removeAllChildren();
-        let firstfloorelement: FloorElement = new FloorElement(new ƒ.Vector3(0, 0, 0))
+        let firstfloorelement: FloorElement = new FloorElement(new ƒ.Vector3(0, 0, 0));
+        console.log(firstfloorelement);
         
       }
 

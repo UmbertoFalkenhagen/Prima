@@ -6,6 +6,8 @@ namespace EndlessMatrixRunnerSoSe22 {
   export let sceneGraph: ƒ.Node;
   export let playerNode: Agent;
 
+  let platformSpawner: PlatformSpawner;
+
   // tslint:disable-next-line: no-any
   export let configurations: any;
   export let deltaTime: number;
@@ -52,10 +54,13 @@ namespace EndlessMatrixRunnerSoSe22 {
       sceneGraph.addChild(cameraNode);
 
       let floorelement: FloorElement = new FloorElement(new ƒ.Vector3(0, 0, 0));
-      //sceneGraph.addChild(floorelement);
+      console.log(floorelement);
 
-      let obstacleplatform: ObstaclePlatform = new ObstaclePlatform(new ƒ.Vector3(20, 2, 0));
+      //let obstacleplatform: ObstaclePlatform = new ObstaclePlatform(new ƒ.Vector3(20, 2, 0));
+      //console.log(obstacleplatform);
       //sceneGraph.addChild(obstacleplatform);
+
+      platformSpawner = new PlatformSpawner(20);
     
       viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);

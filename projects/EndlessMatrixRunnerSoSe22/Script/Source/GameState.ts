@@ -12,6 +12,7 @@ namespace EndlessMatrixRunnerSoSe22 {
         private constructor() {
             super();
             let domHud: HTMLDivElement = document.querySelector("#Hud");
+            console.log(domHud);
             GameState.instance = this;
             //GameState.controller = new ƒui.Controller(this, domHud);
             //console.log("Hud-Controller", GameState.controller);
