@@ -2,7 +2,8 @@ namespace EndlessMatrixRunnerSoSe22 {
   import ƒ = FudgeCore;
   ƒ.Project.registerScriptNamespace(EndlessMatrixRunnerSoSe22);  // Register the namespace to FUDGE for serialization
 
-  export class PlatformSpawnerScript extends ƒ.ComponentScript {
+  export class PlatformSpawnerScript extends ƒ.ComponentScript { //is attached to the platformspawner and 
+    // includes the behavior for spawning predefined combinations of platforms
     // Register the script as component for use in the editor via drag&drop
     //public static readonly iSubclass: number = ƒ.Component.registerSubclass(PlatformSpawnerScript);
     // Properties may be mutated by users in the editor via the automatically created user interface
@@ -52,74 +53,72 @@ namespace EndlessMatrixRunnerSoSe22 {
 
       this.node.mtxLocal.translation.x = playerNode.mtxLocal.translation.x + this.distancefromplayer;
 
-      if (GameState.get().gameRunning) {
-        this.spawnactivationcounter ++;
+      if (GameState.get().gameRunning && playerNode.getComponent(ƒ.ComponentRigidbody).getVelocity().x > 1) {
+        let random: ƒ.Random = new ƒ.Random();
+        let randomnumber: number = random.getRangeFloored(0, playerNode.getComponent(PlayerMovement).ctrlForward.getOutput());
+        this.spawnactivationcounter += randomnumber;
         //console.log(this.spawnactivationcounter);
-        if (this.spawnactivationcounter >= 300) {
-          
-          let random: ƒ.Random = new ƒ.Random();
-          let randomnumber: number = random.getRangeFloored(0, 100);
+        if (this.spawnactivationcounter >= 1000) {
+          random = new ƒ.Random();
+          randomnumber = random.getRangeFloored(0, 100);
           //console.log(randomnumber);
           switch (true) {
-            case (randomnumber < 25):
-              this.spawnactivationcounter = 0;
-              break;
-            case (25 <= randomnumber && randomnumber < 45) :
+            case (randomnumber && randomnumber < 45) :
               this.spawnNewPlatform(0, 0);
               console.log("Spawned one platform");
               this.spawnactivationcounter = 0;
               break;
-            case (45 <= randomnumber && randomnumber < 60) :
+            case (45 <= randomnumber && randomnumber < 70) :
               this.spawnNewPlatform(0, 0);
               this.spawnNewPlatform(15, 4);
               console.log("Spawned two platforms");
               this.spawnactivationcounter = 0;
               break;
-            case (60 <= randomnumber && randomnumber < 73) :
+            case (70 <= randomnumber && randomnumber < 100) :
               this.spawnNewPlatform(0, 0);
               this.spawnNewPlatform(15, 4);
               this.spawnNewPlatform(30, 0);
               console.log("Spawned three platforms");
               this.spawnactivationcounter = 0;
               break;
-            case (73 <= randomnumber && randomnumber < 83) :
-              this.spawnNewPlatform(0, 0);
-              this.spawnNewPlatform(15, 4);
-              this.spawnNewPlatform(30, 0);
-              this.spawnNewPlatform(25, 7);
-              console.log("Spawned four platforms");
-              this.spawnactivationcounter = 0;
-              break;
-            case (83 <= randomnumber && randomnumber < 90) :
-              this.spawnNewPlatform(0, 0);
-              this.spawnNewPlatform(15, 4);
-              this.spawnNewPlatform(30, 0);
-              this.spawnNewPlatform(25, 7);
-              this.spawnNewPlatform(35, 4);
-              console.log("Spawned five platforms");
-              this.spawnactivationcounter = 0;
-              break;
-            case (90 <= randomnumber && randomnumber < 96) :
-              this.spawnNewPlatform(0, 0);
-              this.spawnNewPlatform(15, 4);
-              this.spawnNewPlatform(30, 0);
-              this.spawnNewPlatform(25, 7);
-              this.spawnNewPlatform(35, 4);
-              this.spawnNewPlatform(45, 7);
-              console.log("Spawned six platforms");
-              this.spawnactivationcounter = 0;
-              break;
-            case (96 <= randomnumber && randomnumber < 100) :
-              this.spawnNewPlatform(0, 0);
-              this.spawnNewPlatform(15, 4);
-              this.spawnNewPlatform(30, 0);
-              this.spawnNewPlatform(25, 7);
-              this.spawnNewPlatform(35, 4);
-              this.spawnNewPlatform(45, 7);
-              this.spawnNewPlatform(60, 4);
-              console.log("Spawned seven platforms");
-              this.spawnactivationcounter = 0;
-              break;
+            // case (73 <= randomnumber && randomnumber < 83) :
+            //   this.spawnNewPlatform(0, 0);
+            //   this.spawnNewPlatform(15, 4);
+            //   this.spawnNewPlatform(30, 0);
+            //   this.spawnNewPlatform(25, 7);
+            //   console.log("Spawned four platforms");
+            //   this.spawnactivationcounter = 0;
+            //   break;
+            // case (83 <= randomnumber && randomnumber < 90) :
+            //   this.spawnNewPlatform(0, 0);
+            //   this.spawnNewPlatform(15, 4);
+            //   this.spawnNewPlatform(30, 0);
+            //   this.spawnNewPlatform(25, 7);
+            //   this.spawnNewPlatform(35, 4);
+            //   console.log("Spawned five platforms");
+            //   this.spawnactivationcounter = 0;
+            //   break;
+            // case (90 <= randomnumber && randomnumber < 96) :
+            //   this.spawnNewPlatform(0, 0);
+            //   this.spawnNewPlatform(15, 4);
+            //   this.spawnNewPlatform(30, 0);
+            //   this.spawnNewPlatform(25, 7);
+            //   this.spawnNewPlatform(35, 4);
+            //   this.spawnNewPlatform(45, 7);
+            //   console.log("Spawned six platforms");
+            //   this.spawnactivationcounter = 0;
+            //   break;
+            // case (96 <= randomnumber && randomnumber < 100) :
+            //   this.spawnNewPlatform(0, 0);
+            //   this.spawnNewPlatform(15, 4);
+            //   this.spawnNewPlatform(30, 0);
+            //   this.spawnNewPlatform(25, 7);
+            //   this.spawnNewPlatform(35, 4);
+            //   this.spawnNewPlatform(45, 7);
+            //   this.spawnNewPlatform(60, 4);
+            //   console.log("Spawned seven platforms");
+            //   this.spawnactivationcounter = 0;
+            //   break;
             default:
               break;
           }

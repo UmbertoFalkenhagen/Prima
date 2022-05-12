@@ -1,7 +1,7 @@
 namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
 
-    export class Agent extends ƒ.Node {
+    export class Agent extends ƒ.Node { //creating a new agent will create a new player with all necessary components
         public constructor(position: ƒ.Vector3) {
             super("Agent");
             this.addComponent(new ƒ.ComponentTransform);
@@ -17,14 +17,17 @@ namespace EndlessMatrixRunnerSoSe22 {
 
             let elementrb: ƒ.ComponentRigidbody = new ƒ.ComponentRigidbody();
             elementrb.initialization = ƒ.BODY_INIT.TO_PIVOT;
-            elementrb.mass = 30;
+            elementrb.mass = 20;
             elementrb.typeBody = ƒ.BODY_TYPE.DYNAMIC;
             elementrb.typeCollider = ƒ.COLLIDER_TYPE.CAPSULE;
             elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_1;
             elementrb.restitution = 0;
+            elementrb.effectGravity = 2;
+            elementrb.friction = 0;
             this.addComponent(elementrb);
 
             this.addComponent(new PlayerMovement());
+            this.addComponent(new PlatformRemover);
 
             this.mtxWorld.translation = position;
             this.mtxLocal.translateY(3);

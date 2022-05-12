@@ -61,6 +61,7 @@ namespace EndlessMatrixRunnerSoSe22 {
       //sceneGraph.addChild(obstacleplatform);
 
       platformSpawner = new PlatformSpawner(20);
+      console.log(platformSpawner);
     
       viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);

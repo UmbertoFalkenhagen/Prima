@@ -75,9 +75,7 @@ declare namespace EndlessMatrixRunnerSoSe22 {
     class PlatformRemover extends ƒ.ComponentScript {
         static readonly iSubclass: number;
         message: string;
-        private groundNodes;
-        private noderb;
-        private nodetransform;
+        private platformnodes;
         constructor();
         hndEvent: (_event: Event) => void;
         start(): void;
@@ -109,9 +107,9 @@ declare namespace EndlessMatrixRunnerSoSe22 {
     class PlayerMovement extends ƒ.ComponentScript {
         static readonly iSubclass: number;
         message: string;
+        ctrlForward: ƒ.Control;
         private ctrlJump;
         private isJumpPressed;
-        private ctrlForward;
         private cmpPlayerRb;
         constructor();
         hndEvent: (_event: Event) => void;

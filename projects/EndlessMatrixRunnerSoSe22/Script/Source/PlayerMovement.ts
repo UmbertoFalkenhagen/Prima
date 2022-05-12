@@ -8,10 +8,11 @@ namespace EndlessMatrixRunnerSoSe22 {
     // Properties may be mutated by users in the editor via the automatically created user interface
     public message: string = "PlayerMovement added to ";
     
+    public ctrlForward: ƒ.Control = new ƒ.Control("Forward", 10, ƒ.CONTROL_TYPE.PROPORTIONAL);
     private ctrlJump: ƒ.Control = new ƒ.Control("Jump", 1, ƒ.CONTROL_TYPE.DIFFERENTIAL);
     private isJumpPressed: boolean = false;
 
-    private ctrlForward: ƒ.Control = new ƒ.Control("Forward", 10, ƒ.CONTROL_TYPE.PROPORTIONAL);
+    
     //private canDash: boolean = true;
 
     //private groundRB: ƒ.ComponentRigidbody;
@@ -49,7 +50,7 @@ namespace EndlessMatrixRunnerSoSe22 {
 
     public start (): void  {
       
-      this.ctrlForward.setDelay(10);
+      this.ctrlForward.setDelay(0);
 
       
 
@@ -73,8 +74,9 @@ namespace EndlessMatrixRunnerSoSe22 {
 
       if (GameState.get().gameRunning) {
 
-        this.ctrlForward.setInput(configurations.initialspeed);
-        playerNode.getComponent(ƒ.ComponentRigidbody).applyForce(ƒ.Vector3.SCALE(playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
+        this.ctrlForward.setInput(configurations.maxspeed);
+        //this.cmpPlayerRb.setVelocity(new ƒ.Vector3(this.ctrlForward.getOutput(), this.cmpPlayerRb.getVelocity().y, this.cmpPlayerRb.getVelocity().z));
+        this.cmpPlayerRb.applyForce(ƒ.Vector3.SCALE(playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
   
         let isGrounded: boolean = false;
   
@@ -110,13 +112,14 @@ namespace EndlessMatrixRunnerSoSe22 {
         
         if (this.isJumpPressed && isGrounded) {
           //playerNode.getComponent(ƒ.ComponentRigidbody).applyLinearImpulse(ƒ.Vector3.SCALE(playerNode.mtxLocal.getY(), 300));
-          let velocityvector: ƒ.Vector3 = this.cmpPlayerRb.getVelocity();
-          velocityvector.y = 10;
-          this.cmpPlayerRb.setVelocity(velocityvector);
+          // let velocityvector: ƒ.Vector3 = this.cmpPlayerRb.getVelocity();
+          // velocityvector.y = 20;
+          // this.cmpPlayerRb.setVelocity(velocityvector);
+          this.cmpPlayerRb.applyLinearImpulse(ƒ.Vector3.SCALE(playerNode.mtxLocal.getY(), 400));
           console.log("Jump from ground");
           return;
         } else if (this.isJumpPressed && !isGrounded) {
-          playerNode.getComponent(ƒ.ComponentRigidbody).applyLinearImpulse(ƒ.Vector3.SCALE(playerNode.mtxLocal.getY(), -400));
+          this.cmpPlayerRb.applyLinearImpulse(ƒ.Vector3.SCALE(playerNode.mtxLocal.getY(), -400));
           console.log("Dive towards ground");
         }
       }
@@ -128,7 +131,7 @@ namespace EndlessMatrixRunnerSoSe22 {
         this.cmpPlayerRb.setVelocity(new ƒ.Vector3(0, 0, 0));
         this.cmpPlayerRb.setPosition(new ƒ.Vector3(0, 2.2, 0));
         GameState.get().gameRunning = false;
-        let platforms: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
+        let platforms: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
         platforms.forEach(platform => {
           platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));
           platform.getChildrenByName("Obstacle").forEach(child => {

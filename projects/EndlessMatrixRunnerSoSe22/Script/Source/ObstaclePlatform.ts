@@ -3,6 +3,7 @@ namespace EndlessMatrixRunnerSoSe22 {
     export class ObstaclePlatform extends ƒ.Node {
         public constructor(position: ƒ.Vector3) {
             super("ObstaclePlatform");
+            this.name = "ObstaclePlatform";
             let elementtransform: ƒ.ComponentTransform = new ƒ.ComponentTransform;
             this.addComponent(elementtransform);
 
@@ -24,7 +25,6 @@ namespace EndlessMatrixRunnerSoSe22 {
             // elementrb.typeCollider = ƒ.COLLIDER_TYPE.CUBE;
             // elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
 
-            //this.addComponent(new PlatformRemover);
             
 
             this.mtxLocal.translate(position);
@@ -34,6 +34,7 @@ namespace EndlessMatrixRunnerSoSe22 {
             this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 1, 1));
         
             sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(this);
+            //console.log(sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren().length);
         }
 
         private createObstacleElement(position: ƒ.Vector3, rotation: ƒ.Vector3, scale: ƒ.Vector3): void {

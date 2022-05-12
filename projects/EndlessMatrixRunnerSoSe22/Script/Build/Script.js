@@ -15,13 +15,16 @@ var EndlessMatrixRunnerSoSe22;
             this.addComponent(elementmatcmp);
             let elementrb = new ƒ.ComponentRigidbody();
             elementrb.initialization = ƒ.BODY_INIT.TO_PIVOT;
-            elementrb.mass = 30;
+            elementrb.mass = 20;
             elementrb.typeBody = ƒ.BODY_TYPE.DYNAMIC;
             elementrb.typeCollider = ƒ.COLLIDER_TYPE.CAPSULE;
             elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_1;
             elementrb.restitution = 0;
+            elementrb.effectGravity = 2;
+            elementrb.friction = 0;
             this.addComponent(elementrb);
             this.addComponent(new EndlessMatrixRunnerSoSe22.PlayerMovement());
+            this.addComponent(new EndlessMatrixRunnerSoSe22.PlatformRemover);
             this.mtxWorld.translation = position;
             this.mtxLocal.translateY(3);
         }
@@ -272,6 +275,7 @@ var EndlessMatrixRunnerSoSe22;
             //console.log(obstacleplatform);
             //sceneGraph.addChild(obstacleplatform);
             platformSpawner = new EndlessMatrixRunnerSoSe22.PlatformSpawner(20);
+            console.log(platformSpawner);
             viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
             ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -336,6 +340,7 @@ var EndlessMatrixRunnerSoSe22;
     class ObstaclePlatform extends ƒ.Node {
         constructor(position) {
             super("ObstaclePlatform");
+            this.name = "ObstaclePlatform";
             let elementtransform = new ƒ.ComponentTransform;
             this.addComponent(elementtransform);
             let elementmesh = ƒ.Project.resources["MeshCube|2022-05-05T11:29:50.067Z|61589"];
@@ -353,12 +358,12 @@ var EndlessMatrixRunnerSoSe22;
             // elementrb.typeBody = ƒ.BODY_TYPE.STATIC;
             // elementrb.typeCollider = ƒ.COLLIDER_TYPE.CUBE;
             // elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
-            //this.addComponent(new PlatformRemover);
             this.mtxLocal.translate(position);
             this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
             this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
             this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 1, 1));
             EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(this);
+            //console.log(sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren().length);
         }
         createObstacleElement(position, rotation, scale) {
             let obstacleNode = new ƒ.Node("Obstacle");
@@ -393,10 +398,8 @@ var EndlessMatrixRunnerSoSe22;
         // Register the script as component for use in the editor via drag&drop
         static iSubclass = ƒ.Component.registerSubclass(PlatformRemover);
         // Properties may be mutated by users in the editor via the automatically created user interface
-        message = "PlatfromRemover added to ";
-        groundNodes;
-        noderb;
-        nodetransform;
+        message = "PlatformRemover added to ";
+        platformnodes;
         constructor() {
             super();
             // Don't start when running in editor
@@ -420,26 +423,28 @@ var EndlessMatrixRunnerSoSe22;
             }
         };
         start() {
-            this.noderb = this.node.getComponent(ƒ.ComponentRigidbody);
-            this.nodetransform = this.node.getComponent(ƒ.ComponentTransform);
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
         update = (_event) => {
-            this.groundNodes = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
-            this.checkPlayerPosition();
+            this.platformnodes = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
+            console.log(this.platformnodes.length);
+            this.platformnodes.forEach(platform => {
+                this.checkPlayerPosition(platform);
+            });
         };
-        checkPlayerPosition = () => {
+        checkPlayerPosition = (_platformnode) => {
             //console.log("Playerposition: " + playerNode.mtxLocal.translation.x);
             //console.log("Platformposition: " + this.node.mtxLocal.translation.x);
-            if (EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x - 20 >= this.nodetransform.mtxLocal.translation.x) {
-                this.node.removeComponent(this.noderb);
-                this.node.getChildren().forEach(child => {
+            if (this.node.mtxLocal.translation.x - 20 >= _platformnode.mtxLocal.translation.x) {
+                console.log(this.platformnodes.length);
+                _platformnode.removeComponent(_platformnode.getComponent(ƒ.ComponentRigidbody));
+                _platformnode.getChildren().forEach(child => {
                     child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
                 });
-                this.node.removeAllChildren();
-                this.node.removeComponent(this);
-                EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].removeChild(this.node);
+                _platformnode.removeAllChildren();
+                EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].removeChild(_platformnode);
                 console.log("Removed platform segment");
+                console.log(this.platformnodes.length);
             }
         };
     }
@@ -464,6 +469,7 @@ var EndlessMatrixRunnerSoSe22;
     var ƒ = FudgeCore;
     ƒ.Project.registerScriptNamespace(EndlessMatrixRunnerSoSe22); // Register the namespace to FUDGE for serialization
     class PlatformSpawnerScript extends ƒ.ComponentScript {
+        // includes the behavior for spawning predefined combinations of platforms
         // Register the script as component for use in the editor via drag&drop
         //public static readonly iSubclass: number = ƒ.Component.registerSubclass(PlatformSpawnerScript);
         // Properties may be mutated by users in the editor via the automatically created user interface
@@ -499,73 +505,72 @@ var EndlessMatrixRunnerSoSe22;
         }
         update = (_event) => {
             this.node.mtxLocal.translation.x = EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x + this.distancefromplayer;
-            if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
-                this.spawnactivationcounter++;
+            if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning && EndlessMatrixRunnerSoSe22.playerNode.getComponent(ƒ.ComponentRigidbody).getVelocity().x > 1) {
+                let random = new ƒ.Random();
+                let randomnumber = random.getRangeFloored(0, EndlessMatrixRunnerSoSe22.playerNode.getComponent(EndlessMatrixRunnerSoSe22.PlayerMovement).ctrlForward.getOutput());
+                this.spawnactivationcounter += randomnumber;
                 //console.log(this.spawnactivationcounter);
-                if (this.spawnactivationcounter >= 300) {
-                    let random = new ƒ.Random();
-                    let randomnumber = random.getRangeFloored(0, 100);
+                if (this.spawnactivationcounter >= 1000) {
+                    random = new ƒ.Random();
+                    randomnumber = random.getRangeFloored(0, 100);
                     //console.log(randomnumber);
                     switch (true) {
-                        case (randomnumber < 25):
-                            this.spawnactivationcounter = 0;
-                            break;
-                        case (25 <= randomnumber && randomnumber < 45):
+                        case (randomnumber && randomnumber < 45):
                             this.spawnNewPlatform(0, 0);
                             console.log("Spawned one platform");
                             this.spawnactivationcounter = 0;
                             break;
-                        case (45 <= randomnumber && randomnumber < 60):
+                        case (45 <= randomnumber && randomnumber < 70):
                             this.spawnNewPlatform(0, 0);
                             this.spawnNewPlatform(15, 4);
                             console.log("Spawned two platforms");
                             this.spawnactivationcounter = 0;
                             break;
-                        case (60 <= randomnumber && randomnumber < 73):
+                        case (70 <= randomnumber && randomnumber < 100):
                             this.spawnNewPlatform(0, 0);
                             this.spawnNewPlatform(15, 4);
                             this.spawnNewPlatform(30, 0);
                             console.log("Spawned three platforms");
                             this.spawnactivationcounter = 0;
                             break;
-                        case (73 <= randomnumber && randomnumber < 83):
-                            this.spawnNewPlatform(0, 0);
-                            this.spawnNewPlatform(15, 4);
-                            this.spawnNewPlatform(30, 0);
-                            this.spawnNewPlatform(25, 7);
-                            console.log("Spawned four platforms");
-                            this.spawnactivationcounter = 0;
-                            break;
-                        case (83 <= randomnumber && randomnumber < 90):
-                            this.spawnNewPlatform(0, 0);
-                            this.spawnNewPlatform(15, 4);
-                            this.spawnNewPlatform(30, 0);
-                            this.spawnNewPlatform(25, 7);
-                            this.spawnNewPlatform(35, 4);
-                            console.log("Spawned five platforms");
-                            this.spawnactivationcounter = 0;
-                            break;
-                        case (90 <= randomnumber && randomnumber < 96):
-                            this.spawnNewPlatform(0, 0);
-                            this.spawnNewPlatform(15, 4);
-                            this.spawnNewPlatform(30, 0);
-                            this.spawnNewPlatform(25, 7);
-                            this.spawnNewPlatform(35, 4);
-                            this.spawnNewPlatform(45, 7);
-                            console.log("Spawned six platforms");
-                            this.spawnactivationcounter = 0;
-                            break;
-                        case (96 <= randomnumber && randomnumber < 100):
-                            this.spawnNewPlatform(0, 0);
-                            this.spawnNewPlatform(15, 4);
-                            this.spawnNewPlatform(30, 0);
-                            this.spawnNewPlatform(25, 7);
-                            this.spawnNewPlatform(35, 4);
-                            this.spawnNewPlatform(45, 7);
-                            this.spawnNewPlatform(60, 4);
-                            console.log("Spawned seven platforms");
-                            this.spawnactivationcounter = 0;
-                            break;
+                        // case (73 <= randomnumber && randomnumber < 83) :
+                        //   this.spawnNewPlatform(0, 0);
+                        //   this.spawnNewPlatform(15, 4);
+                        //   this.spawnNewPlatform(30, 0);
+                        //   this.spawnNewPlatform(25, 7);
+                        //   console.log("Spawned four platforms");
+                        //   this.spawnactivationcounter = 0;
+                        //   break;
+                        // case (83 <= randomnumber && randomnumber < 90) :
+                        //   this.spawnNewPlatform(0, 0);
+                        //   this.spawnNewPlatform(15, 4);
+                        //   this.spawnNewPlatform(30, 0);
+                        //   this.spawnNewPlatform(25, 7);
+                        //   this.spawnNewPlatform(35, 4);
+                        //   console.log("Spawned five platforms");
+                        //   this.spawnactivationcounter = 0;
+                        //   break;
+                        // case (90 <= randomnumber && randomnumber < 96) :
+                        //   this.spawnNewPlatform(0, 0);
+                        //   this.spawnNewPlatform(15, 4);
+                        //   this.spawnNewPlatform(30, 0);
+                        //   this.spawnNewPlatform(25, 7);
+                        //   this.spawnNewPlatform(35, 4);
+                        //   this.spawnNewPlatform(45, 7);
+                        //   console.log("Spawned six platforms");
+                        //   this.spawnactivationcounter = 0;
+                        //   break;
+                        // case (96 <= randomnumber && randomnumber < 100) :
+                        //   this.spawnNewPlatform(0, 0);
+                        //   this.spawnNewPlatform(15, 4);
+                        //   this.spawnNewPlatform(30, 0);
+                        //   this.spawnNewPlatform(25, 7);
+                        //   this.spawnNewPlatform(35, 4);
+                        //   this.spawnNewPlatform(45, 7);
+                        //   this.spawnNewPlatform(60, 4);
+                        //   console.log("Spawned seven platforms");
+                        //   this.spawnactivationcounter = 0;
+                        //   break;
                         default:
                             break;
                     }
@@ -592,9 +597,9 @@ var EndlessMatrixRunnerSoSe22;
         static iSubclass = ƒ.Component.registerSubclass(PlayerMovement);
         // Properties may be mutated by users in the editor via the automatically created user interface
         message = "PlayerMovement added to ";
+        ctrlForward = new ƒ.Control("Forward", 10, 0 /* PROPORTIONAL */);
         ctrlJump = new ƒ.Control("Jump", 1, 2 /* DIFFERENTIAL */);
         isJumpPressed = false;
-        ctrlForward = new ƒ.Control("Forward", 10, 0 /* PROPORTIONAL */);
         //private canDash: boolean = true;
         //private groundRB: ƒ.ComponentRigidbody;
         cmpPlayerRb;
@@ -621,7 +626,7 @@ var EndlessMatrixRunnerSoSe22;
             }
         };
         start() {
-            this.ctrlForward.setDelay(10);
+            this.ctrlForward.setDelay(0);
             //this.groundRB = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Ground")[0].getComponent(ƒ.ComponentRigidbody);
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
@@ -630,8 +635,9 @@ var EndlessMatrixRunnerSoSe22;
             this.cmpPlayerRb.effectRotation = new ƒ.Vector3(0, 0, 0);
             this.ctrlJump.setDelay(EndlessMatrixRunnerSoSe22.deltaTime * 1000 - 1);
             if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
-                this.ctrlForward.setInput(EndlessMatrixRunnerSoSe22.configurations.initialspeed);
-                EndlessMatrixRunnerSoSe22.playerNode.getComponent(ƒ.ComponentRigidbody).applyForce(ƒ.Vector3.SCALE(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
+                this.ctrlForward.setInput(EndlessMatrixRunnerSoSe22.configurations.maxspeed);
+                //this.cmpPlayerRb.setVelocity(new ƒ.Vector3(this.ctrlForward.getOutput(), this.cmpPlayerRb.getVelocity().y, this.cmpPlayerRb.getVelocity().z));
+                this.cmpPlayerRb.applyForce(ƒ.Vector3.SCALE(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
                 let isGrounded = false;
                 let playerCollisions = this.cmpPlayerRb.collisions;
                 playerCollisions.forEach(collider => {
@@ -658,14 +664,15 @@ var EndlessMatrixRunnerSoSe22;
                 }
                 if (this.isJumpPressed && isGrounded) {
                     //playerNode.getComponent(ƒ.ComponentRigidbody).applyLinearImpulse(ƒ.Vector3.SCALE(playerNode.mtxLocal.getY(), 300));
-                    let velocityvector = this.cmpPlayerRb.getVelocity();
-                    velocityvector.y = 10;
-                    this.cmpPlayerRb.setVelocity(velocityvector);
+                    // let velocityvector: ƒ.Vector3 = this.cmpPlayerRb.getVelocity();
+                    // velocityvector.y = 20;
+                    // this.cmpPlayerRb.setVelocity(velocityvector);
+                    this.cmpPlayerRb.applyLinearImpulse(ƒ.Vector3.SCALE(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.getY(), 400));
                     console.log("Jump from ground");
                     return;
                 }
                 else if (this.isJumpPressed && !isGrounded) {
-                    EndlessMatrixRunnerSoSe22.playerNode.getComponent(ƒ.ComponentRigidbody).applyLinearImpulse(ƒ.Vector3.SCALE(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.getY(), -400));
+                    this.cmpPlayerRb.applyLinearImpulse(ƒ.Vector3.SCALE(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.getY(), -400));
                     console.log("Dive towards ground");
                 }
             }
@@ -675,7 +682,7 @@ var EndlessMatrixRunnerSoSe22;
             this.cmpPlayerRb.setVelocity(new ƒ.Vector3(0, 0, 0));
             this.cmpPlayerRb.setPosition(new ƒ.Vector3(0, 2.2, 0));
             EndlessMatrixRunnerSoSe22.GameState.get().gameRunning = false;
-            let platforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
+            let platforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
             platforms.forEach(platform => {
                 platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));
                 platform.getChildrenByName("Obstacle").forEach(child => {
