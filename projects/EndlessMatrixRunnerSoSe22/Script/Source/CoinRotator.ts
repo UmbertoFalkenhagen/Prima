@@ -2,12 +2,14 @@ namespace EndlessMatrixRunnerSoSe22 {
   import ƒ = FudgeCore;
   ƒ.Project.registerScriptNamespace(EndlessMatrixRunnerSoSe22);  // Register the namespace to FUDGE for serialization
 
-  export class CameraScript extends ƒ.ComponentScript {
+  export class CoinRotator extends ƒ.ComponentScript {
     // Register the script as component for use in the editor via drag&drop
-    public static readonly iSubclass: number = ƒ.Component.registerSubclass(CameraScript);
+    public static readonly iSubclass: number = ƒ.Component.registerSubclass(CoinRotator);
     // Properties may be mutated by users in the editor via the automatically created user interface
-    public message: string = "CameraScript added to ";
-
+    public message: string = "CoinRotator added to ";
+    private minheight: number;
+    private maxheight: number;
+    private moveDir: boolean = false;
 
     constructor() {
       super();
@@ -19,6 +21,7 @@ namespace EndlessMatrixRunnerSoSe22 {
       // Listen to this component being added to or removed from a node
       this.addEventListener(ƒ.EVENT.COMPONENT_ADD, this.hndEvent);
       this.addEventListener(ƒ.EVENT.COMPONENT_REMOVE, this.hndEvent);
+      this.addEventListener(ƒ.EVENT.NODE_DESERIALIZED, this.hndEvent);
     }
 
     // Activate the functions of this component as response to events
@@ -32,23 +35,41 @@ namespace EndlessMatrixRunnerSoSe22 {
           this.removeEventListener(ƒ.EVENT.COMPONENT_ADD, this.hndEvent);
           this.removeEventListener(ƒ.EVENT.COMPONENT_REMOVE, this.hndEvent);
           break;
+        case ƒ.EVENT.NODE_DESERIALIZED:
+          // if deserialized the node is now fully reconstructed and access to all its components and children is possible
+          break;
       }
     }
 
     public start (): void  {
      
-      this.node.mtxLocal.translation.y = playerNode.mtxLocal.translation.y + 7.5;
+      this.maxheight = this.node.mtxLocal.translation.y + 0.25;
+      this.minheight = this.node.mtxLocal.translation.y - 0.25;
+      
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
       
       
     }
 
     public update = (_event: Event): void => {
-      this.node.mtxLocal.translation.x = playerNode.mtxLocal.translation.x;
-      this.node.mtxLocal.translation.z = playerNode.mtxLocal.translation.z + 40;
-      this.node.mtxLocal.lookAt(playerNode.mtxLocal.translation);
-    }
+      this.node.mtxLocal.rotateY(deltaTime * 180);
 
+      if (this.moveDir) {
+        if (this.node.mtxLocal.translation.y < this.maxheight) {
+          this.node.mtxLocal.translateY(deltaTime);
+        } else {
+          this.node.mtxLocal.translation.y = this.maxheight;
+          this.moveDir = !this.moveDir;
+        }
+      } else {
+        if (this.node.mtxLocal.translation.y > this.minheight) {
+          this.node.mtxLocal.translateY(-deltaTime);
+        } else {
+          this.node.mtxLocal.translation.y = this.minheight;
+          this.moveDir = !this.moveDir;
+        }
+      }
+    }
 
     // protected reduceMutator(_mutator: ƒ.Mutator): void {
     //   // delete properties that should not be mutated

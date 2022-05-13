@@ -11,6 +11,8 @@ namespace EndlessMatrixRunnerSoSe22 {
 
     private distancefromplayer: number;
     private spawnactivationcounter: number = 0;
+    private currentplatforms: ƒ.Node[];
+    private currentplatformswithcoin: ƒ.Node[];
     //private platformGraph: ƒ.Graph;
 
 
@@ -51,14 +53,19 @@ namespace EndlessMatrixRunnerSoSe22 {
 
     public update = (_event: Event): void => {
 
+      this.currentplatforms = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
       this.node.mtxLocal.translation.x = playerNode.mtxLocal.translation.x + this.distancefromplayer;
+      this.createRandomPlatformAmount();
+      this.addCoinsToPlatforms();
+    }
 
+    public createRandomPlatformAmount(): void {
       if (GameState.get().gameRunning && playerNode.getComponent(ƒ.ComponentRigidbody).getVelocity().x > 1) {
         let random: ƒ.Random = new ƒ.Random();
         let randomnumber: number = random.getRangeFloored(0, playerNode.getComponent(PlayerMovement).ctrlForward.getOutput());
         this.spawnactivationcounter += randomnumber;
         //console.log(this.spawnactivationcounter);
-        if (this.spawnactivationcounter >= 1000) {
+        if (this.spawnactivationcounter >= 1000 && this.currentplatforms.length <= 10) {
           random = new ƒ.Random();
           randomnumber = random.getRangeFloored(0, 100);
           //console.log(randomnumber);
@@ -122,6 +129,7 @@ namespace EndlessMatrixRunnerSoSe22 {
             default:
               break;
           }
+          this.currentplatforms = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
         }
       }
     }
@@ -135,6 +143,21 @@ namespace EndlessMatrixRunnerSoSe22 {
       console.log("Added platform segment");
     }
 
+    public addCoinsToPlatforms(): void {
+      
+      this.currentplatforms.forEach(platform => {
+        if (platform.getChildrenByName("Coin").length == 0 && platform.mtxLocal.translation.x - 30 > playerNode.mtxLocal.translation.x ) {
+          let random: ƒ.Random = new ƒ.Random();
+          let randomnumber: number = random.getRangeFloored(0, 200);
+          if (randomnumber == 1) {
+            let newcoin: Coin = new Coin(platform);
+          }
+           
+          
+        }
+        
+      });
+    }
     
 
 

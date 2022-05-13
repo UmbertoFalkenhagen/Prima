@@ -45,7 +45,7 @@ namespace EndlessMatrixRunnerSoSe22 {
       public update = (_event: Event): void => {
   
         this.platformnodes = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
-        console.log(this.platformnodes.length);
+        //console.log(this.platformnodes.length);
         this.platformnodes.forEach(platform => {
           this.checkPlayerPosition(platform);
         });

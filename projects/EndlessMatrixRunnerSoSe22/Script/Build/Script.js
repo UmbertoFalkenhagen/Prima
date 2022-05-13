@@ -25,7 +25,7 @@ var EndlessMatrixRunnerSoSe22;
             this.addComponent(elementrb);
             this.addComponent(new EndlessMatrixRunnerSoSe22.PlayerMovement());
             this.addComponent(new EndlessMatrixRunnerSoSe22.PlatformRemover);
-            this.mtxWorld.translation = position;
+            this.mtxLocal.translation = position;
             this.mtxLocal.translateY(3);
         }
     }
@@ -68,11 +68,113 @@ var EndlessMatrixRunnerSoSe22;
         }
         update = (_event) => {
             this.node.mtxLocal.translation.x = EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x;
-            this.node.mtxLocal.translation.z = EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.z + 30;
+            this.node.mtxLocal.translation.z = EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.z + 40;
             this.node.mtxLocal.lookAt(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation);
         };
     }
     EndlessMatrixRunnerSoSe22.CameraScript = CameraScript;
+})(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
+var EndlessMatrixRunnerSoSe22;
+(function (EndlessMatrixRunnerSoSe22) {
+    var ƒ = FudgeCore;
+    class Coin extends ƒ.Node {
+        constructor(parenplatform) {
+            super("Coin");
+            this.name = "Coin";
+            let elementtransform = new ƒ.ComponentTransform();
+            this.addComponent(elementtransform);
+            let elementmesh = ƒ.Project.resources["MeshTorus|2022-05-13T12:24:39.125Z|90532"];
+            let elementmeshcmp = new ƒ.ComponentMesh(elementmesh);
+            elementmeshcmp.mtxPivot.scaling = new ƒ.Vector3(1, 1, 1);
+            elementmeshcmp.mtxPivot.rotateX(90);
+            this.addComponent(elementmeshcmp);
+            let elementmat = ƒ.Project.resources["Material|2022-05-13T12:25:28.997Z|99078"];
+            let elementmatcmp = new ƒ.ComponentMaterial(elementmat);
+            this.addComponent(elementmatcmp);
+            let elementrb = new ƒ.ComponentRigidbody();
+            elementrb.initialization = ƒ.BODY_INIT.TO_PIVOT;
+            elementrb.mass = 20;
+            elementrb.typeBody = ƒ.BODY_TYPE.KINEMATIC;
+            elementrb.typeCollider = ƒ.COLLIDER_TYPE.SPHERE;
+            elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_4;
+            elementrb.restitution = 0;
+            elementrb.effectGravity = 0;
+            elementrb.friction = 0;
+            elementrb.isTrigger = true;
+            this.addComponent(elementrb);
+            this.mtxLocal.translateY(1.5);
+            this.addComponent(new EndlessMatrixRunnerSoSe22.CoinRotator());
+            parenplatform.addChild(this);
+        }
+    }
+    EndlessMatrixRunnerSoSe22.Coin = Coin;
+})(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
+var EndlessMatrixRunnerSoSe22;
+(function (EndlessMatrixRunnerSoSe22) {
+    var ƒ = FudgeCore;
+    ƒ.Project.registerScriptNamespace(EndlessMatrixRunnerSoSe22); // Register the namespace to FUDGE for serialization
+    class CoinRotator extends ƒ.ComponentScript {
+        // Register the script as component for use in the editor via drag&drop
+        static iSubclass = ƒ.Component.registerSubclass(CoinRotator);
+        // Properties may be mutated by users in the editor via the automatically created user interface
+        message = "CoinRotator added to ";
+        minheight;
+        maxheight;
+        moveDir = false;
+        constructor() {
+            super();
+            // Don't start when running in editor
+            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                return;
+            // Listen to this component being added to or removed from a node
+            this.addEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
+            this.addEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
+            this.addEventListener("nodeDeserialized" /* NODE_DESERIALIZED */, this.hndEvent);
+        }
+        // Activate the functions of this component as response to events
+        hndEvent = (_event) => {
+            switch (_event.type) {
+                case "componentAdd" /* COMPONENT_ADD */:
+                    ƒ.Debug.log(this.message, this.node);
+                    this.start();
+                    break;
+                case "componentRemove" /* COMPONENT_REMOVE */:
+                    this.removeEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
+                    this.removeEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
+                    break;
+                case "nodeDeserialized" /* NODE_DESERIALIZED */:
+                    // if deserialized the node is now fully reconstructed and access to all its components and children is possible
+                    break;
+            }
+        };
+        start() {
+            this.maxheight = this.node.mtxLocal.translation.y + 0.25;
+            this.minheight = this.node.mtxLocal.translation.y - 0.25;
+            ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
+        }
+        update = (_event) => {
+            this.node.mtxLocal.rotateY(EndlessMatrixRunnerSoSe22.deltaTime * 180);
+            if (this.moveDir) {
+                if (this.node.mtxLocal.translation.y < this.maxheight) {
+                    this.node.mtxLocal.translateY(EndlessMatrixRunnerSoSe22.deltaTime);
+                }
+                else {
+                    this.node.mtxLocal.translation.y = this.maxheight;
+                    this.moveDir = !this.moveDir;
+                }
+            }
+            else {
+                if (this.node.mtxLocal.translation.y > this.minheight) {
+                    this.node.mtxLocal.translateY(-EndlessMatrixRunnerSoSe22.deltaTime);
+                }
+                else {
+                    this.node.mtxLocal.translation.y = this.minheight;
+                    this.moveDir = !this.moveDir;
+                }
+            }
+        };
+    }
+    EndlessMatrixRunnerSoSe22.CoinRotator = CoinRotator;
 })(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
 var EndlessMatrixRunnerSoSe22;
 (function (EndlessMatrixRunnerSoSe22) {
@@ -208,13 +310,13 @@ var EndlessMatrixRunnerSoSe22;
         checkPlayerPosition = () => {
             //console.log("Playerposition: " + playerNode.mtxLocal.translation.x);
             //console.log("Platformposition: " + this.node.mtxLocal.translation.x);
-            if ((EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x + 20 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2)
+            if ((EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x + 30 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2)
                 && this.node == this.groundNodes[this.groundNodes.length - 1]) {
                 console.log("Time to spawn a new floor element");
                 let newgroundposition = this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x;
                 this.instantiateNewGroundSegmentAtPosition(newgroundposition);
             }
-            else if (EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x - 20 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2
+            else if (EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x - 30 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2
                 && this.node == this.groundNodes[0]) {
                 this.node.removeComponent(this.node.getComponent(ƒ.ComponentRigidbody));
                 EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("FloorElements")[0].removeChild(this.node);
@@ -274,9 +376,9 @@ var EndlessMatrixRunnerSoSe22;
             //let obstacleplatform: ObstaclePlatform = new ObstaclePlatform(new ƒ.Vector3(20, 2, 0));
             //console.log(obstacleplatform);
             //sceneGraph.addChild(obstacleplatform);
-            platformSpawner = new EndlessMatrixRunnerSoSe22.PlatformSpawner(20);
+            platformSpawner = new EndlessMatrixRunnerSoSe22.PlatformSpawner(40);
             console.log(platformSpawner);
-            viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
+            //viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
             ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         }
@@ -338,6 +440,7 @@ var EndlessMatrixRunnerSoSe22;
 (function (EndlessMatrixRunnerSoSe22) {
     var ƒ = FudgeCore;
     class ObstaclePlatform extends ƒ.Node {
+        receivedCoin = false;
         constructor(position) {
             super("ObstaclePlatform");
             this.name = "ObstaclePlatform";
@@ -427,7 +530,7 @@ var EndlessMatrixRunnerSoSe22;
         }
         update = (_event) => {
             this.platformnodes = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
-            console.log(this.platformnodes.length);
+            //console.log(this.platformnodes.length);
             this.platformnodes.forEach(platform => {
                 this.checkPlayerPosition(platform);
             });
@@ -476,6 +579,8 @@ var EndlessMatrixRunnerSoSe22;
         message = "PlatformSpawnerScript added to ";
         distancefromplayer;
         spawnactivationcounter = 0;
+        currentplatforms;
+        currentplatformswithcoin;
         //private platformGraph: ƒ.Graph;
         constructor(_distancefromplayer) {
             super();
@@ -504,13 +609,18 @@ var EndlessMatrixRunnerSoSe22;
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
         update = (_event) => {
+            this.currentplatforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
             this.node.mtxLocal.translation.x = EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x + this.distancefromplayer;
+            this.createRandomPlatformAmount();
+            this.addCoinsToPlatforms();
+        };
+        createRandomPlatformAmount() {
             if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning && EndlessMatrixRunnerSoSe22.playerNode.getComponent(ƒ.ComponentRigidbody).getVelocity().x > 1) {
                 let random = new ƒ.Random();
                 let randomnumber = random.getRangeFloored(0, EndlessMatrixRunnerSoSe22.playerNode.getComponent(EndlessMatrixRunnerSoSe22.PlayerMovement).ctrlForward.getOutput());
                 this.spawnactivationcounter += randomnumber;
                 //console.log(this.spawnactivationcounter);
-                if (this.spawnactivationcounter >= 1000) {
+                if (this.spawnactivationcounter >= 1000 && this.currentplatforms.length <= 10) {
                     random = new ƒ.Random();
                     randomnumber = random.getRangeFloored(0, 100);
                     //console.log(randomnumber);
@@ -574,9 +684,10 @@ var EndlessMatrixRunnerSoSe22;
                         default:
                             break;
                     }
+                    this.currentplatforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
                 }
             }
-        };
+        }
         spawnNewPlatform = async (xposfrombottomline, yposfrombottomline) => {
             let newPlatformNode = new EndlessMatrixRunnerSoSe22.ObstaclePlatform(ƒ.Vector3.ZERO());
             newPlatformNode.mtxLocal.translation =
@@ -585,6 +696,17 @@ var EndlessMatrixRunnerSoSe22;
             EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(newPlatformNode);
             console.log("Added platform segment");
         };
+        addCoinsToPlatforms() {
+            this.currentplatforms.forEach(platform => {
+                if (platform.getChildrenByName("Coin").length == 0 && platform.mtxLocal.translation.x - 30 > EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x) {
+                    let random = new ƒ.Random();
+                    let randomnumber = random.getRangeFloored(0, 200);
+                    if (randomnumber == 1) {
+                        let newcoin = new EndlessMatrixRunnerSoSe22.Coin(platform);
+                    }
+                }
+            });
+        }
     }
     EndlessMatrixRunnerSoSe22.PlatformSpawnerScript = PlatformSpawnerScript;
 })(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
@@ -649,6 +771,8 @@ var EndlessMatrixRunnerSoSe22;
                             this.respawn();
                             console.log("Obstacle hit");
                             break;
+                        case ƒ.COLLISION_GROUP.GROUP_4:
+                            console.log("Coin collected");
                         default:
                             break;
                     }

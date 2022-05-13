@@ -29,7 +29,7 @@ namespace EndlessMatrixRunnerSoSe22 {
             this.addComponent(new PlayerMovement());
             this.addComponent(new PlatformRemover);
 
-            this.mtxWorld.translation = position;
+            this.mtxLocal.translation = position;
             this.mtxLocal.translateY(3);
         }
         

@@ -55,14 +55,14 @@ namespace EndlessMatrixRunnerSoSe22 {
       private checkPlayerPosition = (): void => {
         //console.log("Playerposition: " + playerNode.mtxLocal.translation.x);
         //console.log("Platformposition: " + this.node.mtxLocal.translation.x);
-        if ((playerNode.mtxLocal.translation.x + 20 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2) 
+        if ((playerNode.mtxLocal.translation.x + 30 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2) 
         && this.node == this.groundNodes[this.groundNodes.length - 1]) {
           console.log("Time to spawn a new floor element");
           let newgroundposition: number = this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x;
           this.instantiateNewGroundSegmentAtPosition(newgroundposition);
           
           
-        } else if (playerNode.mtxLocal.translation.x - 20 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2 
+        } else if (playerNode.mtxLocal.translation.x - 30 >= this.node.mtxLocal.translation.x + this.node.mtxLocal.scaling.x / 2 
           && this.node == this.groundNodes[0]) {
             this.node.removeComponent(this.node.getComponent(ƒ.ComponentRigidbody));
             sceneGraph.getChildrenByName("FloorElements")[0].removeChild(this.node);

@@ -885,7 +885,7 @@ declare namespace FudgeCore {
     class Node extends EventTargetƒ implements Serializable {
         #private;
         name: string;
-        readonly mtxWorld: Matrix4x4;
+        readonly mtxLocal: Matrix4x4;
         timestampUpdate: number;
         /** The number of nodes of the whole branch including this node and all successors */
         nNodesInBranch: number;
@@ -910,7 +910,7 @@ declare namespace FudgeCore {
          * Shortcut to retrieve the local {@link Matrix4x4} attached to this nodes {@link ComponentTransform}
          * Fails if no {@link ComponentTransform} is attached
          */
-        get mtxLocal(): Matrix4x4;
+        get mtxWorld(): Matrix4x4;
         get mtxWorldInverse(): Matrix4x4;
         /**
          * Returns the number of children attached to this

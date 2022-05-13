@@ -93,6 +93,9 @@ namespace EndlessMatrixRunnerSoSe22 {
               
               console.log("Obstacle hit");
               break;
+
+            case ƒ.COLLISION_GROUP.GROUP_4:
+              console.log("Coin collected");
           
             default:
               break;

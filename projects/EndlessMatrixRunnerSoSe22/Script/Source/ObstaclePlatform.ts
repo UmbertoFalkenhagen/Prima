@@ -1,6 +1,8 @@
 namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
     export class ObstaclePlatform extends ƒ.Node {
+        public receivedCoin: boolean = false;
+
         public constructor(position: ƒ.Vector3) {
             super("ObstaclePlatform");
             this.name = "ObstaclePlatform";
