@@ -45,6 +45,7 @@ namespace EndlessMatrixRunnerSoSe22 {
      
       this.maxheight = this.node.mtxLocal.translation.y + 0.25;
       this.minheight = this.node.mtxLocal.translation.y - 0.25;
+      this.node.addEventListener("ColliderEnteredCollision", this.hndPlayerCollision);
       
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
       
@@ -69,6 +70,11 @@ namespace EndlessMatrixRunnerSoSe22 {
           this.moveDir = !this.moveDir;
         }
       }
+    }
+
+    public hndPlayerCollision(): void {
+      this.node.removeEventListener("ColliderEnteredCollision", this.hndPlayerCollision);
+      console.log("Coin Collected");
     }
 
     // protected reduceMutator(_mutator: ƒ.Mutator): void {

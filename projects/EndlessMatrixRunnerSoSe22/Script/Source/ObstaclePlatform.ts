@@ -3,7 +3,7 @@ namespace EndlessMatrixRunnerSoSe22 {
     export class ObstaclePlatform extends ƒ.Node {
         public receivedCoin: boolean = false;
 
-        public constructor(position: ƒ.Vector3) {
+        public constructor(position: ƒ.Vector3, receiveEdgeObstacles: boolean) {
             super("ObstaclePlatform");
             this.name = "ObstaclePlatform";
             let elementtransform: ƒ.ComponentTransform = new ƒ.ComponentTransform;
@@ -30,17 +30,27 @@ namespace EndlessMatrixRunnerSoSe22 {
             
 
             this.mtxLocal.translate(position);
+                    
+                    
+            // });
 
-            this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
-            this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
-            this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 1, 1));
+            if (receiveEdgeObstacles) {
+                this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
+                this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
+                this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 1, 1));
+            }
+            
+            
+            
         
             sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(this);
             //console.log(sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren().length);
         }
 
         private createObstacleElement(position: ƒ.Vector3, rotation: ƒ.Vector3, scale: ƒ.Vector3): void {
+            
             let obstacleNode: ƒ.Node = new ƒ.Node("Obstacle");
+            this.addChild(obstacleNode);
 
             let elementtransform: ƒ.ComponentTransform = new ƒ.ComponentTransform;
             elementtransform.mtxLocal.translation = position;
@@ -64,7 +74,7 @@ namespace EndlessMatrixRunnerSoSe22 {
             elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_3;
             obstacleNode.addComponent(elementrb);
 
-            this.addChild(obstacleNode);
+            
         }
     }
 }

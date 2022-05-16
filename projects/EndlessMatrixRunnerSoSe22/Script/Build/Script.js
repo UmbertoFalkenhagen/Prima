@@ -150,6 +150,7 @@ var EndlessMatrixRunnerSoSe22;
         start() {
             this.maxheight = this.node.mtxLocal.translation.y + 0.25;
             this.minheight = this.node.mtxLocal.translation.y - 0.25;
+            this.node.addEventListener("ColliderEnteredCollision", this.hndPlayerCollision);
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
         update = (_event) => {
@@ -173,6 +174,10 @@ var EndlessMatrixRunnerSoSe22;
                 }
             }
         };
+        hndPlayerCollision() {
+            this.node.removeEventListener("ColliderEnteredCollision", this.hndPlayerCollision);
+            console.log("Coin Collected");
+        }
     }
     EndlessMatrixRunnerSoSe22.CoinRotator = CoinRotator;
 })(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
@@ -441,7 +446,7 @@ var EndlessMatrixRunnerSoSe22;
     var ƒ = FudgeCore;
     class ObstaclePlatform extends ƒ.Node {
         receivedCoin = false;
-        constructor(position) {
+        constructor(position, receiveEdgeObstacles) {
             super("ObstaclePlatform");
             this.name = "ObstaclePlatform";
             let elementtransform = new ƒ.ComponentTransform;
@@ -462,14 +467,18 @@ var EndlessMatrixRunnerSoSe22;
             // elementrb.typeCollider = ƒ.COLLIDER_TYPE.CUBE;
             // elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
             this.mtxLocal.translate(position);
-            this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
-            this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 0.7, 0.5));
-            this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(1, 1, 1));
+            // });
+            if (receiveEdgeObstacles) {
+                this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
+                this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
+                this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 1, 1));
+            }
             EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(this);
             //console.log(sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren().length);
         }
         createObstacleElement(position, rotation, scale) {
             let obstacleNode = new ƒ.Node("Obstacle");
+            this.addChild(obstacleNode);
             let elementtransform = new ƒ.ComponentTransform;
             elementtransform.mtxLocal.translation = position;
             elementtransform.mtxLocal.scaling = scale;
@@ -488,7 +497,6 @@ var EndlessMatrixRunnerSoSe22;
             elementrb.typeCollider = ƒ.COLLIDER_TYPE.PYRAMID;
             elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_3;
             obstacleNode.addComponent(elementrb);
-            this.addChild(obstacleNode);
         }
     }
     EndlessMatrixRunnerSoSe22.ObstaclePlatform = ObstaclePlatform;
@@ -580,7 +588,7 @@ var EndlessMatrixRunnerSoSe22;
         distancefromplayer;
         spawnactivationcounter = 0;
         currentplatforms;
-        currentplatformswithcoin;
+        //private currentplatformswithcoin: ƒ.Node[];
         //private platformGraph: ƒ.Graph;
         constructor(_distancefromplayer) {
             super();
@@ -626,20 +634,20 @@ var EndlessMatrixRunnerSoSe22;
                     //console.log(randomnumber);
                     switch (true) {
                         case (randomnumber && randomnumber < 45):
-                            this.spawnNewPlatform(0, 0);
+                            this.spawnNewPlatform(0, 0, true);
                             console.log("Spawned one platform");
                             this.spawnactivationcounter = 0;
                             break;
                         case (45 <= randomnumber && randomnumber < 70):
-                            this.spawnNewPlatform(0, 0);
-                            this.spawnNewPlatform(15, 4);
+                            this.spawnNewPlatform(0, 0, true);
+                            this.spawnNewPlatform(15, 4, true);
                             console.log("Spawned two platforms");
                             this.spawnactivationcounter = 0;
                             break;
                         case (70 <= randomnumber && randomnumber < 100):
-                            this.spawnNewPlatform(0, 0);
-                            this.spawnNewPlatform(15, 4);
-                            this.spawnNewPlatform(30, 0);
+                            this.spawnNewPlatform(0, 0, true);
+                            this.spawnNewPlatform(15, 4, true);
+                            this.spawnNewPlatform(30, 0, false);
                             console.log("Spawned three platforms");
                             this.spawnactivationcounter = 0;
                             break;
@@ -688,8 +696,8 @@ var EndlessMatrixRunnerSoSe22;
                 }
             }
         }
-        spawnNewPlatform = async (xposfrombottomline, yposfrombottomline) => {
-            let newPlatformNode = new EndlessMatrixRunnerSoSe22.ObstaclePlatform(ƒ.Vector3.ZERO());
+        spawnNewPlatform = async (xposfrombottomline, yposfrombottomline, receiveEdgeObstacles) => {
+            let newPlatformNode = new EndlessMatrixRunnerSoSe22.ObstaclePlatform(ƒ.Vector3.ZERO(), receiveEdgeObstacles);
             newPlatformNode.mtxLocal.translation =
                 new ƒ.Vector3(this.node.mtxLocal.translation.x + xposfrombottomline, this.node.mtxLocal.translation.y + yposfrombottomline + 2, this.node.mtxLocal.translation.z);
             newPlatformNode.name = "Platform";

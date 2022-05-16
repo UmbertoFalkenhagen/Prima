@@ -12,7 +12,7 @@ namespace EndlessMatrixRunnerSoSe22 {
     private distancefromplayer: number;
     private spawnactivationcounter: number = 0;
     private currentplatforms: ƒ.Node[];
-    private currentplatformswithcoin: ƒ.Node[];
+    //private currentplatformswithcoin: ƒ.Node[];
     //private platformGraph: ƒ.Graph;
 
 
@@ -71,20 +71,20 @@ namespace EndlessMatrixRunnerSoSe22 {
           //console.log(randomnumber);
           switch (true) {
             case (randomnumber && randomnumber < 45) :
-              this.spawnNewPlatform(0, 0);
+              this.spawnNewPlatform(0, 0, true);
               console.log("Spawned one platform");
               this.spawnactivationcounter = 0;
               break;
             case (45 <= randomnumber && randomnumber < 70) :
-              this.spawnNewPlatform(0, 0);
-              this.spawnNewPlatform(15, 4);
+              this.spawnNewPlatform(0, 0, true);
+              this.spawnNewPlatform(15, 4, true);
               console.log("Spawned two platforms");
               this.spawnactivationcounter = 0;
               break;
             case (70 <= randomnumber && randomnumber < 100) :
-              this.spawnNewPlatform(0, 0);
-              this.spawnNewPlatform(15, 4);
-              this.spawnNewPlatform(30, 0);
+              this.spawnNewPlatform(0, 0, true);
+              this.spawnNewPlatform(15, 4, true);
+              this.spawnNewPlatform(30, 0, false);
               console.log("Spawned three platforms");
               this.spawnactivationcounter = 0;
               break;
@@ -134,8 +134,8 @@ namespace EndlessMatrixRunnerSoSe22 {
       }
     }
 
-    public spawnNewPlatform = async (xposfrombottomline: number, yposfrombottomline: number): Promise<void> => {
-      let newPlatformNode: ObstaclePlatform = new ObstaclePlatform(ƒ.Vector3.ZERO());
+    public spawnNewPlatform = async (xposfrombottomline: number, yposfrombottomline: number, receiveEdgeObstacles: boolean): Promise<void> => {
+      let newPlatformNode: ObstaclePlatform = new ObstaclePlatform(ƒ.Vector3.ZERO(), receiveEdgeObstacles);
       newPlatformNode.mtxLocal.translation = 
       new ƒ.Vector3(this.node.mtxLocal.translation.x + xposfrombottomline, this.node.mtxLocal.translation.y + yposfrombottomline + 2, this.node.mtxLocal.translation.z);
       newPlatformNode.name = "Platform";

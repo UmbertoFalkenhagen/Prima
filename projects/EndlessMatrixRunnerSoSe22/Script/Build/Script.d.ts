@@ -33,6 +33,7 @@ declare namespace EndlessMatrixRunnerSoSe22 {
         hndEvent: (_event: Event) => void;
         start(): void;
         update: (_event: Event) => void;
+        hndPlayerCollision(): void;
     }
 }
 declare namespace EndlessMatrixRunnerSoSe22 {
@@ -87,7 +88,7 @@ declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
     class ObstaclePlatform extends ƒ.Node {
         receivedCoin: boolean;
-        constructor(position: ƒ.Vector3);
+        constructor(position: ƒ.Vector3, receiveEdgeObstacles: boolean);
         private createObstacleElement;
     }
 }
@@ -117,13 +118,12 @@ declare namespace EndlessMatrixRunnerSoSe22 {
         private distancefromplayer;
         private spawnactivationcounter;
         private currentplatforms;
-        private currentplatformswithcoin;
         constructor(_distancefromplayer: number);
         hndEvent: (_event: Event) => void;
         start(): void;
         update: (_event: Event) => void;
         createRandomPlatformAmount(): void;
-        spawnNewPlatform: (xposfrombottomline: number, yposfrombottomline: number) => Promise<void>;
+        spawnNewPlatform: (xposfrombottomline: number, yposfrombottomline: number, receiveEdgeObstacles: boolean) => Promise<void>;
         addCoinsToPlatforms(): void;
     }
 }
