@@ -151,6 +151,7 @@ namespace EndlessMatrixRunnerSoSe22 {
           let randomnumber: number = random.getRangeFloored(0, 200);
           if (randomnumber == 1) {
             let newcoin: Coin = new Coin(platform);
+            console.log(newcoin);
           }
            
           

@@ -251,6 +251,7 @@ var EndlessMatrixRunnerSoSe22;
 var EndlessMatrixRunnerSoSe22;
 (function (EndlessMatrixRunnerSoSe22) {
     var ƒ = FudgeCore;
+    var ƒUi = FudgeUserInterface;
     //import ƒui = FudgeUserInterface;
     class GameState extends ƒ.Mutable {
         //private static controller: ƒui.Controller;
@@ -258,10 +259,13 @@ var EndlessMatrixRunnerSoSe22;
         name = "EndlessMatrixRunnerSoSe22";
         highscore = 0;
         gameRunning = false;
+        controller;
         constructor() {
             super();
-            let domHud = document.querySelector("#Hud");
-            console.log(domHud);
+            let domVui = document.querySelector("div#vui");
+            console.log(new ƒUi.Controller(this, domVui));
+            this.controller = new ƒUi.Controller(this, domVui);
+            this.controller.updateUserInterface();
             GameState.instance = this;
             //GameState.controller = new ƒui.Controller(this, domHud);
             //console.log("Hud-Controller", GameState.controller);
@@ -711,6 +715,7 @@ var EndlessMatrixRunnerSoSe22;
                     let randomnumber = random.getRangeFloored(0, 200);
                     if (randomnumber == 1) {
                         let newcoin = new EndlessMatrixRunnerSoSe22.Coin(platform);
+                        console.log(newcoin);
                     }
                 }
             });

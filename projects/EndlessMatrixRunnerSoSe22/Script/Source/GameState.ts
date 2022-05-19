@@ -1,7 +1,7 @@
 namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
-    import ƒUi = FudgeCore
-    import ƒui = FudgeUserInterface;
+    import ƒUi = FudgeUserInterface;
+    //import ƒui = FudgeUserInterface;
 
     export class GameState extends ƒ.Mutable {
         //private static controller: ƒui.Controller;
@@ -9,11 +9,14 @@ namespace EndlessMatrixRunnerSoSe22 {
         public name: string = "EndlessMatrixRunnerSoSe22";
         public highscore: number = 0;
         public gameRunning: boolean = false;
+        private controller: ƒUi.Controller;
 
         private constructor() {
             super();
-            let domHud: HTMLDivElement = document.querySelector("#Hud");
-            console.log(domHud);
+            let domVui: HTMLDivElement = document.querySelector("div#vui");
+            console.log(new ƒUi.Controller(this, domVui));
+            this.controller = new ƒUi.Controller(this, domVui);
+            this.controller.updateUserInterface();
             GameState.instance = this;
             //GameState.controller = new ƒui.Controller(this, domHud);
             //console.log("Hud-Controller", GameState.controller);

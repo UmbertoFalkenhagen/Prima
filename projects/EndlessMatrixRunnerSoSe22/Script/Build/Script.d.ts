@@ -58,6 +58,7 @@ declare namespace EndlessMatrixRunnerSoSe22 {
         name: string;
         highscore: number;
         gameRunning: boolean;
+        private controller;
         private constructor();
         static get(): GameState;
         protected reduceMutator(_mutator: ƒ.Mutator): void;
