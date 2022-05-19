@@ -58,15 +58,15 @@ namespace EndlessMatrixRunnerSoSe22 {
         //console.log("Playerposition: " + playerNode.mtxLocal.translation.x);
         //console.log("Platformposition: " + this.node.mtxLocal.translation.x);
         if (this.node.mtxLocal.translation.x - 20 >= _platformnode.mtxLocal.translation.x) {
-            console.log(this.platformnodes.length);
-            _platformnode.removeComponent(_platformnode.getComponent(ƒ.ComponentRigidbody));
-            _platformnode.getChildren().forEach(child => {
-            child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
-            });
-            _platformnode.removeAllChildren();
+            // console.log(this.platformnodes.length);
+            // _platformnode.removeComponent(_platformnode.getComponent(ƒ.ComponentRigidbody));
+            // _platformnode.getChildren().forEach(child => {
+            // child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
+            // });
+            // _platformnode.removeAllChildren();
             sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].removeChild(_platformnode);
-            console.log("Removed platform segment");
-            console.log(this.platformnodes.length);
+            // console.log("Removed platform segment");
+            // console.log(this.platformnodes.length);
         }
       }
 

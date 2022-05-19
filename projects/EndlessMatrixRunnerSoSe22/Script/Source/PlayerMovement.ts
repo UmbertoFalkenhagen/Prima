@@ -134,20 +134,23 @@ namespace EndlessMatrixRunnerSoSe22 {
         this.cmpPlayerRb.setVelocity(new ƒ.Vector3(0, 0, 0));
         this.cmpPlayerRb.setPosition(new ƒ.Vector3(0, 2.2, 0));
         GameState.get().gameRunning = false;
-        let platforms: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
-        platforms.forEach(platform => {
-          platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));
-          platform.getChildrenByName("Obstacle").forEach(child => {
-            child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
-            });
-        });
+        let platforms: ƒ.Node = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0];
+        platforms.removeAllChildren();
+        // let platforms: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
+        // platforms.forEach(platform => {
+          
+        //   platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));
+        //   platform.getChildrenByName("Obstacle").forEach(child => {
+        //     child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
+        //     });
+        // });
 
-        sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].removeAllChildren();
+        // sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].removeAllChildren();
 
-        let groundsegments: ƒ.Node[] = sceneGraph.getChildrenByName("FloorElements")[0].getChildren();
-        groundsegments.forEach(groundsegment => {
-          groundsegment.removeComponent(groundsegment.getComponent(ƒ.ComponentRigidbody));
-        });
+        // let groundsegments: ƒ.Node[] = sceneGraph.getChildrenByName("FloorElements")[0].getChildren();
+        // groundsegments.forEach(groundsegment => {
+        //   groundsegment.removeComponent(groundsegment.getComponent(ƒ.ComponentRigidbody));
+        // });
         sceneGraph.getChildrenByName("FloorElements")[0].removeAllChildren();
         let firstfloorelement: FloorElement = new FloorElement(new ƒ.Vector3(0, 0, 0));
         console.log(firstfloorelement);

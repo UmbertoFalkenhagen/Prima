@@ -63,7 +63,7 @@ namespace EndlessMatrixRunnerSoSe22 {
       platformSpawner = new PlatformSpawner(40);
       console.log(platformSpawner);
     
-      //viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
+      viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     
       ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a

@@ -383,7 +383,7 @@ var EndlessMatrixRunnerSoSe22;
             //sceneGraph.addChild(obstacleplatform);
             platformSpawner = new EndlessMatrixRunnerSoSe22.PlatformSpawner(40);
             console.log(platformSpawner);
-            //viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
+            viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
             ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         }
@@ -547,15 +547,15 @@ var EndlessMatrixRunnerSoSe22;
             //console.log("Playerposition: " + playerNode.mtxLocal.translation.x);
             //console.log("Platformposition: " + this.node.mtxLocal.translation.x);
             if (this.node.mtxLocal.translation.x - 20 >= _platformnode.mtxLocal.translation.x) {
-                console.log(this.platformnodes.length);
-                _platformnode.removeComponent(_platformnode.getComponent(ƒ.ComponentRigidbody));
-                _platformnode.getChildren().forEach(child => {
-                    child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
-                });
-                _platformnode.removeAllChildren();
+                // console.log(this.platformnodes.length);
+                // _platformnode.removeComponent(_platformnode.getComponent(ƒ.ComponentRigidbody));
+                // _platformnode.getChildren().forEach(child => {
+                // child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
+                // });
+                // _platformnode.removeAllChildren();
                 EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].removeChild(_platformnode);
-                console.log("Removed platform segment");
-                console.log(this.platformnodes.length);
+                // console.log("Removed platform segment");
+                // console.log(this.platformnodes.length);
             }
         };
     }
@@ -814,18 +814,20 @@ var EndlessMatrixRunnerSoSe22;
             this.cmpPlayerRb.setVelocity(new ƒ.Vector3(0, 0, 0));
             this.cmpPlayerRb.setPosition(new ƒ.Vector3(0, 2.2, 0));
             EndlessMatrixRunnerSoSe22.GameState.get().gameRunning = false;
-            let platforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
-            platforms.forEach(platform => {
-                platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));
-                platform.getChildrenByName("Obstacle").forEach(child => {
-                    child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
-                });
-            });
-            EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].removeAllChildren();
-            let groundsegments = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("FloorElements")[0].getChildren();
-            groundsegments.forEach(groundsegment => {
-                groundsegment.removeComponent(groundsegment.getComponent(ƒ.ComponentRigidbody));
-            });
+            let platforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0];
+            platforms.removeAllChildren();
+            // let platforms: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
+            // platforms.forEach(platform => {
+            //   platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));
+            //   platform.getChildrenByName("Obstacle").forEach(child => {
+            //     child.removeComponent(child.getComponent(ƒ.ComponentRigidbody));
+            //     });
+            // });
+            // sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].removeAllChildren();
+            // let groundsegments: ƒ.Node[] = sceneGraph.getChildrenByName("FloorElements")[0].getChildren();
+            // groundsegments.forEach(groundsegment => {
+            //   groundsegment.removeComponent(groundsegment.getComponent(ƒ.ComponentRigidbody));
+            // });
             EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("FloorElements")[0].removeAllChildren();
             let firstfloorelement = new EndlessMatrixRunnerSoSe22.FloorElement(new ƒ.Vector3(0, 0, 0));
             console.log(firstfloorelement);

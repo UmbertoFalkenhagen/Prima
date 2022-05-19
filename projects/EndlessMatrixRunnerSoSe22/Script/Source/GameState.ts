@@ -1,6 +1,7 @@
 namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
-    //import ƒui = FudgeUserInterface;
+    import ƒUi = FudgeCore
+    import ƒui = FudgeUserInterface;
 
     export class GameState extends ƒ.Mutable {
         //private static controller: ƒui.Controller;
