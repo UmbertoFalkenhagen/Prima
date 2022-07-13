@@ -66,6 +66,14 @@
       }
     }
   },
+  "Audio|2022-07-13T11:52:30.974Z|27882": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Background Music\\Fluffing-a-Duck.mp3",
+      "idResource": "Audio|2022-07-13T11:52:30.974Z|27882",
+      "name": "Sounds\\Background Music\\Fluffing-a-Duck.mp3",
+      "type": "Audio"
+    }
+  },
   "Graph|2022-05-05T11:28:13.576Z|03522": {
     "ƒ.Graph": {
       "name": "SceneGraph",
@@ -90,7 +98,69 @@
             }
           }
         ],
-        "ComponentMesh": []
+        "ComponentAudio": [
+          {
+            "ƒ.ComponentAudio": {
+              "active": true,
+              "idResource": "Audio|2022-07-13T11:52:30.974Z|27882",
+              "playing": false,
+              "loop": true,
+              "volume": 1
+            }
+          },
+          {
+            "ƒ.ComponentAudio": {
+              "active": true,
+              "idResource": "Audio|2022-07-13T12:08:06.055Z|96739",
+              "playing": false,
+              "loop": false,
+              "volume": 1
+            }
+          },
+          {
+            "ƒ.ComponentAudio": {
+              "active": true,
+              "idResource": "Audio|2022-07-13T12:07:46.815Z|11865",
+              "playing": false,
+              "loop": false,
+              "volume": 1
+            }
+          },
+          {
+            "ƒ.ComponentAudio": {
+              "active": true,
+              "idResource": "Audio|2022-07-13T12:07:35.503Z|65645",
+              "playing": false,
+              "loop": false,
+              "volume": 1
+            }
+          },
+          {
+            "ƒ.ComponentAudio": {
+              "active": true,
+              "idResource": "Audio|2022-07-13T12:07:27.111Z|05474",
+              "playing": false,
+              "loop": false,
+              "volume": 1
+            }
+          },
+          {
+            "ƒ.ComponentAudio": {
+              "active": true,
+              "idResource": "Audio|2022-07-13T12:07:59.279Z|09478",
+              "playing": false,
+              "loop": false,
+              "volume": 1
+            }
+          }
+        ],
+        "ComponentAudioListener": [
+          {
+            "ƒ.ComponentAudioListener": {
+              "active": true
+            }
+          }
+        ]
       },
       "children": [
         {
@@ -618,6 +688,46 @@
         "name": "Textures\\goldtexture.jpg",
         "mipmap": "CRISP"
       }
+    }
+  },
+  "Audio|2022-07-13T12:07:27.111Z|05474": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\coin.wav",
+      "idResource": "Audio|2022-07-13T12:07:27.111Z|05474",
+      "name": "Sounds\\Ingame Sounds\\coin.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2022-07-13T12:07:35.503Z|65645": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\death.mp3",
+      "idResource": "Audio|2022-07-13T12:07:35.503Z|65645",
+      "name": "Sounds\\Ingame Sounds\\death.mp3",
+      "type": "Audio"
+    }
+  },
+  "Audio|2022-07-13T12:07:46.815Z|11865": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\drop.wav",
+      "idResource": "Audio|2022-07-13T12:07:46.815Z|11865",
+      "name": "Sounds\\Ingame Sounds\\drop.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2022-07-13T12:07:59.279Z|09478": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\enemy.wav",
+      "idResource": "Audio|2022-07-13T12:07:59.279Z|09478",
+      "name": "Sounds\\Ingame Sounds\\enemy.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2022-07-13T12:08:06.055Z|96739": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\jump.wav",
+      "idResource": "Audio|2022-07-13T12:08:06.055Z|96739",
+      "name": "Sounds\\Ingame Sounds\\jump.wav",
+      "type": "Audio"
     }
   }
 }

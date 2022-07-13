@@ -1,18 +1,30 @@
 namespace EndlessMatrixRunnerSoSe22 {
   import ƒ = FudgeCore;
+  import ƒUi = FudgeUserInterface;
   ƒ.Debug.info("Main Program Template running!");
 
   let viewport: ƒ.Viewport;
   export let sceneGraph: ƒ.Node;
   export let playerNode: Agent;
-
-  let platformSpawner: PlatformSpawner;
-
   // tslint:disable-next-line: no-any
   export let configurations: any;
   export let deltaTime: number;
 
+  let platformSpawner: PlatformSpawner;
+
+
+
   let cameraNode: ƒ.Node;
+
+  //sounds
+  let jumpSound: ƒ.ComponentAudio;
+  let dropSound: ƒ.ComponentAudio;
+  let deathSound: ƒ.ComponentAudio;
+  let coinSound: ƒ.ComponentAudio;
+  let enemySound: ƒ.ComponentAudio;
+
+  let scoreCounter: HTMLInputElement;
+  let coinCounter: HTMLElement;
 
   window.addEventListener("load", init);
 
@@ -20,20 +32,21 @@ namespace EndlessMatrixRunnerSoSe22 {
     let dialog: HTMLDialogElement = document.querySelector("dialog");
     dialog.querySelector("h1").textContent = document.title;
     dialog.addEventListener("click", (_event: Event) => {
-        // @ts-ignore until HTMLDialog is implemented by all browsers and available in dom.d.ts
-        dialog.close();
-        start();
-      });
+      // @ts-ignore until HTMLDialog is implemented by all browsers and available in dom.d.ts
+      dialog.close();
+      start();
+    });
     //@ts-ignore
     dialog.showModal();
 
     async function start(): Promise<void> {
       await ƒ.Project.loadResourcesFromHTML();
       sceneGraph = <ƒ.Graph>ƒ.Project.resources["Graph|2022-05-05T11:28:13.576Z|03522"];
-      
-      let cmpCamera: ƒ.ComponentCamera  = new ƒ.ComponentCamera();
+
+      let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
 
       configurations = await fetchData();
+
 
       let canvas: HTMLCanvasElement = document.querySelector("canvas");
       viewport = new ƒ.Viewport();
@@ -62,75 +75,111 @@ namespace EndlessMatrixRunnerSoSe22 {
 
       platformSpawner = new PlatformSpawner(40);
       console.log(platformSpawner);
-    
+
+
+      jumpSound = sceneGraph.getComponents(ƒ.ComponentAudio)[1];
+      dropSound = sceneGraph.getComponents(ƒ.ComponentAudio)[2];
+      deathSound = sceneGraph.getComponents(ƒ.ComponentAudio)[3];
+      coinSound = sceneGraph.getComponents(ƒ.ComponentAudio)[4];
+      enemySound = sceneGraph.getComponents(ƒ.ComponentAudio)[5];
+
+
+      sceneGraph.addEventListener("jumpEvent", hndJumpEvent);
+      sceneGraph.addEventListener("dropEvent", hndDropEvent);
+      sceneGraph.addEventListener("deathEvent", hndDeathEvent);
+      sceneGraph.addEventListener("coinEvent", hndCoinEvent);
+      //soundManager.addEventListener("jumpEvent", hndJumpEvent, true);
+
+
+      ƒ.AudioManager.default.listenTo(sceneGraph);
+      ƒ.AudioManager.default.listenWith(sceneGraph.getComponent(ƒ.ComponentAudioListener));
+
       viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-    
+
       ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-  }
+    }
 
     function update(_event: Event): void {
-    ƒ.Physics.simulate();  // if physics is included and used
-    deltaTime = ƒ.Loop.timeFrameReal / 1000;
+      ƒ.Physics.simulate();  // if physics is included and used
+      deltaTime = ƒ.Loop.timeFrameReal / 1000;
 
-    // //make sure all terrain objects have a proper collisiongroup assigned
-    // let platformNodes: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
-    // platformNodes.forEach(platform => {
-    //   platform.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2; //all ground objects are collision group 2
-    //   platform.getChildrenByName("Obstacle").forEach(edgeobstacle => {
-    //     edgeobstacle.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_3; //all obstacles are collision group 3
-    //     //console.log("EdgeObstacle received collision group");
-    //   });
-    // }); //all items should have collision group 4 and all npcs have collision group 5
+      // //make sure all terrain objects have a proper collisiongroup assigned
+      // let platformNodes: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
+      // platformNodes.forEach(platform => {
+      //   platform.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2; //all ground objects are collision group 2
+      //   platform.getChildrenByName("Obstacle").forEach(edgeobstacle => {
+      //     edgeobstacle.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_3; //all obstacles are collision group 3
+      //     //console.log("EdgeObstacle received collision group");
+      //   });
+      // }); //all items should have collision group 4 and all npcs have collision group 5
 
-    if (GameState.get().gameRunning) {
-      //controllGround();
-      GameState.get().highscore += 1 * deltaTime;
-      //console.log(Math.floor(GameState.get().highscore));
+      if (GameState.get().gameRunning) {
+        //controllGround();
+        GameState.get().highscore += 1 * deltaTime;
+        GameState.get().score.textContent = "Score: " + Math.floor(GameState.get().highscore);
+        GameState.get().coins.textContent = "Coins: " + GameState.get().coinscounter;
+        //console.log(Math.floor(GameState.get().highscore));
 
-      
-    } else if (!GameState.get().gameRunning) {
-      startGame();
+
+      } else if (!GameState.get().gameRunning) {
+        sceneGraph.getComponent(ƒ.ComponentAudio).play(false);
+        startGame();
+      }
+
+      viewport.draw();
+      ƒ.AudioManager.default.update();
     }
-
-    viewport.draw();
-    ƒ.AudioManager.default.update();
-  }
 
     async function startGame(): Promise<void> {
-    // console.log(sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].getChildrenByName("Ground").length);
-    // if (sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].getChildrenByName("Ground").length == 0) {
-    //   console.log("#1");
-    //   let ground: ƒ.Graph = <ƒ.Graph>ƒ.Project.resources["Graph|2022-01-11T12:17:14.316Z|01096"];
-    //   let newGroundNode: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(ground);
-    //   newGroundNode.mtxLocal.translation = new ƒ.Vector3(0, 0, 0);
-    //   newGroundNode.name = "Ground";
-    //   sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].addChild(newGroundNode);
-    //   console.log("Created first ground segment");
-    // }
-    if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE, ƒ.KEYBOARD_CODE.ENTER])) {
-      GameState.get().gameRunning = true;
-      GameState.get().highscore = 0;
-    }
+      if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE, ƒ.KEYBOARD_CODE.ENTER])) {
+        GameState.get().gameRunning = true;
+        GameState.get().highscore = 0;
+        GameState.get().coinscounter = 0;
+        sceneGraph.getComponent(ƒ.ComponentAudio).play(true);
+        sceneGraph.getComponent(ƒ.ComponentAudio).volume = configurations.backgroundvolume;
 
-    
-      
-      
-  }
+        jumpSound.volume = configurations.effectvolume;
+        dropSound.volume = configurations.effectvolume;
+        deathSound.volume = configurations.effectvolume;
+        coinSound.volume = configurations.effectvolume;
+        enemySound.volume = configurations.effectvolume;
+      }
+
+
+
+
+    }
 
     // tslint:disable-next-line: typedef
     async function fetchData() {
-    try {
-      // tslint:disable-next-line: typedef
-      const response = await fetch("../configuration.JSON");
-      // tslint:disable-next-line: typedef
-      const responseObj = await response.json();
-      return responseObj;
-    } catch (error) {
-      return error;
+      try {
+        // tslint:disable-next-line: typedef
+        const response = await fetch("../configuration.JSON");
+        // tslint:disable-next-line: typedef
+        const responseObj = await response.json();
+        return responseObj;
+      } catch (error) {
+        return error;
+      }
     }
-  }
 
-  
+    function hndJumpEvent(): void {
+      jumpSound.play(true);
+    }
+
+    function hndDropEvent(): void {
+      dropSound.play(true);
+    }
+
+    function hndDeathEvent(): void {
+      deathSound.play(true);
+    }
+
+    function hndCoinEvent(): void {
+      coinSound.play(true);
+      GameState.get().coinscounter += 1;
+      GameState.get().highscore += 10;
+    }
   }
 }

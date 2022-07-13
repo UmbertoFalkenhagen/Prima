@@ -258,7 +258,10 @@ var EndlessMatrixRunnerSoSe22;
         static instance;
         name = "EndlessMatrixRunnerSoSe22";
         highscore = 0;
+        coinscounter = 0;
         gameRunning = false;
+        score;
+        coins;
         controller;
         constructor() {
             super();
@@ -267,6 +270,10 @@ var EndlessMatrixRunnerSoSe22;
             this.controller = new ƒUi.Controller(this, domVui);
             this.controller.updateUserInterface();
             GameState.instance = this;
+            this.score = document.getElementById("score");
+            this.score.textContent = "Score: " + Math.floor(this.highscore);
+            this.coins = document.getElementById("coins");
+            this.coins.textContent = "Coins: " + this.coinscounter;
             //GameState.controller = new ƒui.Controller(this, domHud);
             //console.log("Hud-Controller", GameState.controller);
         }
@@ -350,6 +357,14 @@ var EndlessMatrixRunnerSoSe22;
     let viewport;
     let platformSpawner;
     let cameraNode;
+    //sounds
+    let jumpSound;
+    let dropSound;
+    let deathSound;
+    let coinSound;
+    let enemySound;
+    let scoreCounter;
+    let coinCounter;
     window.addEventListener("load", init);
     function init(_event) {
         let dialog = document.querySelector("dialog");
@@ -387,6 +402,18 @@ var EndlessMatrixRunnerSoSe22;
             //sceneGraph.addChild(obstacleplatform);
             platformSpawner = new EndlessMatrixRunnerSoSe22.PlatformSpawner(40);
             console.log(platformSpawner);
+            jumpSound = EndlessMatrixRunnerSoSe22.sceneGraph.getComponents(ƒ.ComponentAudio)[1];
+            dropSound = EndlessMatrixRunnerSoSe22.sceneGraph.getComponents(ƒ.ComponentAudio)[2];
+            deathSound = EndlessMatrixRunnerSoSe22.sceneGraph.getComponents(ƒ.ComponentAudio)[3];
+            coinSound = EndlessMatrixRunnerSoSe22.sceneGraph.getComponents(ƒ.ComponentAudio)[4];
+            enemySound = EndlessMatrixRunnerSoSe22.sceneGraph.getComponents(ƒ.ComponentAudio)[5];
+            EndlessMatrixRunnerSoSe22.sceneGraph.addEventListener("jumpEvent", hndJumpEvent);
+            EndlessMatrixRunnerSoSe22.sceneGraph.addEventListener("dropEvent", hndDropEvent);
+            EndlessMatrixRunnerSoSe22.sceneGraph.addEventListener("deathEvent", hndDeathEvent);
+            EndlessMatrixRunnerSoSe22.sceneGraph.addEventListener("coinEvent", hndCoinEvent);
+            //soundManager.addEventListener("jumpEvent", hndJumpEvent, true);
+            ƒ.AudioManager.default.listenTo(EndlessMatrixRunnerSoSe22.sceneGraph);
+            ƒ.AudioManager.default.listenWith(EndlessMatrixRunnerSoSe22.sceneGraph.getComponent(ƒ.ComponentAudioListener));
             viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
             ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -406,28 +433,29 @@ var EndlessMatrixRunnerSoSe22;
             if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
                 //controllGround();
                 EndlessMatrixRunnerSoSe22.GameState.get().highscore += 1 * EndlessMatrixRunnerSoSe22.deltaTime;
+                EndlessMatrixRunnerSoSe22.GameState.get().score.textContent = "Score: " + Math.floor(EndlessMatrixRunnerSoSe22.GameState.get().highscore);
+                EndlessMatrixRunnerSoSe22.GameState.get().coins.textContent = "Coins: " + EndlessMatrixRunnerSoSe22.GameState.get().coinscounter;
                 //console.log(Math.floor(GameState.get().highscore));
             }
             else if (!EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
+                EndlessMatrixRunnerSoSe22.sceneGraph.getComponent(ƒ.ComponentAudio).play(false);
                 startGame();
             }
             viewport.draw();
             ƒ.AudioManager.default.update();
         }
         async function startGame() {
-            // console.log(sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].getChildrenByName("Ground").length);
-            // if (sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].getChildrenByName("Ground").length == 0) {
-            //   console.log("#1");
-            //   let ground: ƒ.Graph = <ƒ.Graph>ƒ.Project.resources["Graph|2022-01-11T12:17:14.316Z|01096"];
-            //   let newGroundNode: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(ground);
-            //   newGroundNode.mtxLocal.translation = new ƒ.Vector3(0, 0, 0);
-            //   newGroundNode.name = "Ground";
-            //   sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("GroundSegments")[0].addChild(newGroundNode);
-            //   console.log("Created first ground segment");
-            // }
             if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE, ƒ.KEYBOARD_CODE.ENTER])) {
                 EndlessMatrixRunnerSoSe22.GameState.get().gameRunning = true;
                 EndlessMatrixRunnerSoSe22.GameState.get().highscore = 0;
+                EndlessMatrixRunnerSoSe22.GameState.get().coinscounter = 0;
+                EndlessMatrixRunnerSoSe22.sceneGraph.getComponent(ƒ.ComponentAudio).play(true);
+                EndlessMatrixRunnerSoSe22.sceneGraph.getComponent(ƒ.ComponentAudio).volume = EndlessMatrixRunnerSoSe22.configurations.backgroundvolume;
+                jumpSound.volume = EndlessMatrixRunnerSoSe22.configurations.effectvolume;
+                dropSound.volume = EndlessMatrixRunnerSoSe22.configurations.effectvolume;
+                deathSound.volume = EndlessMatrixRunnerSoSe22.configurations.effectvolume;
+                coinSound.volume = EndlessMatrixRunnerSoSe22.configurations.effectvolume;
+                enemySound.volume = EndlessMatrixRunnerSoSe22.configurations.effectvolume;
             }
         }
         // tslint:disable-next-line: typedef
@@ -442,6 +470,20 @@ var EndlessMatrixRunnerSoSe22;
             catch (error) {
                 return error;
             }
+        }
+        function hndJumpEvent() {
+            jumpSound.play(true);
+        }
+        function hndDropEvent() {
+            dropSound.play(true);
+        }
+        function hndDeathEvent() {
+            deathSound.play(true);
+        }
+        function hndCoinEvent() {
+            coinSound.play(true);
+            EndlessMatrixRunnerSoSe22.GameState.get().coinscounter += 1;
+            EndlessMatrixRunnerSoSe22.GameState.get().highscore += 10;
         }
     }
 })(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
@@ -761,6 +803,7 @@ var EndlessMatrixRunnerSoSe22;
             }
         };
         start() {
+            this.ctrlForward.setInput(EndlessMatrixRunnerSoSe22.configurations.maxspeed);
             this.ctrlForward.setDelay(0);
             //this.groundRB = sceneGraph.getChildrenByName("Terrain")[0].getChildrenByName("Ground")[0].getComponent(ƒ.ComponentRigidbody);
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
@@ -785,6 +828,8 @@ var EndlessMatrixRunnerSoSe22;
                             console.log("Obstacle hit");
                             break;
                         case ƒ.COLLISION_GROUP.GROUP_4:
+                            this.node.dispatchEvent(new CustomEvent("coinEvent", { bubbles: true }));
+                            collider.node.getParent().removeChild(collider.node);
                             console.log("Coin collected");
                         default:
                             break;
@@ -805,16 +850,19 @@ var EndlessMatrixRunnerSoSe22;
                     // velocityvector.y = 20;
                     // this.cmpPlayerRb.setVelocity(velocityvector);
                     this.cmpPlayerRb.applyLinearImpulse(ƒ.Vector3.SCALE(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.getY(), 400));
-                    console.log("Jump from ground");
+                    this.node.dispatchEvent(new CustomEvent("jumpEvent", { bubbles: true }));
+                    //console.log("Jump from ground");
                     return;
                 }
                 else if (this.isJumpPressed && !isGrounded) {
                     this.cmpPlayerRb.applyLinearImpulse(ƒ.Vector3.SCALE(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.getY(), -400));
-                    console.log("Dive towards ground");
+                    this.node.dispatchEvent(new CustomEvent("dropEvent", { bubbles: true }));
+                    //console.log("Dive towards ground");
                 }
             }
         };
         respawn = () => {
+            this.node.dispatchEvent(new CustomEvent("deathEvent", { bubbles: true }));
             //this.node.mtxLocal.translation = new ƒ.Vector3(0, 2.2, 0);
             this.cmpPlayerRb.setVelocity(new ƒ.Vector3(0, 0, 0));
             this.cmpPlayerRb.setPosition(new ƒ.Vector3(0, 2.2, 0));

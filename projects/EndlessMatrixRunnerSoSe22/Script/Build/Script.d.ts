@@ -57,7 +57,10 @@ declare namespace EndlessMatrixRunnerSoSe22 {
         private static instance;
         name: string;
         highscore: number;
+        coinscounter: number;
         gameRunning: boolean;
+        score: HTMLElement;
+        coins: HTMLElement;
         private controller;
         private constructor();
         static get(): GameState;
