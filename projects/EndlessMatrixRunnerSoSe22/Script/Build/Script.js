@@ -221,6 +221,128 @@ var EndlessMatrixRunnerSoSe22;
 var EndlessMatrixRunnerSoSe22;
 (function (EndlessMatrixRunnerSoSe22) {
     var ƒ = FudgeCore;
+    class Enemy extends ƒ.Node {
+        constructor(position) {
+            super("Enemy");
+            this.addComponent(new ƒ.ComponentTransform);
+            let elementmesh = ƒ.Project.resources["MeshPyramid|2022-07-15T12:09:48.716Z|73697"];
+            let elementmeshcmp = new ƒ.ComponentMesh(elementmesh);
+            elementmeshcmp.mtxPivot.scaling = new ƒ.Vector3(1, 1, 1);
+            elementmeshcmp.mtxPivot.rotateZ(90);
+            this.addComponent(elementmeshcmp);
+            let elementmat = ƒ.Project.resources["Material|2022-07-15T12:16:11.934Z|81738"];
+            let elementmatcmp = new ƒ.ComponentMaterial(elementmat);
+            this.addComponent(elementmatcmp);
+            let elementrb = new ƒ.ComponentRigidbody();
+            elementrb.initialization = ƒ.BODY_INIT.TO_PIVOT;
+            elementrb.mass = 1;
+            elementrb.typeBody = ƒ.BODY_TYPE.DYNAMIC;
+            elementrb.typeCollider = ƒ.COLLIDER_TYPE.PYRAMID;
+            elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_3;
+            elementrb.restitution = 0;
+            elementrb.effectGravity = 0;
+            elementrb.friction = 0;
+            elementrb.mtxPivot.rotateZ(90);
+            this.addComponent(elementrb);
+            this.addComponent(new EndlessMatrixRunnerSoSe22.EnemyStateMachine);
+            EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Enemies")[0].addChild(this);
+            this.mtxLocal.translation = position;
+        }
+    }
+    EndlessMatrixRunnerSoSe22.Enemy = Enemy;
+})(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
+var EndlessMatrixRunnerSoSe22;
+(function (EndlessMatrixRunnerSoSe22) {
+    var ƒ = FudgeCore;
+    var ƒAid = FudgeAid;
+    let JOB;
+    (function (JOB) {
+        JOB[JOB["IDLE"] = 0] = "IDLE";
+        JOB[JOB["ATTACK"] = 1] = "ATTACK";
+        JOB[JOB["DIE"] = 2] = "DIE";
+    })(JOB = EndlessMatrixRunnerSoSe22.JOB || (EndlessMatrixRunnerSoSe22.JOB = {}));
+    class EnemyStateMachine extends ƒAid.ComponentStateMachine {
+        static instructions = EnemyStateMachine.get();
+        timePeriod = 0;
+        constructor() {
+            super();
+            this.instructions = EnemyStateMachine.instructions;
+            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                return;
+            this.addEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
+            this.addEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
+        }
+        static get() {
+            let setup = new ƒAid.StateMachineInstructions();
+            setup.transitDefault = EnemyStateMachine.transitDefault;
+            setup.actDefault = EnemyStateMachine.actDefault;
+            setup.setAction(JOB.IDLE, this.actIdle);
+            setup.setAction(JOB.ATTACK, this.actAttack);
+            setup.setAction(JOB.DIE, this.actDie);
+            return setup;
+        }
+        static actDefault() {
+            //dconsole.log("Goomba default");
+        }
+        static actAttack(_machine) {
+            _machine.node.getComponent(ƒ.ComponentRigidbody).applyForce(new ƒ.Vector3(-100, 0, 0));
+            if (EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x - 10 >= _machine.node.mtxLocal.translation.x) {
+                _machine.transit(JOB.DIE);
+            }
+        }
+        static actIdle(_machine) {
+            _machine.node.getComponent(ƒ.ComponentRigidbody).applyTorque(new ƒ.Vector3(5, 0, 0));
+            let pushforce = EndlessMatrixRunnerSoSe22.playerNode.getComponent(ƒ.ComponentRigidbody).getVelocity();
+            pushforce.y = 0;
+            pushforce.z = 0;
+            _machine.node.getComponent(ƒ.ComponentRigidbody).setVelocity(pushforce);
+            //console.log("Hallo ich lebe!");
+            if (_machine.timePeriod >= 6) {
+                _machine.transit(JOB.ATTACK);
+            }
+            else if (_machine.timePeriod >= 3 && _machine.timePeriod < 5) {
+                let elementmat = ƒ.Project.resources["Material|2022-07-15T12:15:38.997Z|21886"];
+                _machine.node.removeComponent(_machine.node.getComponent(ƒ.ComponentMaterial));
+                let elementmatcmp = new ƒ.ComponentMaterial(elementmat);
+                _machine.node.addComponent(elementmatcmp);
+            }
+            else if (_machine.timePeriod >= 5 && _machine.timePeriod < 6) {
+                let elementmat = ƒ.Project.resources["Material|2022-07-15T12:10:50.126Z|04547"];
+                _machine.node.removeComponent(_machine.node.getComponent(ƒ.ComponentMaterial));
+                let elementmatcmp = new ƒ.ComponentMaterial(elementmat);
+                _machine.node.addComponent(elementmatcmp);
+                _machine.node.dispatchEvent(new CustomEvent("enemyEvent", { bubbles: true }));
+            }
+            _machine.timePeriod += EndlessMatrixRunnerSoSe22.deltaTime;
+        }
+        static actDie(_machine) {
+            _machine.node.getParent().removeChild(_machine.node);
+        }
+        static transitDefault(_machine) {
+            //console.log("Transit to", _machine.stateNext);
+        }
+        hndEvent = (_event) => {
+            switch (_event.type) {
+                case "componentAdd" /* COMPONENT_ADD */:
+                    ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
+                    this.transit(JOB.IDLE);
+                    break;
+                case "componentRemove" /* COMPONENT_REMOVE */:
+                    this.removeEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
+                    this.removeEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
+                    ƒ.Loop.removeEventListener("loopFrame" /* LOOP_FRAME */, this.update);
+                    break;
+            }
+        };
+        update = (_event) => {
+            this.act();
+        };
+    }
+    EndlessMatrixRunnerSoSe22.EnemyStateMachine = EnemyStateMachine;
+})(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
+var EndlessMatrixRunnerSoSe22;
+(function (EndlessMatrixRunnerSoSe22) {
+    var ƒ = FudgeCore;
     class FloorElement extends ƒ.Node {
         constructor(position) {
             super("FloorElement");
@@ -411,6 +533,7 @@ var EndlessMatrixRunnerSoSe22;
             EndlessMatrixRunnerSoSe22.sceneGraph.addEventListener("dropEvent", hndDropEvent);
             EndlessMatrixRunnerSoSe22.sceneGraph.addEventListener("deathEvent", hndDeathEvent);
             EndlessMatrixRunnerSoSe22.sceneGraph.addEventListener("coinEvent", hndCoinEvent);
+            EndlessMatrixRunnerSoSe22.sceneGraph.addEventListener("enemyEvent", hndEnemyEvent);
             //soundManager.addEventListener("jumpEvent", hndJumpEvent, true);
             ƒ.AudioManager.default.listenTo(EndlessMatrixRunnerSoSe22.sceneGraph);
             ƒ.AudioManager.default.listenWith(EndlessMatrixRunnerSoSe22.sceneGraph.getComponent(ƒ.ComponentAudioListener));
@@ -480,6 +603,10 @@ var EndlessMatrixRunnerSoSe22;
         function hndDeathEvent() {
             deathSound.play(true);
         }
+        function hndEnemyEvent() {
+            console.log("Gegner greift an!");
+            enemySound.play(true);
+        }
         function hndCoinEvent() {
             coinSound.play(true);
             EndlessMatrixRunnerSoSe22.GameState.get().coinscounter += 1;
@@ -514,11 +641,11 @@ var EndlessMatrixRunnerSoSe22;
             // elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
             this.mtxLocal.translate(position);
             // });
-            if (receiveEdgeObstacles) {
-                this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
-                this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
-                this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 1, 1));
-            }
+            // if (receiveEdgeObstacles) {
+            //     this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
+            //     this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
+            //     this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 1, 1));
+            // }
             EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(this);
             //console.log(sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren().length);
         }
@@ -679,7 +806,7 @@ var EndlessMatrixRunnerSoSe22;
                     randomnumber = random.getRangeFloored(0, 100);
                     //console.log(randomnumber);
                     switch (true) {
-                        case (randomnumber && randomnumber < 45):
+                        case (randomnumber < 45):
                             this.spawnNewPlatform(0, 0, true);
                             console.log("Spawned one platform");
                             this.spawnactivationcounter = 0;
@@ -697,46 +824,13 @@ var EndlessMatrixRunnerSoSe22;
                             console.log("Spawned three platforms");
                             this.spawnactivationcounter = 0;
                             break;
-                        // case (73 <= randomnumber && randomnumber < 83) :
-                        //   this.spawnNewPlatform(0, 0);
-                        //   this.spawnNewPlatform(15, 4);
-                        //   this.spawnNewPlatform(30, 0);
-                        //   this.spawnNewPlatform(25, 7);
-                        //   console.log("Spawned four platforms");
-                        //   this.spawnactivationcounter = 0;
-                        //   break;
-                        // case (83 <= randomnumber && randomnumber < 90) :
-                        //   this.spawnNewPlatform(0, 0);
-                        //   this.spawnNewPlatform(15, 4);
-                        //   this.spawnNewPlatform(30, 0);
-                        //   this.spawnNewPlatform(25, 7);
-                        //   this.spawnNewPlatform(35, 4);
-                        //   console.log("Spawned five platforms");
-                        //   this.spawnactivationcounter = 0;
-                        //   break;
-                        // case (90 <= randomnumber && randomnumber < 96) :
-                        //   this.spawnNewPlatform(0, 0);
-                        //   this.spawnNewPlatform(15, 4);
-                        //   this.spawnNewPlatform(30, 0);
-                        //   this.spawnNewPlatform(25, 7);
-                        //   this.spawnNewPlatform(35, 4);
-                        //   this.spawnNewPlatform(45, 7);
-                        //   console.log("Spawned six platforms");
-                        //   this.spawnactivationcounter = 0;
-                        //   break;
-                        // case (96 <= randomnumber && randomnumber < 100) :
-                        //   this.spawnNewPlatform(0, 0);
-                        //   this.spawnNewPlatform(15, 4);
-                        //   this.spawnNewPlatform(30, 0);
-                        //   this.spawnNewPlatform(25, 7);
-                        //   this.spawnNewPlatform(35, 4);
-                        //   this.spawnNewPlatform(45, 7);
-                        //   this.spawnNewPlatform(60, 4);
-                        //   console.log("Spawned seven platforms");
-                        //   this.spawnactivationcounter = 0;
-                        //   break;
                         default:
                             break;
+                    }
+                    random = new ƒ.Random();
+                    randomnumber = random.getRangeFloored(0, 10);
+                    if (randomnumber <= 3) {
+                        this.spawnEnemy(0);
                     }
                     this.currentplatforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
                 }
@@ -761,6 +855,58 @@ var EndlessMatrixRunnerSoSe22;
                     }
                 }
             });
+        }
+        spawnEnemy(iterator) {
+            let enemynodes = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Enemies")[0].getChildren();
+            if (enemynodes.length < 2) {
+                let random = new ƒ.Random();
+                let randomnumber = random.getRangeFloored(1, 4);
+                let placementposition = ƒ.Vector3.ZERO();
+                switch (randomnumber) {
+                    case 1:
+                        enemynodes.forEach(element => {
+                            if (element.mtxLocal.translation.y == 2) {
+                                if (iterator < 3) {
+                                    this.spawnEnemy(iterator + 1);
+                                }
+                                else {
+                                    return;
+                                }
+                            }
+                        });
+                        placementposition = new ƒ.Vector3(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x + 20, 2, 0);
+                        break;
+                    case 2:
+                        enemynodes.forEach(element => {
+                            if (element.mtxLocal.translation.y == 6) {
+                                if (iterator < 3) {
+                                    this.spawnEnemy(iterator + 1);
+                                }
+                                else {
+                                    return;
+                                }
+                            }
+                        });
+                        placementposition = new ƒ.Vector3(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x + 20, 6, 0);
+                        break;
+                    case 3:
+                        enemynodes.forEach(element => {
+                            if (element.mtxLocal.translation.y == 10) {
+                                if (iterator < 3) {
+                                    this.spawnEnemy(iterator + 1);
+                                }
+                                else {
+                                    return;
+                                }
+                            }
+                        });
+                        placementposition = new ƒ.Vector3(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x + 20, 10, 0);
+                        break;
+                    default:
+                        break;
+                }
+                let enemy = new EndlessMatrixRunnerSoSe22.Enemy(placementposition);
+            }
         }
     }
     EndlessMatrixRunnerSoSe22.PlatformSpawnerScript = PlatformSpawnerScript;
@@ -823,7 +969,7 @@ var EndlessMatrixRunnerSoSe22;
                         case ƒ.COLLISION_GROUP.GROUP_2: //Ground elements
                             isGrounded = true;
                             break;
-                        case ƒ.COLLISION_GROUP.GROUP_3: //Obstacles
+                        case ƒ.COLLISION_GROUP.GROUP_3: //Obstacles & enemies
                             this.respawn();
                             console.log("Obstacle hit");
                             break;
@@ -869,6 +1015,8 @@ var EndlessMatrixRunnerSoSe22;
             EndlessMatrixRunnerSoSe22.GameState.get().gameRunning = false;
             let platforms = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0];
             platforms.removeAllChildren();
+            let enemies = EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Enemies")[0];
+            enemies.removeAllChildren();
             // let platforms: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
             // platforms.forEach(platform => {
             //   platform.removeComponent(platform.getComponent(ƒ.ComponentRigidbody));

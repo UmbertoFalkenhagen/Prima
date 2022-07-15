@@ -47,6 +47,33 @@ declare namespace EndlessMatrixRunnerSoSe22 {
 }
 declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
+    class Enemy extends ƒ.Node {
+        constructor(position: ƒ.Vector3);
+    }
+}
+declare namespace EndlessMatrixRunnerSoSe22 {
+    import ƒAid = FudgeAid;
+    enum JOB {
+        IDLE = 0,
+        ATTACK = 1,
+        DIE = 2
+    }
+    class EnemyStateMachine extends ƒAid.ComponentStateMachine<JOB> {
+        private static instructions;
+        timePeriod: number;
+        constructor();
+        static get(): ƒAid.StateMachineInstructions<JOB>;
+        private static actDefault;
+        private static actAttack;
+        private static actIdle;
+        private static actDie;
+        private static transitDefault;
+        private hndEvent;
+        private update;
+    }
+}
+declare namespace EndlessMatrixRunnerSoSe22 {
+    import ƒ = FudgeCore;
     class FloorElement extends ƒ.Node {
         constructor(position: ƒ.Vector3);
     }
@@ -129,6 +156,7 @@ declare namespace EndlessMatrixRunnerSoSe22 {
         createRandomPlatformAmount(): void;
         spawnNewPlatform: (xposfrombottomline: number, yposfrombottomline: number, receiveEdgeObstacles: boolean) => Promise<void>;
         addCoinsToPlatforms(): void;
+        spawnEnemy(iterator: number): void;
     }
 }
 declare namespace EndlessMatrixRunnerSoSe22 {

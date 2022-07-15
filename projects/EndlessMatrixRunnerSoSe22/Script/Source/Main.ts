@@ -88,6 +88,7 @@ namespace EndlessMatrixRunnerSoSe22 {
       sceneGraph.addEventListener("dropEvent", hndDropEvent);
       sceneGraph.addEventListener("deathEvent", hndDeathEvent);
       sceneGraph.addEventListener("coinEvent", hndCoinEvent);
+      sceneGraph.addEventListener("enemyEvent", hndEnemyEvent);
       //soundManager.addEventListener("jumpEvent", hndJumpEvent, true);
 
 
@@ -174,6 +175,11 @@ namespace EndlessMatrixRunnerSoSe22 {
 
     function hndDeathEvent(): void {
       deathSound.play(true);
+    }
+
+    function hndEnemyEvent(): void {
+      console.log("Gegner greift an!");
+      enemySound.play(true);
     }
 
     function hndCoinEvent(): void {

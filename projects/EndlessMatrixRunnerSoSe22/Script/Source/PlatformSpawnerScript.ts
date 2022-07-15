@@ -43,12 +43,12 @@ namespace EndlessMatrixRunnerSoSe22 {
       }
     }
 
-    public start (): void  {
-     
-      
+    public start(): void {
+
+
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.update);
-      
-      
+
+
     }
 
     public update = (_event: Event): void => {
@@ -70,64 +70,32 @@ namespace EndlessMatrixRunnerSoSe22 {
           randomnumber = random.getRangeFloored(0, 100);
           //console.log(randomnumber);
           switch (true) {
-            case (randomnumber && randomnumber < 45) :
+            case (randomnumber < 45):
               this.spawnNewPlatform(0, 0, true);
               console.log("Spawned one platform");
               this.spawnactivationcounter = 0;
               break;
-            case (45 <= randomnumber && randomnumber < 70) :
+            case (45 <= randomnumber && randomnumber < 70):
               this.spawnNewPlatform(0, 0, true);
               this.spawnNewPlatform(15, 4, true);
               console.log("Spawned two platforms");
               this.spawnactivationcounter = 0;
               break;
-            case (70 <= randomnumber && randomnumber < 100) :
+            case (70 <= randomnumber && randomnumber < 100):
               this.spawnNewPlatform(0, 0, true);
               this.spawnNewPlatform(15, 4, true);
               this.spawnNewPlatform(30, 0, false);
               console.log("Spawned three platforms");
               this.spawnactivationcounter = 0;
               break;
-            // case (73 <= randomnumber && randomnumber < 83) :
-            //   this.spawnNewPlatform(0, 0);
-            //   this.spawnNewPlatform(15, 4);
-            //   this.spawnNewPlatform(30, 0);
-            //   this.spawnNewPlatform(25, 7);
-            //   console.log("Spawned four platforms");
-            //   this.spawnactivationcounter = 0;
-            //   break;
-            // case (83 <= randomnumber && randomnumber < 90) :
-            //   this.spawnNewPlatform(0, 0);
-            //   this.spawnNewPlatform(15, 4);
-            //   this.spawnNewPlatform(30, 0);
-            //   this.spawnNewPlatform(25, 7);
-            //   this.spawnNewPlatform(35, 4);
-            //   console.log("Spawned five platforms");
-            //   this.spawnactivationcounter = 0;
-            //   break;
-            // case (90 <= randomnumber && randomnumber < 96) :
-            //   this.spawnNewPlatform(0, 0);
-            //   this.spawnNewPlatform(15, 4);
-            //   this.spawnNewPlatform(30, 0);
-            //   this.spawnNewPlatform(25, 7);
-            //   this.spawnNewPlatform(35, 4);
-            //   this.spawnNewPlatform(45, 7);
-            //   console.log("Spawned six platforms");
-            //   this.spawnactivationcounter = 0;
-            //   break;
-            // case (96 <= randomnumber && randomnumber < 100) :
-            //   this.spawnNewPlatform(0, 0);
-            //   this.spawnNewPlatform(15, 4);
-            //   this.spawnNewPlatform(30, 0);
-            //   this.spawnNewPlatform(25, 7);
-            //   this.spawnNewPlatform(35, 4);
-            //   this.spawnNewPlatform(45, 7);
-            //   this.spawnNewPlatform(60, 4);
-            //   console.log("Spawned seven platforms");
-            //   this.spawnactivationcounter = 0;
-            //   break;
             default:
               break;
+          }
+
+          random = new ƒ.Random();
+          randomnumber = random.getRangeFloored(0, 10);
+          if (randomnumber <= 3) {
+            this.spawnEnemy(0);
           }
           this.currentplatforms = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
         }
@@ -136,30 +104,84 @@ namespace EndlessMatrixRunnerSoSe22 {
 
     public spawnNewPlatform = async (xposfrombottomline: number, yposfrombottomline: number, receiveEdgeObstacles: boolean): Promise<void> => {
       let newPlatformNode: ObstaclePlatform = new ObstaclePlatform(ƒ.Vector3.ZERO(), receiveEdgeObstacles);
-      newPlatformNode.mtxLocal.translation = 
-      new ƒ.Vector3(this.node.mtxLocal.translation.x + xposfrombottomline, this.node.mtxLocal.translation.y + yposfrombottomline + 2, this.node.mtxLocal.translation.z);
+      newPlatformNode.mtxLocal.translation =
+        new ƒ.Vector3(this.node.mtxLocal.translation.x + xposfrombottomline, this.node.mtxLocal.translation.y + yposfrombottomline + 2, this.node.mtxLocal.translation.z);
       newPlatformNode.name = "Platform";
       sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(newPlatformNode);
       console.log("Added platform segment");
     }
 
     public addCoinsToPlatforms(): void {
-      
+
       this.currentplatforms.forEach(platform => {
-        if (platform.getChildrenByName("Coin").length == 0 && platform.mtxLocal.translation.x - 30 > playerNode.mtxLocal.translation.x ) {
+        if (platform.getChildrenByName("Coin").length == 0 && platform.mtxLocal.translation.x - 30 > playerNode.mtxLocal.translation.x) {
           let random: ƒ.Random = new ƒ.Random();
           let randomnumber: number = random.getRangeFloored(0, 200);
           if (randomnumber == 1) {
             let newcoin: Coin = new Coin(platform);
             console.log(newcoin);
           }
-           
-          
+
+
         }
-        
+
       });
     }
-    
+
+    public spawnEnemy(iterator: number): void {
+      let enemynodes: ƒ.Node[] = sceneGraph.getChildrenByName("Enemies")[0].getChildren();
+      if (enemynodes.length < 2) {
+        let random: ƒ.Random = new ƒ.Random();
+        let randomnumber: number = random.getRangeFloored(1, 4);
+        let placementposition: ƒ.Vector3 = ƒ.Vector3.ZERO();
+        switch (randomnumber) {
+          case 1:
+            enemynodes.forEach(element => {
+              if (element.mtxLocal.translation.y == 2) {
+                if (iterator < 3) {
+                  this.spawnEnemy(iterator + 1);
+                } else {
+                  return;
+                }
+              }
+            });
+            placementposition = new ƒ.Vector3(playerNode.mtxLocal.translation.x + 20, 2, 0);
+            break;
+          case 2:
+            enemynodes.forEach(element => {
+              if (element.mtxLocal.translation.y == 6) {
+                if (iterator < 3) {
+                  this.spawnEnemy(iterator + 1);
+                } else {
+                  return;
+                }
+              }
+            });
+            placementposition = new ƒ.Vector3(playerNode.mtxLocal.translation.x + 20, 6, 0);
+            break;
+          case 3:
+            enemynodes.forEach(element => {
+              if (element.mtxLocal.translation.y == 10) {
+                if (iterator < 3) {
+                  this.spawnEnemy(iterator + 1);
+                } else {
+                  return;
+                }
+              }
+            });
+            placementposition = new ƒ.Vector3(playerNode.mtxLocal.translation.x + 20, 10, 0);
+            break;
+          default:
+            break;
+        }
+
+        let enemy: Enemy = new Enemy(placementposition);
+
+      }
+
+    }
+
+
 
 
     // protected reduceMutator(_mutator: ƒ.Mutator): void {

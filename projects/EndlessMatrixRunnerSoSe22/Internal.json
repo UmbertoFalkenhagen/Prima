@@ -74,6 +74,46 @@
       "type": "Audio"
     }
   },
+  "Audio|2022-07-13T12:08:06.055Z|96739": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\jump.wav",
+      "idResource": "Audio|2022-07-13T12:08:06.055Z|96739",
+      "name": "Sounds\\Ingame Sounds\\jump.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2022-07-13T12:07:46.815Z|11865": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\drop.wav",
+      "idResource": "Audio|2022-07-13T12:07:46.815Z|11865",
+      "name": "Sounds\\Ingame Sounds\\drop.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2022-07-13T12:07:35.503Z|65645": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\death.mp3",
+      "idResource": "Audio|2022-07-13T12:07:35.503Z|65645",
+      "name": "Sounds\\Ingame Sounds\\death.mp3",
+      "type": "Audio"
+    }
+  },
+  "Audio|2022-07-13T12:07:27.111Z|05474": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\coin.wav",
+      "idResource": "Audio|2022-07-13T12:07:27.111Z|05474",
+      "name": "Sounds\\Ingame Sounds\\coin.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2022-07-13T12:07:59.279Z|09478": {
+    "ƒ.Audio": {
+      "url": "Sounds\\Ingame Sounds\\enemy.wav",
+      "idResource": "Audio|2022-07-13T12:07:59.279Z|09478",
+      "name": "Sounds\\Ingame Sounds\\enemy.wav",
+      "type": "Audio"
+    }
+  },
   "Graph|2022-05-05T11:28:13.576Z|03522": {
     "ƒ.Graph": {
       "name": "SceneGraph",
@@ -186,6 +226,14 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "ƒ.Node": {
+            "name": "Enemies",
+            "active": true,
+            "components": {},
+            "children": []
           }
         }
       ],
@@ -690,44 +738,105 @@
       }
     }
   },
-  "Audio|2022-07-13T12:07:27.111Z|05474": {
-    "ƒ.Audio": {
-      "url": "Sounds\\Ingame Sounds\\coin.wav",
-      "idResource": "Audio|2022-07-13T12:07:27.111Z|05474",
-      "name": "Sounds\\Ingame Sounds\\coin.wav",
-      "type": "Audio"
+  "MeshPyramid|2022-07-15T12:09:48.716Z|73697": {
+    "ƒ.MeshPyramid": {
+      "idResource": "MeshPyramid|2022-07-15T12:09:48.716Z|73697",
+      "name": "EnemyMesh",
+      "type": "MeshPyramid"
     }
   },
-  "Audio|2022-07-13T12:07:35.503Z|65645": {
-    "ƒ.Audio": {
-      "url": "Sounds\\Ingame Sounds\\death.mp3",
-      "idResource": "Audio|2022-07-13T12:07:35.503Z|65645",
-      "name": "Sounds\\Ingame Sounds\\death.mp3",
-      "type": "Audio"
+  "Material|2022-07-15T12:10:50.126Z|04547": {
+    "ƒ.Material": {
+      "name": "EnemyMatRed",
+      "idResource": "Material|2022-07-15T12:10:50.126Z|04547",
+      "shader": "ShaderLit",
+      "coat": {
+        "ƒ.CoatColored": {
+          "color": "[1, 0, 0, 1]"
+        }
+      }
     }
   },
-  "Audio|2022-07-13T12:07:46.815Z|11865": {
-    "ƒ.Audio": {
-      "url": "Sounds\\Ingame Sounds\\drop.wav",
-      "idResource": "Audio|2022-07-13T12:07:46.815Z|11865",
-      "name": "Sounds\\Ingame Sounds\\drop.wav",
-      "type": "Audio"
+  "Graph|2022-07-15T12:15:08.865Z|64060": {
+    "ƒ.Graph": {
+      "name": "Enemy",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 90]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentMesh": [
+          {
+            "ƒ.ComponentMesh": {
+              "idMesh": "MeshPyramid|2022-07-15T12:09:48.716Z|73697",
+              "pivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentMaterial": [
+          {
+            "ƒ.ComponentMaterial": {
+              "sortForAlpha": false,
+              "clrPrimary": "[1, 1, 1, 1]",
+              "clrSecondary": "[1, 1, 1, 1]",
+              "pivot": {
+                "translation": "[0, 0]",
+                "rotation": 0,
+                "scaling": "[1, 1]"
+              },
+              "Component": {
+                "active": true
+              },
+              "idMaterial": "Material|2022-07-15T12:10:50.126Z|04547"
+            }
+          }
+        ]
+      },
+      "children": [],
+      "idResource": "Graph|2022-07-15T12:15:08.865Z|64060",
+      "type": "Graph"
     }
   },
-  "Audio|2022-07-13T12:07:59.279Z|09478": {
-    "ƒ.Audio": {
-      "url": "Sounds\\Ingame Sounds\\enemy.wav",
-      "idResource": "Audio|2022-07-13T12:07:59.279Z|09478",
-      "name": "Sounds\\Ingame Sounds\\enemy.wav",
-      "type": "Audio"
+  "Material|2022-07-15T12:15:38.997Z|21886": {
+    "ƒ.Material": {
+      "name": "EnemyMatYellow",
+      "idResource": "Material|2022-07-15T12:15:38.997Z|21886",
+      "shader": "ShaderLit",
+      "coat": {
+        "ƒ.CoatColored": {
+          "color": "[1, 0.6352941176470588, 0, 1]"
+        }
+      }
     }
   },
-  "Audio|2022-07-13T12:08:06.055Z|96739": {
-    "ƒ.Audio": {
-      "url": "Sounds\\Ingame Sounds\\jump.wav",
-      "idResource": "Audio|2022-07-13T12:08:06.055Z|96739",
-      "name": "Sounds\\Ingame Sounds\\jump.wav",
-      "type": "Audio"
+  "Material|2022-07-15T12:16:11.934Z|81738": {
+    "ƒ.Material": {
+      "name": "EnemyMatGreen",
+      "idResource": "Material|2022-07-15T12:16:11.934Z|81738",
+      "shader": "ShaderLit",
+      "coat": {
+        "ƒ.CoatColored": {
+          "color": "[0.3176470588235294, 1, 0, 1]"
+        }
+      }
     }
   }
 }

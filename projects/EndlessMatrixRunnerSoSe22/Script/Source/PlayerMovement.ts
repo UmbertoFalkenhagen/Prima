@@ -89,7 +89,7 @@ namespace EndlessMatrixRunnerSoSe22 {
               isGrounded = true;
               break;
 
-            case ƒ.COLLISION_GROUP.GROUP_3: //Obstacles
+            case ƒ.COLLISION_GROUP.GROUP_3: //Obstacles & enemies
               this.respawn();
               console.log("Obstacle hit");
               break;
@@ -140,6 +140,8 @@ namespace EndlessMatrixRunnerSoSe22 {
       GameState.get().gameRunning = false;
       let platforms: ƒ.Node = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0];
       platforms.removeAllChildren();
+      let enemies: ƒ.Node = sceneGraph.getChildrenByName("Enemies")[0];
+      enemies.removeAllChildren();
       // let platforms: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren();
       // platforms.forEach(platform => {
 
