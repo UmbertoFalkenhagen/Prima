@@ -76,6 +76,7 @@ namespace EndlessMatrixRunnerSoSe22 {
       if (GameState.get().gameRunning) {
 
         this.ctrlForward.setInput(configurations.maxspeed);
+        this.node.mtxLocal.translation.z = 0;
         //this.cmpPlayerRb.setVelocity(new ƒ.Vector3(this.ctrlForward.getOutput(), this.cmpPlayerRb.getVelocity().y, this.cmpPlayerRb.getVelocity().z));
         this.cmpPlayerRb.applyForce(ƒ.Vector3.SCALE(playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
 

@@ -960,6 +960,7 @@ var EndlessMatrixRunnerSoSe22;
             this.ctrlJump.setDelay(EndlessMatrixRunnerSoSe22.deltaTime * 1000 - 1);
             if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
                 this.ctrlForward.setInput(EndlessMatrixRunnerSoSe22.configurations.maxspeed);
+                this.node.mtxLocal.translation.z = 0;
                 //this.cmpPlayerRb.setVelocity(new ƒ.Vector3(this.ctrlForward.getOutput(), this.cmpPlayerRb.getVelocity().y, this.cmpPlayerRb.getVelocity().z));
                 this.cmpPlayerRb.applyForce(ƒ.Vector3.SCALE(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
                 let isGrounded = false;
