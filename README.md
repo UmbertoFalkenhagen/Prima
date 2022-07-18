@@ -29,7 +29,7 @@ Repository for the module "Prototyping interactive media-applications and games"
 |   8 | Event-System        | Events when:<br> - collecting coins,<br> - running into an obstacle,<br> - enemy attacks |
 |   9 | External Data       | configuration.json allows to set:<br> - player speed,<br> - background music volume,<br> - sound effects volume,<br> - platforms with/without obstacles attached |
 |   A | Light               | Since this game is 2.5D I decided to go with just one constant <br> ambient light in order to have a consistent environment and <br>avoid confusion during fast actions |
-|   B | Physics             | - Rigidbodies used for: Agent, Floor/Platform elements, Enemies <br> - Rigibodies that are triggers: Coins |
+|   B | Physics             | - Rigidbodies used for: Agent, Floor/Platform elements, Enemies <br> - Rigibodies that are triggers: Coins <br> - Working with forces/torques: Player movement (forward and jump/drop), Enemy movement (while idle and when dashing at the player)|
 |   C | Net                 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |   D | State Machines      | - ComponentStateMachine used for enemies |
 |   E | Animation           |  |
