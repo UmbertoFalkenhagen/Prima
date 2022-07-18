@@ -544,21 +544,10 @@ var EndlessMatrixRunnerSoSe22;
         function update(_event) {
             ƒ.Physics.simulate(); // if physics is included and used
             EndlessMatrixRunnerSoSe22.deltaTime = ƒ.Loop.timeFrameReal / 1000;
-            // //make sure all terrain objects have a proper collisiongroup assigned
-            // let platformNodes: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
-            // platformNodes.forEach(platform => {
-            //   platform.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2; //all ground objects are collision group 2
-            //   platform.getChildrenByName("Obstacle").forEach(edgeobstacle => {
-            //     edgeobstacle.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_3; //all obstacles are collision group 3
-            //     //console.log("EdgeObstacle received collision group");
-            //   });
-            // }); //all items should have collision group 4 and all npcs have collision group 5
             if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
-                //controllGround();
                 EndlessMatrixRunnerSoSe22.GameState.get().highscore += 1 * EndlessMatrixRunnerSoSe22.deltaTime;
                 EndlessMatrixRunnerSoSe22.GameState.get().score.textContent = "Score: " + Math.floor(EndlessMatrixRunnerSoSe22.GameState.get().highscore);
                 EndlessMatrixRunnerSoSe22.GameState.get().coins.textContent = "Coins: " + EndlessMatrixRunnerSoSe22.GameState.get().coinscounter;
-                //console.log(Math.floor(GameState.get().highscore));
             }
             else if (!EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
                 EndlessMatrixRunnerSoSe22.sceneGraph.getComponent(ƒ.ComponentAudio).play(false);
@@ -957,10 +946,12 @@ var EndlessMatrixRunnerSoSe22;
         update = (_event) => {
             this.cmpPlayerRb = EndlessMatrixRunnerSoSe22.playerNode.getComponent(ƒ.ComponentRigidbody);
             this.cmpPlayerRb.effectRotation = new ƒ.Vector3(0, 0, 0);
+            if (this.cmpPlayerRb.getPosition().z != 0) {
+                this.cmpPlayerRb.setPosition(new ƒ.Vector3(this.cmpPlayerRb.getPosition().x, this.cmpPlayerRb.getPosition().y, 0));
+            }
             this.ctrlJump.setDelay(EndlessMatrixRunnerSoSe22.deltaTime * 1000 - 1);
             if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
                 this.ctrlForward.setInput(EndlessMatrixRunnerSoSe22.configurations.maxspeed);
-                this.node.mtxLocal.translation.z = 0;
                 //this.cmpPlayerRb.setVelocity(new ƒ.Vector3(this.ctrlForward.getOutput(), this.cmpPlayerRb.getVelocity().y, this.cmpPlayerRb.getVelocity().z));
                 this.cmpPlayerRb.applyForce(ƒ.Vector3.SCALE(EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
                 let isGrounded = false;

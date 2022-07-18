@@ -105,23 +105,10 @@ namespace EndlessMatrixRunnerSoSe22 {
       ƒ.Physics.simulate();  // if physics is included and used
       deltaTime = ƒ.Loop.timeFrameReal / 1000;
 
-      // //make sure all terrain objects have a proper collisiongroup assigned
-      // let platformNodes: ƒ.Node[] = sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildrenByName("ObstaclePlatform");
-      // platformNodes.forEach(platform => {
-      //   platform.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_2; //all ground objects are collision group 2
-      //   platform.getChildrenByName("Obstacle").forEach(edgeobstacle => {
-      //     edgeobstacle.getComponent(ƒ.ComponentRigidbody).collisionGroup = ƒ.COLLISION_GROUP.GROUP_3; //all obstacles are collision group 3
-      //     //console.log("EdgeObstacle received collision group");
-      //   });
-      // }); //all items should have collision group 4 and all npcs have collision group 5
-
       if (GameState.get().gameRunning) {
-        //controllGround();
         GameState.get().highscore += 1 * deltaTime;
         GameState.get().score.textContent = "Score: " + Math.floor(GameState.get().highscore);
         GameState.get().coins.textContent = "Coins: " + GameState.get().coinscounter;
-        //console.log(Math.floor(GameState.get().highscore));
-
 
       } else if (!GameState.get().gameRunning) {
         sceneGraph.getComponent(ƒ.ComponentAudio).play(false);

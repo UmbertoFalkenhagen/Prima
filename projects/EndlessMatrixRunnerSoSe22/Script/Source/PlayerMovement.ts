@@ -69,6 +69,10 @@ namespace EndlessMatrixRunnerSoSe22 {
 
       this.cmpPlayerRb.effectRotation = new ƒ.Vector3(0, 0, 0);
 
+      if (this.cmpPlayerRb.getPosition().z != 0) {
+        this.cmpPlayerRb.setPosition(new ƒ.Vector3(this.cmpPlayerRb.getPosition().x, this.cmpPlayerRb.getPosition().y, 0));
+      }
+
 
 
       this.ctrlJump.setDelay(deltaTime * 1000 - 1);
@@ -76,7 +80,6 @@ namespace EndlessMatrixRunnerSoSe22 {
       if (GameState.get().gameRunning) {
 
         this.ctrlForward.setInput(configurations.maxspeed);
-        this.node.mtxLocal.translation.z = 0;
         //this.cmpPlayerRb.setVelocity(new ƒ.Vector3(this.ctrlForward.getOutput(), this.cmpPlayerRb.getVelocity().y, this.cmpPlayerRb.getVelocity().z));
         this.cmpPlayerRb.applyForce(ƒ.Vector3.SCALE(playerNode.mtxLocal.getX(), this.ctrlForward.getOutput()));
 
