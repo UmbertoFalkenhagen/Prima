@@ -585,7 +585,7 @@ var EndlessMatrixRunnerSoSe22;
         async function fetchData() {
             try {
                 // tslint:disable-next-line: typedef
-                const response = await fetch("configuration.JSON");
+                const response = await fetch("configuration.json");
                 // tslint:disable-next-line: typedef
                 const responseObj = await response.json();
                 return responseObj;
