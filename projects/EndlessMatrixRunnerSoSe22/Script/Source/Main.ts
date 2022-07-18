@@ -156,7 +156,7 @@ namespace EndlessMatrixRunnerSoSe22 {
     async function fetchData() {
       try {
         // tslint:disable-next-line: typedef
-        const response = await fetch("https://github.com/UmbertoFalkenhagen/Prima/blob/master/projects/EndlessMatrixRunnerSoSe22/configuration.json");
+        const response = await fetch("../configuration.JSON");
         // tslint:disable-next-line: typedef
         const responseObj = await response.json();
         return responseObj;
