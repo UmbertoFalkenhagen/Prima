@@ -641,11 +641,11 @@ var EndlessMatrixRunnerSoSe22;
             // elementrb.collisionGroup = ƒ.COLLISION_GROUP.GROUP_2;
             this.mtxLocal.translate(position);
             // });
-            // if (receiveEdgeObstacles) {
-            //     this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
-            //     this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
-            //     this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 1, 1));
-            // }
+            if (receiveEdgeObstacles) {
+                this.createObstacleElement(new ƒ.Vector3(-2, 0, -0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
+                this.createObstacleElement(new ƒ.Vector3(-2, 0, 0.75), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 0.7, 0.5));
+                this.createObstacleElement(new ƒ.Vector3(-2, 0, 0), new ƒ.Vector3(0, 0, 90), new ƒ.Vector3(0.8, 1, 1));
+            }
             EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(this);
             //console.log(sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].getChildren().length);
         }
@@ -807,20 +807,20 @@ var EndlessMatrixRunnerSoSe22;
                     //console.log(randomnumber);
                     switch (true) {
                         case (randomnumber < 45):
-                            this.spawnNewPlatform(0, 0, true);
+                            this.spawnNewPlatform(0, 0, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
                             console.log("Spawned one platform");
                             this.spawnactivationcounter = 0;
                             break;
                         case (45 <= randomnumber && randomnumber < 70):
-                            this.spawnNewPlatform(0, 0, true);
-                            this.spawnNewPlatform(15, 4, true);
+                            this.spawnNewPlatform(0, 0, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
+                            this.spawnNewPlatform(15, 4, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
                             console.log("Spawned two platforms");
                             this.spawnactivationcounter = 0;
                             break;
                         case (70 <= randomnumber && randomnumber < 100):
-                            this.spawnNewPlatform(0, 0, true);
-                            this.spawnNewPlatform(15, 4, true);
-                            this.spawnNewPlatform(30, 0, false);
+                            this.spawnNewPlatform(0, 0, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
+                            this.spawnNewPlatform(15, 4, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
+                            this.spawnNewPlatform(30, 0, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
                             console.log("Spawned three platforms");
                             this.spawnactivationcounter = 0;
                             break;

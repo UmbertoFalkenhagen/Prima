@@ -1,5 +1,6 @@
 {
     "maxspeed": 5,
     "backgroundvolume": 0.5,
-    "effectvolume": 0.25    
+    "effectvolume": 0.25,
+    "obstacleplatforms": true    
 }

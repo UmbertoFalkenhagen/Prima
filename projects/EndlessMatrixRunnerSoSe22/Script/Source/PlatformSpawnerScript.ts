@@ -71,20 +71,20 @@ namespace EndlessMatrixRunnerSoSe22 {
           //console.log(randomnumber);
           switch (true) {
             case (randomnumber < 45):
-              this.spawnNewPlatform(0, 0, true);
+              this.spawnNewPlatform(0, 0, configurations.obstacleplatforms);
               console.log("Spawned one platform");
               this.spawnactivationcounter = 0;
               break;
             case (45 <= randomnumber && randomnumber < 70):
-              this.spawnNewPlatform(0, 0, true);
-              this.spawnNewPlatform(15, 4, true);
+              this.spawnNewPlatform(0, 0, configurations.obstacleplatforms);
+              this.spawnNewPlatform(15, 4, configurations.obstacleplatforms);
               console.log("Spawned two platforms");
               this.spawnactivationcounter = 0;
               break;
             case (70 <= randomnumber && randomnumber < 100):
-              this.spawnNewPlatform(0, 0, true);
-              this.spawnNewPlatform(15, 4, true);
-              this.spawnNewPlatform(30, 0, false);
+              this.spawnNewPlatform(0, 0, configurations.obstacleplatforms);
+              this.spawnNewPlatform(15, 4, configurations.obstacleplatforms);
+              this.spawnNewPlatform(30, 0, configurations.obstacleplatforms);
               console.log("Spawned three platforms");
               this.spawnactivationcounter = 0;
               break;
