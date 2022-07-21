@@ -107,7 +107,7 @@ namespace EndlessMatrixRunnerSoSe22 {
       deltaTime = ƒ.Loop.timeFrameReal / 1000;
 
       if (GameState.get().coinscounter >= 20 * difficulty) {
-        GameState.get().highscore += 100;
+        GameState.get().highscore += 100 * difficulty;
         difficulty += 1;
       }
 

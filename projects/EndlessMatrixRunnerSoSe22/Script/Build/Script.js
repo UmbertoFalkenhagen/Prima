@@ -546,7 +546,7 @@ var EndlessMatrixRunnerSoSe22;
             ƒ.Physics.simulate(); // if physics is included and used
             EndlessMatrixRunnerSoSe22.deltaTime = ƒ.Loop.timeFrameReal / 1000;
             if (EndlessMatrixRunnerSoSe22.GameState.get().coinscounter >= 20 * EndlessMatrixRunnerSoSe22.difficulty) {
-                EndlessMatrixRunnerSoSe22.GameState.get().highscore += 100;
+                EndlessMatrixRunnerSoSe22.GameState.get().highscore += 100 * EndlessMatrixRunnerSoSe22.difficulty;
                 EndlessMatrixRunnerSoSe22.difficulty += 1;
             }
             if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
