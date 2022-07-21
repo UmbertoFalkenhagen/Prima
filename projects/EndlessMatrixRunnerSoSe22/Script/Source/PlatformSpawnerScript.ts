@@ -12,6 +12,7 @@ namespace EndlessMatrixRunnerSoSe22 {
     private distancefromplayer: number;
     private spawnactivationcounter: number = 0;
     private currentplatforms: ƒ.Node[];
+    private spawnobstacles: boolean = false;
     //private currentplatformswithcoin: ƒ.Node[];
     //private platformGraph: ƒ.Graph;
 
@@ -67,24 +68,25 @@ namespace EndlessMatrixRunnerSoSe22 {
         //console.log(this.spawnactivationcounter);
         if (this.spawnactivationcounter >= 1000 && this.currentplatforms.length <= 10) {
           random = new ƒ.Random();
+
           randomnumber = random.getRangeFloored(0, 100);
           //console.log(randomnumber);
           switch (true) {
             case (randomnumber < 45):
-              this.spawnNewPlatform(0, 0, configurations.obstacleplatforms);
+              this.spawnNewPlatform(0, 0, this.spawnWithObstacles());
               console.log("Spawned one platform");
               this.spawnactivationcounter = 0;
               break;
             case (45 <= randomnumber && randomnumber < 70):
-              this.spawnNewPlatform(0, 0, configurations.obstacleplatforms);
-              this.spawnNewPlatform(15, 4, configurations.obstacleplatforms);
+              this.spawnNewPlatform(0, 0, this.spawnWithObstacles());
+              this.spawnNewPlatform(15, 4, this.spawnWithObstacles());
               console.log("Spawned two platforms");
               this.spawnactivationcounter = 0;
               break;
             case (70 <= randomnumber && randomnumber < 100):
-              this.spawnNewPlatform(0, 0, configurations.obstacleplatforms);
-              this.spawnNewPlatform(15, 4, configurations.obstacleplatforms);
-              this.spawnNewPlatform(30, 0, configurations.obstacleplatforms);
+              this.spawnNewPlatform(0, 0, this.spawnWithObstacles());
+              this.spawnNewPlatform(15, 4, this.spawnWithObstacles());
+              this.spawnNewPlatform(30, 0, this.spawnWithObstacles());
               console.log("Spawned three platforms");
               this.spawnactivationcounter = 0;
               break;
@@ -109,6 +111,18 @@ namespace EndlessMatrixRunnerSoSe22 {
       newPlatformNode.name = "Platform";
       sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(newPlatformNode);
       console.log("Added platform segment");
+    }
+
+    public spawnWithObstacles(): boolean {
+      let random: ƒ.Random = new ƒ.Random();
+      let randomnumber: number;
+      if (difficulty >= 5 && configurations.obstacleplatforms) {
+        randomnumber = random.getRangeFloored(0, 100 / Math.sqrt(difficulty));
+        if (randomnumber <= 1) {
+          return true;
+        }
+      }
+      return false;
     }
 
     public addCoinsToPlatforms(): void {

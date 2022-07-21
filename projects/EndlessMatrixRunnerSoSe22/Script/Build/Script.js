@@ -477,6 +477,7 @@ var EndlessMatrixRunnerSoSe22;
     var ƒ = FudgeCore;
     ƒ.Debug.info("Main Program Template running!");
     let viewport;
+    EndlessMatrixRunnerSoSe22.difficulty = 1;
     let platformSpawner;
     let cameraNode;
     //sounds
@@ -544,6 +545,10 @@ var EndlessMatrixRunnerSoSe22;
         function update(_event) {
             ƒ.Physics.simulate(); // if physics is included and used
             EndlessMatrixRunnerSoSe22.deltaTime = ƒ.Loop.timeFrameReal / 1000;
+            if (EndlessMatrixRunnerSoSe22.GameState.get().coinscounter >= 20 * EndlessMatrixRunnerSoSe22.difficulty) {
+                EndlessMatrixRunnerSoSe22.GameState.get().highscore += 100;
+                EndlessMatrixRunnerSoSe22.difficulty += 1;
+            }
             if (EndlessMatrixRunnerSoSe22.GameState.get().gameRunning) {
                 EndlessMatrixRunnerSoSe22.GameState.get().highscore += 1 * EndlessMatrixRunnerSoSe22.deltaTime;
                 EndlessMatrixRunnerSoSe22.GameState.get().score.textContent = "Score: " + Math.floor(EndlessMatrixRunnerSoSe22.GameState.get().highscore);
@@ -599,7 +604,7 @@ var EndlessMatrixRunnerSoSe22;
         function hndCoinEvent() {
             coinSound.play(true);
             EndlessMatrixRunnerSoSe22.GameState.get().coinscounter += 1;
-            EndlessMatrixRunnerSoSe22.GameState.get().highscore += 10;
+            EndlessMatrixRunnerSoSe22.GameState.get().highscore += 10 * EndlessMatrixRunnerSoSe22.difficulty;
         }
     }
 })(EndlessMatrixRunnerSoSe22 || (EndlessMatrixRunnerSoSe22 = {}));
@@ -750,6 +755,7 @@ var EndlessMatrixRunnerSoSe22;
         distancefromplayer;
         spawnactivationcounter = 0;
         currentplatforms;
+        spawnobstacles = false;
         //private currentplatformswithcoin: ƒ.Node[];
         //private platformGraph: ƒ.Graph;
         constructor(_distancefromplayer) {
@@ -796,20 +802,20 @@ var EndlessMatrixRunnerSoSe22;
                     //console.log(randomnumber);
                     switch (true) {
                         case (randomnumber < 45):
-                            this.spawnNewPlatform(0, 0, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
+                            this.spawnNewPlatform(0, 0, this.spawnWithObstacles());
                             console.log("Spawned one platform");
                             this.spawnactivationcounter = 0;
                             break;
                         case (45 <= randomnumber && randomnumber < 70):
-                            this.spawnNewPlatform(0, 0, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
-                            this.spawnNewPlatform(15, 4, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
+                            this.spawnNewPlatform(0, 0, this.spawnWithObstacles());
+                            this.spawnNewPlatform(15, 4, this.spawnWithObstacles());
                             console.log("Spawned two platforms");
                             this.spawnactivationcounter = 0;
                             break;
                         case (70 <= randomnumber && randomnumber < 100):
-                            this.spawnNewPlatform(0, 0, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
-                            this.spawnNewPlatform(15, 4, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
-                            this.spawnNewPlatform(30, 0, EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms);
+                            this.spawnNewPlatform(0, 0, this.spawnWithObstacles());
+                            this.spawnNewPlatform(15, 4, this.spawnWithObstacles());
+                            this.spawnNewPlatform(30, 0, this.spawnWithObstacles());
                             console.log("Spawned three platforms");
                             this.spawnactivationcounter = 0;
                             break;
@@ -833,6 +839,17 @@ var EndlessMatrixRunnerSoSe22;
             EndlessMatrixRunnerSoSe22.sceneGraph.getChildrenByName("Obstacles")[0].getChildrenByName("Platforms")[0].addChild(newPlatformNode);
             console.log("Added platform segment");
         };
+        spawnWithObstacles() {
+            let random = new ƒ.Random();
+            let randomnumber;
+            if (EndlessMatrixRunnerSoSe22.difficulty >= 5 && EndlessMatrixRunnerSoSe22.configurations.obstacleplatforms) {
+                randomnumber = random.getRangeFloored(0, 100 / Math.sqrt(EndlessMatrixRunnerSoSe22.difficulty));
+                if (randomnumber <= 1) {
+                    return true;
+                }
+            }
+            return false;
+        }
         addCoinsToPlatforms() {
             this.currentplatforms.forEach(platform => {
                 if (platform.getChildrenByName("Coin").length == 0 && platform.mtxLocal.translation.x - 30 > EndlessMatrixRunnerSoSe22.playerNode.mtxLocal.translation.x) {

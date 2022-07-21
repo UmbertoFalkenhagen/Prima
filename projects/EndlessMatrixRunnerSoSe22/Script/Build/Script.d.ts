@@ -112,6 +112,7 @@ declare namespace EndlessMatrixRunnerSoSe22 {
     import ƒ = FudgeCore;
     let sceneGraph: ƒ.Node;
     let playerNode: Agent;
+    let difficulty: number;
     let configurations: any;
     let deltaTime: number;
 }
@@ -149,12 +150,14 @@ declare namespace EndlessMatrixRunnerSoSe22 {
         private distancefromplayer;
         private spawnactivationcounter;
         private currentplatforms;
+        private spawnobstacles;
         constructor(_distancefromplayer: number);
         hndEvent: (_event: Event) => void;
         start(): void;
         update: (_event: Event) => void;
         createRandomPlatformAmount(): void;
         spawnNewPlatform: (xposfrombottomline: number, yposfrombottomline: number, receiveEdgeObstacles: boolean) => Promise<void>;
+        spawnWithObstacles(): boolean;
         addCoinsToPlatforms(): void;
         spawnEnemy(iterator: number): void;
     }

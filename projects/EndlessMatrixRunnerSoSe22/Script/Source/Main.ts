@@ -6,6 +6,7 @@ namespace EndlessMatrixRunnerSoSe22 {
   let viewport: ƒ.Viewport;
   export let sceneGraph: ƒ.Node;
   export let playerNode: Agent;
+  export let difficulty: number = 1;
   // tslint:disable-next-line: no-any
   export let configurations: any;
   export let deltaTime: number;
@@ -105,6 +106,11 @@ namespace EndlessMatrixRunnerSoSe22 {
       ƒ.Physics.simulate();  // if physics is included and used
       deltaTime = ƒ.Loop.timeFrameReal / 1000;
 
+      if (GameState.get().coinscounter >= 20 * difficulty) {
+        GameState.get().highscore += 100;
+        difficulty += 1;
+      }
+
       if (GameState.get().gameRunning) {
         GameState.get().highscore += 1 * deltaTime;
         GameState.get().score.textContent = "Score: " + Math.floor(GameState.get().highscore);
@@ -172,7 +178,7 @@ namespace EndlessMatrixRunnerSoSe22 {
     function hndCoinEvent(): void {
       coinSound.play(true);
       GameState.get().coinscounter += 1;
-      GameState.get().highscore += 10;
+      GameState.get().highscore += 10 * difficulty;
     }
   }
 }
