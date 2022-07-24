@@ -96,7 +96,7 @@ namespace EndlessMatrixRunnerSoSe22 {
       ƒ.AudioManager.default.listenTo(sceneGraph);
       ƒ.AudioManager.default.listenWith(sceneGraph.getComponent(ƒ.ComponentAudioListener));
 
-      viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
+      //viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
 
       ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a

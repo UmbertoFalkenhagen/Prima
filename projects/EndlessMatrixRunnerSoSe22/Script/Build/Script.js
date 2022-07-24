@@ -538,7 +538,7 @@ var EndlessMatrixRunnerSoSe22;
             //soundManager.addEventListener("jumpEvent", hndJumpEvent, true);
             ƒ.AudioManager.default.listenTo(EndlessMatrixRunnerSoSe22.sceneGraph);
             ƒ.AudioManager.default.listenWith(EndlessMatrixRunnerSoSe22.sceneGraph.getComponent(ƒ.ComponentAudioListener));
-            viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
+            //viewport.physicsDebugMode = ƒ.PHYSICS_DEBUGMODE.COLLIDERS;
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
             ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         }
